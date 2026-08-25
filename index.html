@@ -10,22 +10,21 @@
 
   <!-- Navegación Principal -->
   <nav class="navbar">
-    <button class="btn-tab active" onclick="cambiarPestana('pos')">☕ Punto de Venta</button>
-    <button class="btn-tab" onclick="cambiarPestana('inventario')">📦 Inventario</button>
-    <button class="btn-tab" onclick="cambiarPestana('corte')">📊 Corte de Caja</button>
+    <div class="nav-left">
+      <button class="btn-tab active" onclick="cambiarPestana('pos', event)">☕ Punto de Venta</button>
+      <button class="btn-tab" onclick="cambiarPestana('inventario', event)">📦 Inventario</button>
+      <button class="btn-tab" onclick="cambiarPestana('corte', event)">📊 Corte de Caja</button>
+    </div>
+    <div class="nav-right">
+      <!-- Botón para ver Comandas Pendientes en lugar de tenerlas expuestas -->
+      <button class="btn-comandas-pendientes" onclick="abrirModalComandas()">
+        ☁️ Comandas Pendientes <span id="badgeComandasCount" class="badge">0</span>
+      </button>
+    </div>
   </nav>
 
   <!-- PESTAÑA 1: PUNTO DE VENTA -->
   <main id="tab-pos" class="seccion active">
-    
-    <!-- Barra Superior de Comandas Guardadas en la Nube / Espera -->
-    <div class="comandas-bar">
-      <h3>☁️ Comandas Pendientes:</h3>
-      <div id="contenedorComandas" class="comandas-lista">
-        <!-- Las comandas pendientes aparecerán aquí -->
-      </div>
-    </div>
-
     <div class="pos-grid">
       
       <!-- Catálogo de Bebidas -->
@@ -78,7 +77,18 @@
     <!-- Generado desde JS -->
   </main>
 
-  <!-- Modal de Selección de Método de Pago -->
+  <!-- MODAL 1: Comandas Pendientes -->
+  <div id="modalComandas" class="modal-overlay">
+    <div class="modal-content modal-ancho">
+      <h3>☁️ Comandas Pendientes por Cobrar</h3>
+      <div id="listaComandasModal" class="lista-comandas-modal">
+        <!-- Se renderizan dinámicamente -->
+      </div>
+      <button class="btn-cancelar" style="margin-top:15px;" onclick="cerrarModalComandas()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Método de Pago -->
   <div id="modalPago" class="modal-overlay">
     <div class="modal-content">
       <h3>Selecciona Método de Pago</h3>
