@@ -1,0 +1,179 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+/* Navegación por pestañas */
+.navbar {
+  display: flex;
+  background-color: #0f172a;
+  padding: 12px 20px;
+  gap: 10px;
+}
+
+.btn-tab {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.btn-tab:hover {
+  color: #f8fafc;
+  background-color: #1e293b;
+}
+
+.btn-tab.active {
+  background-color: #0284c7;
+  color: #ffffff;
+}
+
+/* Control de Secciones */
+.seccion {
+  display: none;
+  padding: 20px;
+}
+
+.seccion.active {
+  display: block;
+}
+
+/* Layout del POS */
+.pos-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.panel-catalogo, .panel-orden {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.modificadores {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modificadores select {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+}
+
+/* Grid de Productos */
+.grid-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.card-producto {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 15px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.2s;
+}
+
+.card-producto:hover {
+  border-color: #0284c7;
+  transform: translateY(-2px);
+}
+
+.card-producto strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.card-producto span {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+/* Orden / Carrito */
+.lista-carrito {
+  min-height: 250px;
+  max-height: 380px;
+  overflow-y: auto;
+  margin: 15px 0;
+  border-top: 1px solid #f1f5f9;
+}
+
+.item-carrito {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.item-carrito small {
+  color: #64748b;
+  display: block;
+}
+
+.btn-eliminar {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+/* Footer Orden */
+.footer-orden {
+  border-top: 2px dashed #e2e8f0;
+  padding-top: 15px;
+}
+
+.monto-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.btn-cobrar {
+  width: 100%;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cobrar:hover {
+  background-color: #15803d;
+}
