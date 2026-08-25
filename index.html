@@ -3,30 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POS Cafetería de Especialidad</title>
+  <title>POS Cafetería</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Navegación Principal -->
   <nav class="navbar">
     <div class="nav-left">
-      <button class="btn-tab active" id="tabBtnPos">☕ Punto de Venta</button>
-      <button class="btn-tab" id="tabBtnInv">📦 Inventario</button>
-      <button class="btn-tab" id="tabBtnCorte">📊 Corte de Caja</button>
+      <button class="btn-tab active" onclick="cambiarPestana('pos')">☕ Punto de Venta</button>
+      <button class="btn-tab" onclick="cambiarPestana('inventario')">📦 Inventario</button>
+      <button class="btn-tab" onclick="cambiarPestana('corte')">📊 Corte de Caja</button>
     </div>
     <div class="nav-right">
-      <button class="btn-comandas-pendientes" id="btnVerComandas">
+      <button class="btn-comandas-pendientes" onclick="abrirModalComandas()">
         ☁️ Comandas Pendientes <span id="badgeComandasCount" class="badge">0</span>
       </button>
     </div>
   </nav>
 
-  <!-- PESTAÑA 1: PUNTO DE VENTA -->
   <main id="tab-pos" class="seccion active">
     <div class="pos-grid">
       
-      <!-- Catálogo de Bebidas -->
       <section class="panel-catalogo">
         <h2>Bebidas Reales</h2>
         
@@ -40,10 +37,18 @@
           </select>
         </div>
 
-        <div id="gridProductos" class="grid-productos"></div>
+        <div id="gridProductos" class="grid-productos">
+          <div class="card-producto" onclick="agregarAlCarrito('Espresso', 35)"><strong>Espresso</strong><span>$35</span></div>
+          <div class="card-producto" onclick="agregarAlCarrito('Americano', 45)"><strong>Americano</strong><span>$45</span></div>
+          <div class="card-producto" onclick="agregarAlCarrito('Cappuccino', 60)"><strong>Cappuccino</strong><span>$60</span></div>
+          <div class="card-producto" onclick="agregarAlCarrito('Flat White', 65)"><strong>Flat White</strong><span>$65</span></div>
+          <div class="card-producto" onclick="agregarAlCarrito('Latte 12oz', 65)"><strong>Latte 12oz</strong><span>$65</span></div>
+          <div class="card-producto" onclick="agregarAlCarrito('Mocha', 75)"><strong>Mocha</strong><span>$75</span></div>
+          <div class="card-producto" onclick="agregarAlCarrito('Cold Brew', 55)"><strong>Cold Brew</strong><span>$55</span></div>
+          <div class="card-producto" onclick="agregarAlCarrito('Espresso Tonic', 70)"><strong>Espresso Tonic</strong><span>$70</span></div>
+        </div>
       </section>
 
-      <!-- Panel de Orden / Comanda Actual -->
       <section class="panel-orden">
         <h2>Comanda Actual</h2>
         <div id="listaCarrito" class="lista-carrito"></div>
@@ -54,14 +59,13 @@
             <strong id="montoTotal">$0.00</strong>
           </div>
 
-          <button id="btnGuardarComanda" class="btn-guardar-comanda">☁️ Guardar Comanda Pendiente</button>
+          <button class="btn-guardar-comanda" onclick="guardarComandaPendiente()">☁️ Guardar Comanda Pendiente</button>
 
-          <!-- Opciones de cobro directo -->
           <div class="seccion-cobro">
             <p><strong>Selecciona Método de Pago:</strong></p>
             <div class="metodos-pago">
-              <button id="btnPagoEfectivo" class="btn-pago efectivo">💵 Efectivo</button>
-              <button id="btnPagoTarjeta" class="btn-pago tarjeta">💳 Tarjeta</button>
+              <button class="btn-pago efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
+              <button class="btn-pago tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
             </div>
           </div>
         </div>
@@ -70,23 +74,18 @@
     </div>
   </main>
 
-  <!-- PESTAÑA 2: INVENTARIO -->
   <main id="tab-inventario" class="seccion">
     <h2>Control de Inventario</h2>
     <p style="margin-top:10px; color:#64748b;">Módulo en desarrollo.</p>
   </main>
 
-  <!-- PESTAÑA 3: CORTE DE CAJA -->
-  <main id="tab-corte" class="seccion">
-    <!-- Se genera desde JS -->
-  </main>
+  <main id="tab-corte" class="seccion"></main>
 
-  <!-- MODAL: Comandas Pendientes -->
   <div id="modalComandas" class="modal-overlay">
     <div class="modal-content modal-ancho">
       <h3>☁️ Comandas Pendientes en Espera</h3>
       <div id="listaComandasModal" class="lista-comandas-modal"></div>
-      <button id="btnCerrarModalComandas" class="btn-cancelar" style="margin-top:15px;">Cerrar</button>
+      <button class="btn-cancelar" style="margin-top:15px;" onclick="cerrarModalComandas()">Cerrar</button>
     </div>
   </div>
 
