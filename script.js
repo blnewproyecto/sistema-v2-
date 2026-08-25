@@ -217,7 +217,7 @@ function renderizarCorteCaja() {
       </div>
     </div>
 
-    <button class="btn-cerrar-caja" onclick="cerrarCajaTurno(${totalEfectivo}, ${totalTarjeta}, ${totalGeneral})">🔒 Cerrar Caja y Reiniciar Día</button>
+    <button class="btn-cerrar-caja" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
 
     <h3 style="margin-top:25px; margin-bottom:10px;">Historial de Órdenes del Turno</h3>
     <div style="background:#fff; border-radius:8px; padding:15px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
@@ -236,22 +236,37 @@ function renderizarCorteCaja() {
   `;
 }
 
-function cerrarCajaTurno(efectivo, tarjeta, total) {
+function cerrarCajaTurno() {
   const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
 
-  // VALIDACIÓN: Bloquear cierre si hay comandas pendientes en espera
+  // BLOQUEO 1: Si hay items en el carrito activo sin cobrar
+  if (carrito.length > 0) {
+    alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito antes de cerrar caja.");
+    return;
+  }
+
+  // BLOQUEO 2: Si hay comandas guardadas en pendientes
   if (comandasPendientes.length > 0) {
-    alert(`⚠️ ATENCIÓN: No puedes cerrar caja todavía.\n\nTienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar o cancelar.`);
+    alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar. Debes cobrarlas o eliminarlas antes de cerrar caja.`);
     return;
   }
 
-  if (total === 0) {
-    alert("No hay ventas registradas para realizar el cierre.");
+  // Cálculo directo desde storage
+  let efectivo = 0;
+  let tarjeta = 0;
+  ventas.forEach(v => {
+    if (v.metodo === 'Tarjeta') tarjeta += v.total;
+    else efectivo += v.total;
+  });
+  const total = efectivo + tarjeta;
+
+  if (ventas.length === 0) {
+    alert("No hay ventas registradas en este turno para cerrar la caja.");
     return;
   }
 
-  const confirmar = confirm(`¿Estás seguro de cerrar la caja?\n\n- Efectivo: $${efectivo.toFixed(2)}\n- Tarjeta: $${tarjeta.toFixed(2)}\n- Total: $${total.toFixed(2)}\n\nSe imprimirá el Ticket de Cierre y se reiniciará el día.`);
+  const confirmar = confirm(`¿Estás seguro de cerrar la caja?\n\n- Efectivo: $${efectivo.toFixed(2)}\n- Tarjeta: $${tarjeta.toFixed(2)}\n- Total: $${total.toFixed(2)}\n\nSe imprimirá el Ticket Z y se reiniciará el día.`);
   
   if (confirmar) {
     const fecha = new Date().toLocaleDateString('es-MX');
@@ -274,7 +289,7 @@ function cerrarCajaTurno(efectivo, tarjeta, total) {
 
     localStorage.removeItem('ventasDiarias');
 
-    alert("✅ Caja cerrada con éxito. El sistema ha sido reiniciado para el nuevo turno.");
+    alert("✅ Caja cerrada con éxito. El día ha sido reiniciado.");
     renderizarCorteCaja();
   }
 }
