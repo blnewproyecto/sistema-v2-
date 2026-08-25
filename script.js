@@ -237,7 +237,14 @@ function renderizarCorteCaja() {
 }
 
 function cerrarCajaTurno(efectivo, tarjeta, total) {
+  const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+
+  // VALIDACIÓN: Bloquear cierre si hay comandas pendientes en espera
+  if (comandasPendientes.length > 0) {
+    alert(`⚠️ ATENCIÓN: No puedes cerrar caja todavía.\n\nTienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar o cancelar.`);
+    return;
+  }
 
   if (total === 0) {
     alert("No hay ventas registradas para realizar el cierre.");
@@ -250,7 +257,6 @@ function cerrarCajaTurno(efectivo, tarjeta, total) {
     const fecha = new Date().toLocaleDateString('es-MX');
     const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    // Guardar cierre en historial
     const historialCortes = JSON.parse(localStorage.getItem('historialCortes')) || [];
     historialCortes.push({
       id: Date.now(),
@@ -264,10 +270,8 @@ function cerrarCajaTurno(efectivo, tarjeta, total) {
     
     localStorage.setItem('historialCortes', JSON.stringify(historialCortes));
 
-    // Imprimir Ticket Z de Cierre
     imprimirTicketCorte(fecha, hora, efectivo, tarjeta, total, ventas.length);
 
-    // Limpiar ventas diarias
     localStorage.removeItem('ventasDiarias');
 
     alert("✅ Caja cerrada con éxito. El sistema ha sido reiniciado para el nuevo turno.");
