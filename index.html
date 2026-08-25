@@ -11,13 +11,12 @@
   <!-- Navegación Principal -->
   <nav class="navbar">
     <div class="nav-left">
-      <button class="btn-tab active" onclick="cambiarPestana('pos', event)">☕ Punto de Venta</button>
-      <button class="btn-tab" onclick="cambiarPestana('inventario', event)">📦 Inventario</button>
-      <button class="btn-tab" onclick="cambiarPestana('corte', event)">📊 Corte de Caja</button>
+      <button class="btn-tab active" id="tabBtnPos">☕ Punto de Venta</button>
+      <button class="btn-tab" id="tabBtnInv">📦 Inventario</button>
+      <button class="btn-tab" id="tabBtnCorte">📊 Corte de Caja</button>
     </div>
     <div class="nav-right">
-      <!-- Botón para ver Comandas Pendientes en lugar de tenerlas expuestas -->
-      <button class="btn-comandas-pendientes" onclick="abrirModalComandas()">
+      <button class="btn-comandas-pendientes" id="btnVerComandas">
         ☁️ Comandas Pendientes <span id="badgeComandasCount" class="badge">0</span>
       </button>
     </div>
@@ -31,7 +30,6 @@
       <section class="panel-catalogo">
         <h2>Bebidas Reales</h2>
         
-        <!-- Opciones de leche -->
         <div class="modificadores">
           <label for="selectLeche"><strong>Tipo de Leche:</strong></label>
           <select id="selectLeche">
@@ -42,14 +40,12 @@
           </select>
         </div>
 
-        <div id="gridProductos" class="grid-productos">
-          <!-- Se cargan dinámicamente desde JS -->
-        </div>
+        <div id="gridProductos" class="grid-productos"></div>
       </section>
 
       <!-- Panel de Orden / Comanda Actual -->
       <section class="panel-orden">
-        <h2>Comanda Actual <span id="numComandaTxt" style="font-size:14px; color:#0284c7;"></span></h2>
+        <h2>Comanda Actual</h2>
         <div id="listaCarrito" class="lista-carrito"></div>
 
         <div class="footer-orden">
@@ -58,8 +54,16 @@
             <strong id="montoTotal">$0.00</strong>
           </div>
 
-          <button class="btn-guardar-comanda" onclick="guardarComandaPendiente()">☁️ Guardar / Nueva Comanda</button>
-          <button class="btn-cobrar" onclick="abrirModalPago()">💳 Cobrar Orden</button>
+          <button id="btnGuardarComanda" class="btn-guardar-comanda">☁️ Guardar Comanda Pendiente</button>
+          
+          <!-- Opciones de cobro directo -->
+          <div class="seccion-cobro">
+            <p><strong>Selecciona Método de Pago:</strong></p>
+            <div class="metodos-pago">
+              <button id="btnPagoEfectivo" class="btn-pago efectivo">💵 Efectivo</button>
+              <button id="btnPagoTarjeta" class="btn-pago tarjeta">💳 Tarjeta</button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -69,37 +73,20 @@
   <!-- PESTAÑA 2: INVENTARIO -->
   <main id="tab-inventario" class="seccion">
     <h2>Control de Inventario</h2>
-    <p style="margin-top:10px; color:#64748b;">Próximamente: Consulta y actualización de insumos en tiempo real.</p>
+    <p style="margin-top:10px; color:#64748b;">Módulo en desarrollo.</p>
   </main>
 
   <!-- PESTAÑA 3: CORTE DE CAJA -->
   <main id="tab-corte" class="seccion">
-    <!-- Generado desde JS -->
+    <!-- Se llena desde JS -->
   </main>
 
-  <!-- MODAL 1: Comandas Pendientes -->
+  <!-- MODAL: Comandas Pendientes -->
   <div id="modalComandas" class="modal-overlay">
     <div class="modal-content modal-ancho">
-      <h3>☁️ Comandas Pendientes por Cobrar</h3>
-      <div id="listaComandasModal" class="lista-comandas-modal">
-        <!-- Se renderizan dinámicamente -->
-      </div>
-      <button class="btn-cancelar" style="margin-top:15px;" onclick="cerrarModalComandas()">Cerrar</button>
-    </div>
-  </div>
-
-  <!-- MODAL 2: Método de Pago -->
-  <div id="modalPago" class="modal-overlay">
-    <div class="modal-content">
-      <h3>Selecciona Método de Pago</h3>
-      <p id="modalMontoTxt" class="modal-monto">$0.00</p>
-      
-      <div class="metodos-pago">
-        <button class="btn-pago efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
-        <button class="btn-pago tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
-      </div>
-      
-      <button class="btn-cancelar" onclick="cerrarModalPago()">Cancelar</button>
+      <h3>☁️ Comandas Pendientes en Espera</h3>
+      <div id="listaComandasModal" class="lista-comandas-modal"></div>
+      <button id="btnCerrarModalComandas" class="btn-cancelar" style="margin-top:15px;">Cerrar</button>
     </div>
   </div>
 
