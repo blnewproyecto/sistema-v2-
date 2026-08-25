@@ -62,12 +62,236 @@ function actualizarCarritoUI() {
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
-function guardarComandaPendiente() {
+// 1. IMPRIMIR PRIMERA COMANDA (PEDIDO PARA COCINA / BARRA)
+function imprimirComanda() {
   if (carrito.length === 0) {
-    alert("Agrega productos a la comanda antes de guardarla.");
+    alert("No hay productos en el carrito para enviar a cocina/barra.");
     return;
   }
 
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  // Guardar en pendientes automáticamente al sacar comanda
+  guardarComandaSilencioso();
+
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
+
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          @page { margin: 0; }
+          body { 
+            font-family: Arial, sans-serif; 
+            width: 58mm; 
+            padding: 8px 4px; 
+            margin: 0 auto; 
+            font-size: 14px; 
+            color: #000;
+          }
+          .centro { text-align: center; }
+          .linea { border-bottom: 2px solid #000; margin: 6px 0; }
+          .item { font-weight: bold; font-size: 15px; margin-top: 4px; }
+          .subitem { font-size: 13px; margin-left: 8px; }
+        </style>
+      </head>
+      <body>
+        <div class="centro">
+          <h2>*** COMANDA ***</h2>
+          <strong>ORDEN #${comandaActualId.toString().slice(-4)}</strong><br>
+          <small>Hora: ${hora}</small>
+        </div>
+        <div class="linea"></div>
+        ${carrito.map(i => `
+          <div class="item">• 1x ${i.nombre}</div>
+          <div class="subitem">Leche: ${i.leche}</div>
+        `).join('')}
+        <div class="linea"></div>
+        <script>
+          window.onload = function() { 
+            window.print(); 
+            window.close(); 
+          }
+        </script>
+      </body>
+    </html>
+  `);
+  ventana.document.close();
+}
+
+// 2. IMPRIMIR PRE-CUENTA (SEGUNDA COMANDA PARA ENTREGAR AL CLIENTE)
+function imprimirPrecuenta() {
+  if (carrito.length === 0) {
+    alert("No hay productos en el carrito para generar la cuenta.");
+    return;
+  }
+
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
+
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          @page { margin: 0; }
+          body { 
+            font-family: Arial, sans-serif; 
+            width: 58mm; 
+            padding: 8px 4px; 
+            margin: 0 auto; 
+            font-size: 14px; 
+            color: #000;
+            line-height: 1.2;
+          }
+          .centro { text-align: center; }
+          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+          .flex { display: flex; justify-content: space-between; font-weight: bold; }
+          .total-box { font-size: 18px; font-weight: bold; margin-top: 6px; }
+          .aviso { font-size: 11px; margin-top: 8px; font-style: italic; }
+        </style>
+      </head>
+      <body>
+        <div class="centro">
+          <strong>PRE-CUENTA</strong><br>
+          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
+        </div>
+        <div class="linea"></div>
+        ${carrito.map(i => `
+          <div class="flex">
+            <span>${i.nombre}</span>
+            <span>$${i.precio.toFixed(2)}</span>
+          </div>
+          <small style="margin-left: 6px;">• Leche: ${i.leche}</small>
+        `).join('')}
+        <div class="linea"></div>
+        <div class="flex total-box">
+          <span>TOTAL:</span>
+          <span>$${total.toFixed(2)}</span>
+        </div>
+        <div class="linea"></div>
+        <div class="centro aviso">
+          *** ESTE TICKET NO ES UN COMPROBANTE DE PAGO ***
+        </div>
+        <script>
+          window.onload = function() { 
+            window.print(); 
+            window.close(); 
+          }
+        </script>
+      </body>
+    </html>
+  `);
+  ventana.document.close();
+}
+
+// 3. COBRAR (EFECTIVO O TARJETA) E IMPRIMIR TICKET FINAL
+function finalizarCobro(metodoPago) {
+  if (carrito.length === 0) {
+    alert("Agrega productos a la comanda para poder cobrar.");
+    return;
+  }
+
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+
+  // Registrar venta
+  const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+  historialVentas.push({
+    id: Date.now(),
+    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    items: [...carrito],
+    total: total,
+    metodo: metodoPago
+  });
+  localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
+
+  // Eliminar de comandas pendientes si existía
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  comandas = comandas.filter(c => c.id !== comandaActualId);
+  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+
+  // Imprimir Ticket Final de Venta automáticamente
+  imprimirTicketFinal(carrito, total, metodoPago);
+
+  // Limpiar carrito y reiniciar ID
+  carrito = [];
+  comandaActualId = Date.now();
+  actualizarCarritoUI();
+  actualizarUIComandasPendientes();
+  renderizarCorteCaja();
+}
+
+function imprimirTicketFinal(items, total, metodo) {
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
+  
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          @page { margin: 0; }
+          body { 
+            font-family: Arial, sans-serif; 
+            width: 58mm; 
+            padding: 8px 4px; 
+            margin: 0 auto; 
+            font-size: 14px; 
+            color: #000;
+            line-height: 1.2;
+          }
+          .centro { text-align: center; }
+          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+          .flex { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+          .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
+          .item-leche { font-size: 12px; margin-left: 6px; color: #333; }
+          .titulo { font-size: 16px; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="centro">
+          <div class="titulo">CAFETERÍA ESPECIALIDAD</div>
+          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
+        </div>
+        <div class="linea"></div>
+        ${items.map(i => `
+          <div class="flex">
+            <span>${i.nombre}</span>
+            <span>$${i.precio.toFixed(2)}</span>
+          </div>
+          <div class="item-leche">• Leche: ${i.leche}</div>
+        `).join('')}
+        <div class="linea"></div>
+        <div class="flex total-box">
+          <span>PAGADO:</span>
+          <span>$${total.toFixed(2)}</span>
+        </div>
+        <div class="linea"></div>
+        <div class="centro">
+          Forma de Pago: <strong>${metodo}</strong><br><br>
+          ¡Gracias por tu compra!
+        </div>
+        <script>
+          window.onload = function() { 
+            window.print(); 
+            window.close(); 
+          }
+        </script>
+      </body>
+    </html>
+  `);
+  ventana.document.close();
+}
+
+function guardarComandaSilencioso() {
   let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
   const idx = comandas.findIndex(c => c.id === comandaActualId);
@@ -86,11 +310,20 @@ function guardarComandaPendiente() {
   }
 
   localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+  actualizarUIComandasPendientes();
+}
+
+function guardarComandaPendiente() {
+  if (carrito.length === 0) {
+    alert("Agrega productos a la comanda antes de guardarla.");
+    return;
+  }
+
+  guardarComandaSilencioso();
 
   carrito = [];
   comandaActualId = Date.now();
   actualizarCarritoUI();
-  actualizarUIComandasPendientes();
   alert("☁️ Comanda guardada en pendientes.");
 }
 
@@ -111,7 +344,7 @@ function abrirModalComandas() {
     contenedor.innerHTML = comandas.map((c, index) => `
       <div class="card-comanda-item">
         <div>
-          <strong>Orden #${index + 1}</strong> <small>(${c.hora})</small><br>
+          <strong>Orden #${c.id.toString().slice(-4)}</strong> <small>(${c.hora})</small><br>
           <small>${c.items.map(i => i.nombre).join(', ')}</small><br>
           <strong style="color:#16a34a;">Total: $${c.total.toFixed(2)}</strong>
         </div>
@@ -137,40 +370,6 @@ function cargarComanda(id) {
     actualizarCarritoUI();
     cerrarModalComandas();
   }
-}
-
-function finalizarCobro(metodoPago) {
-  if (carrito.length === 0) {
-    alert("Agrega productos a la comanda para poder cobrar.");
-    return;
-  }
-
-  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
-
-  const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  historialVentas.push({
-    id: Date.now(),
-    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    items: [...carrito],
-    total: total,
-    metodo: metodoPago
-  });
-  localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
-
-  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-  comandas = comandas.filter(c => c.id !== comandaActualId);
-  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
-
-  const deseaImprimir = confirm("¿Deseas imprimir el ticket de venta?");
-  if (deseaImprimir) {
-    imprimirTicket(carrito, total, metodoPago);
-  }
-
-  carrito = [];
-  comandaActualId = Date.now();
-  actualizarCarritoUI();
-  actualizarUIComandasPendientes();
-  renderizarCorteCaja();
 }
 
 function renderizarCorteCaja() {
@@ -240,19 +439,16 @@ function cerrarCajaTurno() {
   const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
 
-  // BLOQUEO 1: Si hay items en el carrito activo sin cobrar
   if (carrito.length > 0) {
     alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito antes de cerrar caja.");
     return;
   }
 
-  // BLOQUEO 2: Si hay comandas guardadas en pendientes
   if (comandasPendientes.length > 0) {
     alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar. Debes cobrarlas o eliminarlas antes de cerrar caja.`);
     return;
   }
 
-  // Cálculo directo desde storage
   let efectivo = 0;
   let tarjeta = 0;
   ventas.forEach(v => {
@@ -292,69 +488,6 @@ function cerrarCajaTurno() {
     alert("✅ Caja cerrada con éxito. El día ha sido reiniciado.");
     renderizarCorteCaja();
   }
-}
-
-function imprimirTicket(items, total, metodo) {
-  const ventana = window.open('', '', 'width=400,height=600');
-  if (!ventana) return;
-  
-  ventana.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style>
-          @page { margin: 0; }
-          body { 
-            font-family: Arial, sans-serif; 
-            width: 58mm; 
-            padding: 8px 4px; 
-            margin: 0 auto; 
-            font-size: 14px; 
-            color: #000;
-            line-height: 1.2;
-          }
-          .centro { text-align: center; }
-          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
-          .flex { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
-          .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
-          .item-leche { font-size: 12px; margin-left: 6px; color: #333; }
-          .titulo { font-size: 16px; font-weight: bold; }
-        </style>
-      </head>
-      <body>
-        <div class="centro">
-          <div class="titulo">CAFETERÍA ESPECIALIDAD</div>
-          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
-        </div>
-        <div class="linea"></div>
-        ${items.map(i => `
-          <div class="flex">
-            <span>${i.nombre}</span>
-            <span>$${i.precio.toFixed(2)}</span>
-          </div>
-          <div class="item-leche">• Leche: ${i.leche}</div>
-        `).join('')}
-        <div class="linea"></div>
-        <div class="flex total-box">
-          <span>TOTAL:</span>
-          <span>$${total.toFixed(2)}</span>
-        </div>
-        <div class="linea"></div>
-        <div class="centro">
-          Método de Pago: <strong>${metodo}</strong><br><br>
-          ¡Gracias por tu compra!
-        </div>
-        <script>
-          window.onload = function() { 
-            window.print(); 
-            window.close(); 
-          }
-        </script>
-      </body>
-    </html>
-  `);
-  ventana.document.close();
 }
 
 function imprimirTicketCorte(fecha, hora, efectivo, tarjeta, total, numVentas) {
