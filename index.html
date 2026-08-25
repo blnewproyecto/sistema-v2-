@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS Cafetería de Especialidad</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navegación Principal -->
+  <nav class="navbar">
+    <button class="btn-tab active" onclick="cambiarPestana('pos')">☕ Punto de Venta</button>
+    <button class="btn-tab" onclick="cambiarPestana('inventario')">📦 Inventario</button>
+    <button class="btn-tab" onclick="cambiarPestana('corte')">📊 Corte de Caja</button>
+  </nav>
+
+  <!-- PESTAÑA 1: PUNTO DE VENTA -->
+  <main id="tab-pos" class="seccion active">
+    <div class="pos-grid">
+      
+      <!-- Catálogo de Bebidas -->
+      <section class="panel-catalogo">
+        <h2>Bebidas Reales</h2>
+        
+        <!-- Opciones de leche -->
+        <div class="modificadores">
+          <label for="selectLeche"><strong>Tipo de Leche:</strong></label>
+          <select id="selectLeche">
+            <option value="Entera">Entera ($0)</option>
+            <option value="Deslactosada">Deslactosada ($0)</option>
+            <option value="Avena">Avena (+$10)</option>
+            <option value="Almendra">Almendra (+$10)</option>
+          </select>
+        </div>
+
+        <div id="gridProductos" class="grid-productos">
+          <!-- Se cargan dinámicamente desde JS -->
+        </div>
+      </section>
+
+      <!-- Panel de Orden y Cobro -->
+      <section class="panel-orden">
+        <h2>Orden Actual</h2>
+        <div id="listaCarrito" class="lista-carrito"></div>
+
+        <div class="footer-orden">
+          <div class="monto-total">
+            <span>TOTAL:</span>
+            <strong id="montoTotal">$0.00</strong>
+          </div>
+          <button class="btn-cobrar" onclick="procesarVenta()">Cobrar e Imprimir Ticket</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- PESTAÑA 2: INVENTARIO -->
+  <main id="tab-inventario" class="seccion">
+    <h2>Control de Inventario</h2>
+    <p>Próximamente: Consulta y actualización de insumos en tiempo real.</p>
+  </main>
+
+  <!-- PESTAÑA 3: CORTE DE CAJA -->
+  <main id="tab-corte" class="seccion">
+    <h2>Corte de Caja</h2>
+    <p>Próximamente: Historial de ventas del día y total acumulado.</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
