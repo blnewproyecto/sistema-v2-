@@ -17,6 +17,15 @@
 
   <!-- PESTAÑA 1: PUNTO DE VENTA -->
   <main id="tab-pos" class="seccion active">
+    
+    <!-- Barra Superior de Comandas Guardadas en la Nube / Espera -->
+    <div class="comandas-bar">
+      <h3>☁️ Comandas Pendientes:</h3>
+      <div id="contenedorComandas" class="comandas-lista">
+        <!-- Las comandas pendientes aparecerán aquí -->
+      </div>
+    </div>
+
     <div class="pos-grid">
       
       <!-- Catálogo de Bebidas -->
@@ -39,9 +48,9 @@
         </div>
       </section>
 
-      <!-- Panel de Orden y Cobro -->
+      <!-- Panel de Orden / Comanda Actual -->
       <section class="panel-orden">
-        <h2>Orden Actual</h2>
+        <h2>Comanda Actual <span id="numComandaTxt" style="font-size:14px; color:#0284c7;"></span></h2>
         <div id="listaCarrito" class="lista-carrito"></div>
 
         <div class="footer-orden">
@@ -49,7 +58,9 @@
             <span>TOTAL:</span>
             <strong id="montoTotal">$0.00</strong>
           </div>
-          <button class="btn-cobrar" onclick="procesarVenta()">Cobrar e Imprimir Ticket</button>
+
+          <button class="btn-guardar-comanda" onclick="guardarComandaPendiente()">☁️ Guardar / Nueva Comanda</button>
+          <button class="btn-cobrar" onclick="abrirModalPago()">💳 Cobrar Orden</button>
         </div>
       </section>
 
@@ -59,14 +70,28 @@
   <!-- PESTAÑA 2: INVENTARIO -->
   <main id="tab-inventario" class="seccion">
     <h2>Control de Inventario</h2>
-    <p>Próximamente: Consulta y actualización de insumos en tiempo real.</p>
+    <p style="margin-top:10px; color:#64748b;">Próximamente: Consulta y actualización de insumos en tiempo real.</p>
   </main>
 
   <!-- PESTAÑA 3: CORTE DE CAJA -->
   <main id="tab-corte" class="seccion">
-    <h2>Corte de Caja</h2>
-    <p>Próximamente: Historial de ventas del día y total acumulado.</p>
+    <!-- Generado desde JS -->
   </main>
+
+  <!-- Modal de Selección de Método de Pago -->
+  <div id="modalPago" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Selecciona Método de Pago</h3>
+      <p id="modalMontoTxt" class="modal-monto">$0.00</p>
+      
+      <div class="metodos-pago">
+        <button class="btn-pago efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
+        <button class="btn-pago tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
+      </div>
+      
+      <button class="btn-cancelar" onclick="cerrarModalPago()">Cancelar</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
