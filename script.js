@@ -12,24 +12,27 @@ const productos = [
 let carrito = [];
 let comandaActualId = Date.now();
 
-document.addEventListener('DOMContentLoaded', () => {
+// Inicialización inmediata de la aplicación
+function iniciarSistema() {
   renderizarProductos();
   actualizarCarritoUI();
   actualizarUIComandasPendientes();
   renderizarCorteCaja();
 
-  // Asignar Eventos a Botones Principales
-  document.getElementById('tabBtnPos').addEventListener('click', (e) => cambiarPestana('pos', e.target));
-  document.getElementById('tabBtnInv').addEventListener('click', (e) => cambiarPestana('inventario', e.target));
-  document.getElementById('tabBtnCorte').addEventListener('click', (e) => cambiarPestana('corte', e.target));
+  // Pestañas
+  document.getElementById('tabBtnPos').onclick = (e) => cambiarPestana('pos', e.target);
+  document.getElementById('tabBtnInv').onclick = (e) => cambiarPestana('inventario', e.target);
+  document.getElementById('tabBtnCorte').onclick = (e) => cambiarPestana('corte', e.target);
 
-  document.getElementById('btnGuardarComanda').addEventListener('click', guardarComandaPendiente);
-  document.getElementById('btnPagoEfectivo').addEventListener('click', () => finalizarCobro('Efectivo'));
-  document.getElementById('btnPagoTarjeta').addEventListener('click', () => finalizarCobro('Tarjeta'));
+  // Acciones de Comandas y Cobros
+  document.getElementById('btnGuardarComanda').onclick = guardarComandaPendiente;
+  document.getElementById('btnPagoEfectivo').onclick = () => finalizarCobro('Efectivo');
+  document.getElementById('btnPagoTarjeta').onclick = () => finalizarCobro('Tarjeta');
 
-  document.getElementById('btnVerComandas').addEventListener('click', abrirModalComandas);
-  document.getElementById('btnCerrarModalComandas').addEventListener('click', cerrarModalComandas);
-});
+  // Modal de Comandas
+  document.getElementById('btnVerComandas').onclick = abrirModalComandas;
+  document.getElementById('btnCerrarModalComandas').onclick = cerrarModalComandas;
+}
 
 function cambiarPestana(idPestana, elementoBtn) {
   document.querySelectorAll('.seccion').forEach(s => s.classList.remove('active'));
@@ -43,23 +46,17 @@ function cambiarPestana(idPestana, elementoBtn) {
   }
 }
 
+// Renderizar Menú de Bebidas
 function renderizarProductos() {
   const grid = document.getElementById('gridProductos');
   if (!grid) return;
 
   grid.innerHTML = productos.map(p => `
-    <div class="card-producto" data-id="${p.id}">
+    <div class="card-producto" onclick="agregarAlCarrito(${p.id})">
       <strong>${p.nombre}</strong>
       <span>$${p.precio}</span>
     </div>
   `).join('');
-
-  grid.querySelectorAll('.card-producto').forEach(card => {
-    card.addEventListener('click', () => {
-      const id = parseInt(card.getAttribute('data-id'));
-      agregarAlCarrito(id);
-    });
-  });
 }
 
 function agregarAlCarrito(id) {
@@ -104,22 +101,15 @@ function actualizarCarritoUI() {
       </div>
       <div>
         <span>$${item.precio}</span>
-        <button class="btn-eliminar" data-id="${item.idUnico}">✕</button>
+        <button class="btn-eliminar" onclick="eliminarDelCarrito(${item.idUnico})">✕</button>
       </div>
     </div>
   `).join('');
 
-  lista.querySelectorAll('.btn-eliminar').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idUnico = parseFloat(btn.getAttribute('data-id'));
-      eliminarDelCarrito(idUnico);
-    });
-  });
-
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
-// GUARDAR COMANDA PENDIENTE
+// Guardar Comandas en la "Nube" (Pendientes)
 function guardarComandaPendiente() {
   if (carrito.length === 0) {
     alert("Agrega productos a la comanda antes de guardarla.");
@@ -173,16 +163,9 @@ function abrirModalComandas() {
           <small>${c.items.map(i => i.nombre).join(', ')}</small><br>
           <strong style="color:#16a34a;">Total: $${c.total.toFixed(2)}</strong>
         </div>
-        <button class="btn-cargar-comanda" data-id="${c.id}">Cobrar / Editar</button>
+        <button class="btn-cargar-comanda" onclick="cargarComanda(${c.id})">Cobrar / Editar</button>
       </div>
     `).join('');
-
-    contenedor.querySelectorAll('.btn-cargar-comanda').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = parseFloat(btn.getAttribute('data-id'));
-        cargarComanda(id);
-      });
-    });
   }
 
   modal.classList.add('active');
@@ -204,7 +187,7 @@ function cargarComanda(id) {
   }
 }
 
-// PROCESO DE COBRO Y CORTE DE CAJA
+// Proceso de Cobro Directo
 function finalizarCobro(metodoPago) {
   if (carrito.length === 0) {
     alert("Agrega productos a la comanda para poder cobrar.");
@@ -213,7 +196,7 @@ function finalizarCobro(metodoPago) {
 
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
 
-  // 1. Guardar Venta en el Historial del Corte de Caja
+  // Guardar Venta en el Corte
   const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   historialVentas.push({
     id: Date.now(),
@@ -224,15 +207,15 @@ function finalizarCobro(metodoPago) {
   });
   localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
 
-  // 2. Si venía de las pendientes, borrarla de allí
+  // Eliminar comanda pendiente si fue cobrada
   let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   comandas = comandas.filter(c => c.id !== comandaActualId);
   localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
 
-  // 3. Imprimir Ticket
+  // Ticket
   imprimirTicket(carrito, total, metodoPago);
 
-  // 4. Limpiar pantalla para la siguiente orden
+  // Reiniciar
   carrito = [];
   comandaActualId = Date.now();
   actualizarCarritoUI();
@@ -341,3 +324,6 @@ function imprimirTicket(items, total, metodo) {
   `);
   ventana.document.close();
 }
+
+// Ejecutar el sistema inmediatamente
+iniciarSistema();
