@@ -1,74 +1,27 @@
-const productos = [
-  { id: 1, nombre: 'Espresso', precio: 35 },
-  { id: 2, nombre: 'Americano', precio: 45 },
-  { id: 3, nombre: 'Cappuccino', precio: 60 },
-  { id: 4, nombre: 'Flat White', precio: 65 },
-  { id: 5, nombre: 'Latte 12oz', precio: 65 },
-  { id: 6, nombre: 'Mocha', precio: 75 },
-  { id: 7, nombre: 'Cold Brew', precio: 55 },
-  { id: 8, nombre: 'Espresso Tonic', precio: 70 }
-];
-
 let carrito = [];
 let comandaActualId = Date.now();
 
-// Inicialización inmediata de la aplicación
-function iniciarSistema() {
-  renderizarProductos();
-  actualizarCarritoUI();
-  actualizarUIComandasPendientes();
-  renderizarCorteCaja();
-
-  // Pestañas
-  document.getElementById('tabBtnPos').onclick = (e) => cambiarPestana('pos', e.target);
-  document.getElementById('tabBtnInv').onclick = (e) => cambiarPestana('inventario', e.target);
-  document.getElementById('tabBtnCorte').onclick = (e) => cambiarPestana('corte', e.target);
-
-  // Acciones de Comandas y Cobros
-  document.getElementById('btnGuardarComanda').onclick = guardarComandaPendiente;
-  document.getElementById('btnPagoEfectivo').onclick = () => finalizarCobro('Efectivo');
-  document.getElementById('btnPagoTarjeta').onclick = () => finalizarCobro('Tarjeta');
-
-  // Modal de Comandas
-  document.getElementById('btnVerComandas').onclick = abrirModalComandas;
-  document.getElementById('btnCerrarModalComandas').onclick = cerrarModalComandas;
-}
-
-function cambiarPestana(idPestana, elementoBtn) {
+function cambiarPestana(idPestana) {
   document.querySelectorAll('.seccion').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
 
   document.getElementById(`tab-${idPestana}`).classList.add('active');
-  if (elementoBtn) elementoBtn.classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
 
   if (idPestana === 'corte') {
     renderizarCorteCaja();
   }
 }
 
-// Renderizar Menú de Bebidas
-function renderizarProductos() {
-  const grid = document.getElementById('gridProductos');
-  if (!grid) return;
-
-  grid.innerHTML = productos.map(p => `
-    <div class="card-producto" onclick="agregarAlCarrito(${p.id})">
-      <strong>${p.nombre}</strong>
-      <span>$${p.precio}</span>
-    </div>
-  `).join('');
-}
-
-function agregarAlCarrito(id) {
-  const prod = productos.find(p => p.id === id);
+function agregarAlCarrito(nombre, precioBase) {
   const lecheSelect = document.getElementById('selectLeche');
   const tipoLeche = lecheSelect ? lecheSelect.value : 'Entera';
   let extraLeche = (tipoLeche === 'Avena' || tipoLeche === 'Almendra') ? 10 : 0;
 
   carrito.push({
     idUnico: Date.now() + Math.random(),
-    nombre: prod.nombre,
-    precio: prod.precio + extraLeche,
+    nombre: nombre,
+    precio: precioBase + extraLeche,
     leche: tipoLeche
   });
 
@@ -109,7 +62,6 @@ function actualizarCarritoUI() {
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
-// Guardar Comandas en la "Nube" (Pendientes)
 function guardarComandaPendiente() {
   if (carrito.length === 0) {
     alert("Agrega productos a la comanda antes de guardarla.");
@@ -187,7 +139,6 @@ function cargarComanda(id) {
   }
 }
 
-// Proceso de Cobro Directo
 function finalizarCobro(metodoPago) {
   if (carrito.length === 0) {
     alert("Agrega productos a la comanda para poder cobrar.");
@@ -196,7 +147,6 @@ function finalizarCobro(metodoPago) {
 
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
 
-  // Guardar Venta en el Corte
   const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   historialVentas.push({
     id: Date.now(),
@@ -207,15 +157,15 @@ function finalizarCobro(metodoPago) {
   });
   localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
 
-  // Eliminar comanda pendiente si fue cobrada
   let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   comandas = comandas.filter(c => c.id !== comandaActualId);
   localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
 
-  // Ticket
-  imprimirTicket(carrito, total, metodoPago);
+  const deseaImprimir = confirm("¿Deseas imprimir el ticket de venta?");
+  if (deseaImprimir) {
+    imprimirTicket(carrito, total, metodoPago);
+  }
 
-  // Reiniciar
   carrito = [];
   comandaActualId = Date.now();
   actualizarCarritoUI();
@@ -241,30 +191,37 @@ function renderizarCorteCaja() {
   });
 
   const totalGeneral = totalEfectivo + totalTarjeta;
+  const fechaActual = new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   contenedorCorte.innerHTML = `
-    <h2>Corte de Caja Diario</h2>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2>Corte de Caja Diario</h2>
+      <span style="color:#64748b; font-weight:bold;">${fechaActual} - ${horaActual}</span>
+    </div>
     
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:15px;">
       <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #16a34a;">
         <span style="color:#64748b; font-size:14px;">Total en Efectivo</span>
-        <h3 style="color:#16a34a; font-size:22px;">$${totalEfectivo.toFixed(2)}</h3>
+        <h3 style="color:#16a34a; font-size:24px;">$${totalEfectivo.toFixed(2)}</h3>
       </div>
       
       <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #2563eb;">
         <span style="color:#64748b; font-size:14px;">Total en Tarjeta</span>
-        <h3 style="color:#2563eb; font-size:22px;">$${totalTarjeta.toFixed(2)}</h3>
+        <h3 style="color:#2563eb; font-size:24px;">$${totalTarjeta.toFixed(2)}</h3>
       </div>
 
       <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #0284c7;">
         <span style="color:#64748b; font-size:14px;">Total Acumulado</span>
-        <h3 style="color:#0284c7; font-size:22px;">$${totalGeneral.toFixed(2)}</h3>
+        <h3 style="color:#0284c7; font-size:24px;">$${totalGeneral.toFixed(2)}</h3>
       </div>
     </div>
 
-    <h3 style="margin-top:25px; margin-bottom:10px;">Historial de Órdenes Cobradas</h3>
+    <button class="btn-cerrar-caja" onclick="cerrarCajaTurno(${totalEfectivo}, ${totalTarjeta}, ${totalGeneral})">🔒 Cerrar Caja y Reiniciar Día</button>
+
+    <h3 style="margin-top:25px; margin-bottom:10px;">Historial de Órdenes del Turno</h3>
     <div style="background:#fff; border-radius:8px; padding:15px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-      ${ventas.length === 0 ? '<p style="color:#64748b;">No hay ventas registradas hoy.</p>' : ''}
+      ${ventas.length === 0 ? '<p style="color:#64748b;">No hay ventas registradas en el turno actual.</p>' : ''}
       ${ventas.slice().reverse().map((v, i) => `
         <div style="border-bottom:1px solid #f1f5f9; padding:10px 0; display:flex; justify-content:space-between; align-items:center;">
           <div>
@@ -279,31 +236,72 @@ function renderizarCorteCaja() {
   `;
 }
 
+function cerrarCajaTurno(efectivo, tarjeta, total) {
+  if (total === 0) {
+    alert("No hay ventas registradas para realizar el cierre.");
+    return;
+  }
+
+  const confirmar = confirm(`¿Estás seguro de cerrar la caja?\n\n- Efectivo: $${efectivo.toFixed(2)}\n- Tarjeta: $${tarjeta.toFixed(2)}\n- Total: $${total.toFixed(2)}\n\nEsta acción reiniciará las ventas del día para el siguiente turno.`);
+  
+  if (confirmar) {
+    const historialCortes = JSON.parse(localStorage.getItem('historialCortes')) || [];
+    historialCortes.push({
+      id: Date.now(),
+      fecha: new Date().toLocaleDateString('es-MX'),
+      hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      efectivo: efectivo,
+      tarjeta: tarjeta,
+      total: total
+    });
+    
+    localStorage.setItem('historialCortes', JSON.stringify(historialCortes));
+    localStorage.removeItem('ventasDiarias');
+
+    alert("✅ Caja cerrada con éxito. El sistema ha sido reiniciado para el nuevo turno.");
+    renderizarCorteCaja();
+  }
+}
+
 function imprimirTicket(items, total, metodo) {
-  const ventana = window.open('', '', 'width=320,height=550');
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
+  
   ventana.document.write(`
     <!DOCTYPE html>
     <html>
       <head>
         <meta charset="UTF-8">
         <style>
-          body { font-family: 'Courier New', Courier, monospace; width: 58mm; padding: 5px; margin: 0; font-size: 13px; color: #000; }
+          @page { margin: 0; }
+          body { 
+            font-family: Arial, sans-serif; 
+            width: 58mm; 
+            padding: 8px 4px; 
+            margin: 0 auto; 
+            font-size: 14px; 
+            color: #000;
+            line-height: 1.2;
+          }
           .centro { text-align: center; }
-          .linea { border-bottom: 1px dashed #000; margin: 8px 0; }
-          .flex { display: flex; justify-content: space-between; font-weight: bold; }
-          .total-box { font-size: 16px; font-weight: bold; margin-top: 5px; }
-          .item-leche { font-size: 11px; margin-left: 8px; color: #333; }
+          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+          .flex { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+          .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
+          .item-leche { font-size: 12px; margin-left: 6px; color: #333; }
+          .titulo { font-size: 16px; font-weight: bold; }
         </style>
       </head>
       <body>
         <div class="centro">
-          <strong style="font-size:15px;">CAFETERÍA DE ESPECIALIDAD</strong><br>
-          Ticket de Venta<br>
+          <div class="titulo">CAFETERÍA ESPECIALIDAD</div>
           <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
         </div>
         <div class="linea"></div>
         ${items.map(i => `
-          <div class="flex"><span>${i.nombre}</span><span>$${i.precio.toFixed(2)}</span></div>
+          <div class="flex">
+            <span>${i.nombre}</span>
+            <span>$${i.precio.toFixed(2)}</span>
+          </div>
           <div class="item-leche">• Leche: ${i.leche}</div>
         `).join('')}
         <div class="linea"></div>
@@ -313,11 +311,14 @@ function imprimirTicket(items, total, metodo) {
         </div>
         <div class="linea"></div>
         <div class="centro">
-          Pago: <strong>${metodo}</strong><br><br>
+          Método de Pago: <strong>${metodo}</strong><br><br>
           ¡Gracias por tu compra!
         </div>
         <script>
-          window.onload = function() { window.print(); window.close(); }
+          window.onload = function() { 
+            window.print(); 
+            window.close(); 
+          }
         </script>
       </body>
     </html>
@@ -325,5 +326,5 @@ function imprimirTicket(items, total, metodo) {
   ventana.document.close();
 }
 
-// Ejecutar el sistema inmediatamente
-iniciarSistema();
+actualizarCarritoUI();
+actualizarUIComandasPendientes();
