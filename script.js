@@ -237,25 +237,37 @@ function renderizarCorteCaja() {
 }
 
 function cerrarCajaTurno(efectivo, tarjeta, total) {
+  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+
   if (total === 0) {
     alert("No hay ventas registradas para realizar el cierre.");
     return;
   }
 
-  const confirmar = confirm(`¿Estás seguro de cerrar la caja?\n\n- Efectivo: $${efectivo.toFixed(2)}\n- Tarjeta: $${tarjeta.toFixed(2)}\n- Total: $${total.toFixed(2)}\n\nEsta acción reiniciará las ventas del día para el siguiente turno.`);
+  const confirmar = confirm(`¿Estás seguro de cerrar la caja?\n\n- Efectivo: $${efectivo.toFixed(2)}\n- Tarjeta: $${tarjeta.toFixed(2)}\n- Total: $${total.toFixed(2)}\n\nSe imprimirá el Ticket de Cierre y se reiniciará el día.`);
   
   if (confirmar) {
+    const fecha = new Date().toLocaleDateString('es-MX');
+    const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Guardar cierre en historial
     const historialCortes = JSON.parse(localStorage.getItem('historialCortes')) || [];
     historialCortes.push({
       id: Date.now(),
-      fecha: new Date().toLocaleDateString('es-MX'),
-      hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      fecha: fecha,
+      hora: hora,
       efectivo: efectivo,
       tarjeta: tarjeta,
-      total: total
+      total: total,
+      numVentas: ventas.length
     });
     
     localStorage.setItem('historialCortes', JSON.stringify(historialCortes));
+
+    // Imprimir Ticket Z de Cierre
+    imprimirTicketCorte(fecha, hora, efectivo, tarjeta, total, ventas.length);
+
+    // Limpiar ventas diarias
     localStorage.removeItem('ventasDiarias');
 
     alert("✅ Caja cerrada con éxito. El sistema ha sido reiniciado para el nuevo turno.");
@@ -314,6 +326,81 @@ function imprimirTicket(items, total, metodo) {
           Método de Pago: <strong>${metodo}</strong><br><br>
           ¡Gracias por tu compra!
         </div>
+        <script>
+          window.onload = function() { 
+            window.print(); 
+            window.close(); 
+          }
+        </script>
+      </body>
+    </html>
+  `);
+  ventana.document.close();
+}
+
+function imprimirTicketCorte(fecha, hora, efectivo, tarjeta, total, numVentas) {
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
+
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          @page { margin: 0; }
+          body { 
+            font-family: Arial, sans-serif; 
+            width: 58mm; 
+            padding: 8px 4px; 
+            margin: 0 auto; 
+            font-size: 14px; 
+            color: #000;
+            line-height: 1.2;
+          }
+          .centro { text-align: center; }
+          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+          .flex { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+          .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
+          .titulo { font-size: 16px; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="centro">
+          <div class="titulo">CORTE DE CAJA (Z)</div>
+          <strong>CAFETERÍA ESPECIALIDAD</strong><br>
+          <small>Fecha: ${fecha} - ${hora}</small>
+        </div>
+        <div class="linea"></div>
+        
+        <div class="flex">
+          <span>Órdenes Cobradas:</span>
+          <span>${numVentas}</span>
+        </div>
+        <div class="linea"></div>
+
+        <div class="flex">
+          <span>EFECTIVO:</span>
+          <span>$${efectivo.toFixed(2)}</span>
+        </div>
+        <div class="flex">
+          <span>TARJETA:</span>
+          <span>$${tarjeta.toFixed(2)}</span>
+        </div>
+
+        <div class="linea"></div>
+        <div class="flex total-box">
+          <span>TOTAL TURNO:</span>
+          <span>$${total.toFixed(2)}</span>
+        </div>
+        <div class="linea"></div>
+
+        <div class="centro" style="margin-top: 15px;">
+          <br><br>
+          ________________________<br>
+          Firma de Conformidad
+        </div>
+
         <script>
           window.onload = function() { 
             window.print(); 
