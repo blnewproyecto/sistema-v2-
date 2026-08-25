@@ -11,10 +11,11 @@ const productos = [
 ];
 
 let carrito = [];
+let comandaActualId = Date.now();
 
-// Cargar estado inicial
 document.addEventListener('DOMContentLoaded', () => {
   renderizarProductos();
+  renderizarComandasPendientes();
   renderizarCorteCaja();
 });
 
@@ -74,7 +75,7 @@ function actualizarCarritoUI() {
   if (!lista || !totalTxt) return;
 
   if (carrito.length === 0) {
-    lista.innerHTML = '<p style="color:#94a3b8; text-align:center; margin-top:20px;">No hay ítems en la orden</p>';
+    lista.innerHTML = '<p style="color:#94a3b8; text-align:center; margin-top:20px;">No hay ítems en la comanda</p>';
     totalTxt.innerText = '$0.00';
     return;
   }
@@ -95,49 +96,162 @@ function actualizarCarritoUI() {
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
-// Guardar Venta y Procesar
-function procesarVenta() {
+// GESTIÓN DE COMANDAS EN LA NUBE (PENDIENTES)
+function guardarComandaPendiente() {
   if (carrito.length === 0) {
-    alert("Agrega al menos una bebida a la orden.");
+    // Si el carrito está vacío, simplemente iniciamos una nueva comanda limpia
+    comandaActualId = Date.now();
+    actualizarCarritoUI();
+    return;
+  }
+
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  
+  // Si ya existía la actualizamos, si no la agregamos
+  const idx = comandas.findIndex(c => c.id === comandaActualId);
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+
+  const datosComanda = {
+    id: comandaActualId,
+    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    items: [...carrito],
+    total: total
+  };
+
+  if (idx >= 0) {
+    comandas[idx] = datosComanda;
+  } else {
+    comandas.push(datosComanda);
+  }
+
+  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+  
+  // Limpiar mesa para nueva comanda
+  carrito = [];
+  comandaActualId = Date.now();
+  actualizarCarritoUI();
+  renderizarComandasPendientes();
+}
+
+function cargarComanda(id) {
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  const comanda = comandas.find(c => c.id === id);
+
+  if (comanda) {
+    carrito = [...comanda.items];
+    comandaActualId = comanda.id;
+    actualizarCarritoUI();
+  }
+}
+
+function renderizarComandasPendientes() {
+  const contenedor = document.getElementById('contenedorComandas');
+  if (!contenedor) return;
+
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+
+  if (comandas.length === 0) {
+    contenedor.innerHTML = '<span style="color:#94a3b8; font-size:13px;">No hay comandas en espera</span>';
+    return;
+  }
+
+  contenedor.innerHTML = comandas.map((c, index) => `
+    <button class="btn-comanda-chip" onclick="cargarComanda(${c.id})">
+      📋 Comanda #${index + 1} (${c.hora}) - $${c.total}
+    </button>
+  `).join('');
+}
+
+// MODAL DE COBRO Y MÉTODO DE PAGO
+function abrirModalPago() {
+  if (carrito.length === 0) {
+    alert("Agrega bebidas a la comanda antes de cobrar.");
     return;
   }
 
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+  document.getElementById('modalMontoTxt').innerText = `$${total.toFixed(2)}`;
+  document.getElementById('modalPago').classList.add('active');
+}
 
-  // Registrar venta en historial guardado
+function cerrarModalPago() {
+  document.getElementById('modalPago').classList.remove('active');
+}
+
+function finalizarCobro(metodoPago) {
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+
+  // Guardar Venta en el Corte
   const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   const nuevaVenta = {
     hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     items: [...carrito],
-    total: total
+    total: total,
+    metodo: metodoPago
   };
   
   historialVentas.push(nuevaVenta);
   localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
 
-  imprimirTicket(carrito, total);
-  
+  // Eliminar comanda pendiente de la nube si existía
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  comandas = comandas.filter(c => c.id !== comandaActualId);
+  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+
+  // Imprimir Ticket
+  imprimirTicket(carrito, total, metodoPago);
+
+  // Reiniciar
+  cerrarModalPago();
   carrito = [];
+  comandaActualId = Date.now();
   actualizarCarritoUI();
+  renderizarComandasPendientes();
   renderizarCorteCaja();
 }
 
-// Dibujar Corte de Caja
+// DIBUJAR CORTE DE CAJA CON DETALLE EFECTIVO / TARJETA
 function renderizarCorteCaja() {
   const contenedorCorte = document.getElementById('tab-corte');
   if (!contenedorCorte) return;
 
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  const totalAcumulado = ventas.reduce((sum, v) => sum + v.total, 0);
+  
+  let totalEfectivo = 0;
+  let totalTarjeta = 0;
+
+  ventas.forEach(v => {
+    if (v.metodo === 'Tarjeta') {
+      totalTarjeta += v.total;
+    } else {
+      totalEfectivo += v.total;
+    }
+  });
+
+  const totalGeneral = totalEfectivo + totalTarjeta;
 
   contenedorCorte.innerHTML = `
     <h2>Corte de Caja Diario</h2>
-    <div style="background:#fff; padding:20px; border-radius:8px; margin-top:15px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-      <h3 style="color:#16a34a; font-size:24px; margin-bottom:10px;">
-        Ventas Totales: $${totalAcumulado.toFixed(2)}
-      </h3>
-      <p><strong>Total de Transacciones:</strong> ${ventas.length}</p>
-      <button onclick="reiniciarCaja()" style="margin-top:15px; background:#ef4444; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer; font-weight:bold;">
+    
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:15px;">
+      <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #16a34a;">
+        <span style="color:#64748b; font-size:14px;">Total en Efectivo</span>
+        <h3 style="color:#16a34a; font-size:22px;">$${totalEfectivo.toFixed(2)}</h3>
+      </div>
+      
+      <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #2563eb;">
+        <span style="color:#64748b; font-size:14px;">Total en Tarjeta</span>
+        <h3 style="color:#2563eb; font-size:22px;">$${totalTarjeta.toFixed(2)}</h3>
+      </div>
+
+      <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #0284c7;">
+        <span style="color:#64748b; font-size:14px;">Total Acumulado</span>
+        <h3 style="color:#0284c7; font-size:22px;">$${totalGeneral.toFixed(2)}</h3>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button onclick="reiniciarCaja()" style="background:#ef4444; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer; font-weight:bold;">
         🗑️ Reiniciar Corte del Día
       </button>
     </div>
@@ -148,7 +262,8 @@ function renderizarCorteCaja() {
       ${ventas.slice().reverse().map((v, i) => `
         <div style="border-bottom:1px solid #f1f5f9; padding:10px 0; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <strong>Venta #${ventas.length - i}</strong> <small style="color:#64748b;">(${v.hora})</small><br>
+            <strong>Venta #${ventas.length - i}</strong> 
+            <small style="color:#64748b;">(${v.hora}) - [${v.metodo || 'Efectivo'}]</small><br>
             <small style="color:#475569;">${v.items.map(it => it.nombre).join(', ')}</small>
           </div>
           <strong style="color:#16a34a; font-size:16px;">$${v.total.toFixed(2)}</strong>
@@ -165,36 +280,44 @@ function reiniciarCaja() {
   }
 }
 
-// Impresión de Ticket
-function imprimirTicket(items, total) {
-  const ventana = window.open('', '', 'width=300,height=500');
+// IMPRESIÓN DE TICKET OPTIMIZADA Y CLARA
+function imprimirTicket(items, total, metodo) {
+  const ventana = window.open('', '', 'width=320,height=550');
   ventana.document.write(`
+    <!DOCTYPE html>
     <html>
       <head>
+        <meta charset="UTF-8">
         <style>
-          body { font-family: monospace; width: 58mm; padding: 5px; margin: 0; }
+          body { font-family: 'Courier New', Courier, monospace; width: 58mm; padding: 5px; margin: 0; font-size: 13px; color: #000; }
           .centro { text-align: center; }
-          .linea { border-bottom: 1px dashed #000; margin: 5px 0; }
+          .linea { border-bottom: 1px dashed #000; margin: 8px 0; }
           .flex { display: flex; justify-content: space-between; font-weight: bold; }
+          .total-box { font-size: 16px; font-weight: bold; margin-top: 5px; }
+          .item-leche { font-size: 11px; margin-left: 8px; color: #333; }
         </style>
       </head>
       <body>
         <div class="centro">
-          <strong>CAFETERÍA DE ESPECIALIDAD</strong><br>
-          Ticket de Venta
+          <strong style="font-size:15px;">CAFETERÍA DE ESPECIALIDAD</strong><br>
+          Ticket de Venta<br>
+          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
         </div>
         <div class="linea"></div>
         ${items.map(i => `
-          <div class="flex"><span>${i.nombre}</span><span>$${i.precio}</span></div>
-          <small>• Leche: ${i.leche}</small><br>
+          <div class="flex"><span>${i.nombre}</span><span>$${i.precio.toFixed(2)}</span></div>
+          <div class="item-leche">• Leche: ${i.leche}</div>
         `).join('')}
         <div class="linea"></div>
-        <div class="flex">
+        <div class="flex total-box">
           <span>TOTAL:</span>
           <span>$${total.toFixed(2)}</span>
         </div>
         <div class="linea"></div>
-        <div class="centro"><br>¡Gracias por tu compra!</div>
+        <div class="centro">
+          Pago: <strong>${metodo}</strong><br><br>
+          ¡Gracias por tu compra!
+        </div>
         <script>
           window.onload = function() { window.print(); window.close(); }
         </script>
