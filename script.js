@@ -1,11 +1,234 @@
+// Base de datos completa del Menú
+const menuData = {
+  calientesCafe: [
+    { nombre: "Espresso Sencillo (1oz)", precio: 35 },
+    { nombre: "Espresso Doble (2oz)", precio: 45 },
+    { nombre: "Doble Cortado (2oz)", precio: 50 },
+    { nombre: "Panna (2oz)", precio: 50 },
+    { nombre: "Flat White (2oz)", precio: 55 },
+    { nombre: "Affogato", precio: 65 },
+    { nombre: "Affogato Nut", precio: 95 },
+    { nombre: "Americano M", precio: 42 },
+    { nombre: "Americano G", precio: 47 },
+    { nombre: "Café de Olla M", precio: 47 },
+    { nombre: "Café de Olla G", precio: 52 },
+    { nombre: "Capuccino / Latte M", precio: 60 },
+    { nombre: "Capuccino / Latte G", precio: 65 },
+    { nombre: "Moka Obscuro M", precio: 80 },
+    { nombre: "Moka Obscuro G", precio: 85 },
+    { nombre: "Moka Blanco M", precio: 80 },
+    { nombre: "Moka Blanco G", precio: 85 },
+    { nombre: "Caramel Latte M", precio: 80 },
+    { nombre: "Caramel Latte G", precio: 85 },
+    { nombre: "Cajeta Latte M", precio: 80 },
+    { nombre: "Cajeta Latte G", precio: 85 }
+  ],
+  calientesSinCafe: [
+    { nombre: "Chocolate Obscuro M", precio: 75 },
+    { nombre: "Chocolate Obscuro G", precio: 80 },
+    { nombre: "Chocolate Blanco M", precio: 75 },
+    { nombre: "Chocolate Blanco G", precio: 80 },
+    { nombre: "Chai M", precio: 80 },
+    { nombre: "Chai G", precio: 85 },
+    { nombre: "Matcha M", precio: 80 },
+    { nombre: "Matcha G", precio: 85 },
+    { nombre: "Taro M", precio: 80 },
+    { nombre: "Taro G", precio: 85 },
+    { nombre: "Horchata M", precio: 75 },
+    { nombre: "Horchata G", precio: 80 }
+  ],
+  calientesEspecialess: [
+    { nombre: "Chai Manzana Verde M", precio: 80 },
+    { nombre: "Chai Manzana Verde G", precio: 85 },
+    { nombre: "Horchai M", precio: 80 },
+    { nombre: "Horchai G", precio: 85 },
+    { nombre: "Blessed M", precio: 90 },
+    { nombre: "Blessed G", precio: 95 },
+    { nombre: "Hope Latte M", precio: 90 },
+    { nombre: "Hope Latte G", precio: 95 },
+    { nombre: "Ferrero Sin Café M", precio: 80 },
+    { nombre: "Ferrero Sin Café G", precio: 85 },
+    { nombre: "Ferrero Con Café M", precio: 90 },
+    { nombre: "Ferrero Con Café G", precio: 95 },
+    { nombre: "Mazapán M", precio: 80 },
+    { nombre: "Mazapán G", precio: 85 }
+  ],
+  calientesInfusionables: [
+    { nombre: "Tizana Fresa Kiwi M", precio: 75 },
+    { nombre: "Tizana Fresa Kiwi G", precio: 80 },
+    { nombre: "Tizana Maracuyá M", precio: 75 },
+    { nombre: "Tizana Maracuyá G", precio: 80 },
+    { nombre: "Tizana Frutos Tropicales M", precio: 75 },
+    { nombre: "Tizana Frutos Tropicales G", precio: 80 },
+    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) M", precio: 45 },
+    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) G", precio: 50 }
+  ],
+  friasCafe: [
+    { nombre: "Americano Frío", precio: 55 },
+    { nombre: "Capuccino/Latte Frío", precio: 70 },
+    { nombre: "Capuccino/Latte Frappé", precio: 75 },
+    { nombre: "Cold Brew", precio: 70 },
+    { nombre: "Moka Frío", precio: 80 },
+    { nombre: "Moka Frappé", precio: 85 },
+    { nombre: "Moka Blanco Frío", precio: 80 },
+    { nombre: "Moka Blanco Frappé", precio: 85 },
+    { nombre: "Caramel Latte Frío", precio: 80 },
+    { nombre: "Caramel Latte Frappé", precio: 85 },
+    { nombre: "Cajeta Latte Frío", precio: 80 },
+    { nombre: "Cajeta Latte Frappé", precio: 85 }
+  ],
+  friasSinCafe: [
+    { nombre: "Chocolate Obscuro Frío", precio: 80 },
+    { nombre: "Chocolate Obscuro Frappé", precio: 85 },
+    { nombre: "Chai Frío", precio: 85 },
+    { nombre: "Chai Frappé", precio: 90 },
+    { nombre: "Matcha Frío", precio: 85 },
+    { nombre: "Matcha Frappé", precio: 90 },
+    { nombre: "Taro Frío", precio: 85 },
+    { nombre: "Taro Frappé", precio: 90 },
+    { nombre: "Cookies (Oreo) Frío", precio: 85 },
+    { nombre: "Cookies (Oreo) Frappé", precio: 90 },
+    { nombre: "Horchata Fría", precio: 85 },
+    { nombre: "Horchata Frappé", precio: 90 }
+  ],
+  friasEspecialess: [
+    { nombre: "Chai Manzana Verde Frío", precio: 85 },
+    { nombre: "Chai Manzana Verde Frappé", precio: 90 },
+    { nombre: "Horchai Frío", precio: 90 },
+    { nombre: "Horchai Frappé", precio: 95 },
+    { nombre: "Blessed Frío", precio: 90 },
+    { nombre: "Blessed Frappé", precio: 95 },
+    { nombre: "Hope Latte Frío", precio: 90 },
+    { nombre: "Hope Latte Frappé", precio: 95 },
+    { nombre: "Ferrero Sin Café Frío", precio: 80 },
+    { nombre: "Ferrero Sin Café Frappé", precio: 85 },
+    { nombre: "Ferrero Con Café Frío", precio: 90 },
+    { nombre: "Ferrero Con Café Frappé", precio: 95 },
+    { nombre: "Mazapán Frío", precio: 90 },
+    { nombre: "Mazapán Frappé", precio: 95 }
+  ],
+  friasFoamMalteadas: [
+    { nombre: "Cold Foam Vainilla/Caramelo/Moka", precio: 95 },
+    { nombre: "Cold Foam Taro Coconut", precio: 99 },
+    { nombre: "Cold Foam Berry Matcha", precio: 99 },
+    { nombre: "Cold Foam Banana Peanut Coffee", precio: 99 },
+    { nombre: "Cold Foam Strawberry Coconut", precio: 99 },
+    { nombre: "Cold Foam Matcha Coconut", precio: 99 },
+    { nombre: "Malteada Vainilla/Fresa/Chocolate", precio: 90 },
+    { nombre: "Malteada Caramelo/Oreo/Ferrero", precio: 95 }
+  ],
+  friasVarios: [
+    { nombre: "Shaken Tea", precio: 80 },
+    { nombre: "Naranjada / Limonada", precio: 60 },
+    { nombre: "Black Orange Tonic", precio: 80 },
+    { nombre: "Lemon Coffee Tonic", precio: 80 },
+    { nombre: "Chamoyada Mango/Fresa/Maracuyá", precio: 80 },
+    { nombre: "Smoothie Detox", precio: 95 },
+    { nombre: "Smoothie Tropical / Banana Berry", precio: 95 },
+    { nombre: "Smoothie Apple Kiss / Exótico", precio: 95 }
+  ],
+  friasMocktails: [
+    { nombre: "Mocktail Frutos Rojos / Kiwi / Lichi", precio: 85 },
+    { nombre: "Tizana Fría", precio: 85 },
+    { nombre: "Tizana Frappé", precio: 90 },
+    { nombre: "Té Herbal Frío", precio: 65 }
+  ],
+  alimentosSalados: [
+    { nombre: "Molletes Sencillos", precio: 80 },
+    { nombre: "Molletes con Jamón", precio: 90 },
+    { nombre: "Molletes con Chorizo", precio: 99 },
+    { nombre: "Chilaquiles Sencillos", precio: 80 },
+    { nombre: "Chilaquiles c/ Huevo", precio: 95 },
+    { nombre: "Chilaquiles c/ Pollo", precio: 110 },
+    { nombre: "Chilaquiles Gratinedos", precio: 140 },
+    { nombre: "Sincronizada", precio: 70 },
+    { nombre: "Chapata Pizza", precio: 99 },
+    { nombre: "Baguette / Chapata Pechuga Pavo", precio: 90 },
+    { nombre: "Wrap Clásico", precio: 75 },
+    { nombre: "Wrap Pollo", precio: 85 },
+    { nombre: "Ensalada Bless", precio: 65 },
+    { nombre: "Especialess Salada Mexicana", precio: 120 },
+    { nombre: "Especialess Salada Hawaiiana", precio: 120 },
+    { nombre: "Especialess Salada Vegetariana", precio: 120 },
+    { nombre: "Especialess Salada Italiana", precio: 130 },
+    { nombre: "Especialess Salada Bless", precio: 130 }
+  ],
+  alimentosDulces: [
+    { nombre: "Crepa Tradicional", precio: 95 },
+    { nombre: "Crepa Frutal", precio: 99 },
+    { nombre: "Crepa Celaya", precio: 115 },
+    { nombre: "Crepa Celaya Frutal", precio: 120 },
+    { nombre: "Crepa Banana Bless", precio: 120 },
+    { nombre: "Crepa Arroz con Leche", precio: 120 },
+    { nombre: "Crepa Rompope Bless", precio: 130 },
+    { nombre: "Crepa Dulce Deseo", precio: 130 },
+    { nombre: "Hot Cakes", precio: 80 },
+    { nombre: "Hot Cakes 3 Leches", precio: 100 },
+    { nombre: "Waffles", precio: 80 },
+    { nombre: "Pastel del Día", precio: 70 },
+    { nombre: "Rol de Canela", precio: 49 },
+    { nombre: "Bisquet c/ Mermelada", precio: 35 },
+    { nombre: "Croissant c/ Mermelada", precio: 60 },
+    { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
+    { nombre: "Postre Especialess Waffles Bless", precio: 99 }
+  ]
+};
+
 let carrito = [];
 let comandaActualId = Date.now();
+
+// Renderizar Menú en la Interfaz
+function renderizarMenu() {
+  const mapeo = {
+    'grid-calientes-cafe': menuData.calientesCafe,
+    'grid-calientes-sincafe': menuData.calientesSinCafe,
+    'grid-calientes-especialess': menuData.calientesEspecialess,
+    'grid-calientes-infusionables': menuData.calientesInfusionables,
+    'grid-frias-cafe': menuData.friasCafe,
+    'grid-frias-sincafe': menuData.friasSinCafe,
+    'grid-frias-especialess': menuData.friasEspecialess,
+    'grid-frias-foam-malteadas': menuData.friasFoamMalteadas,
+    'grid-frias-varios': menuData.friasVarios,
+    'grid-frias-mocktails': menuData.friasMocktails,
+    'grid-alimentos-salados': menuData.alimentosSalados,
+    'grid-alimentos-dulces': menuData.alimentosDulces
+  };
+
+  for (let idContainer in mapeo) {
+    const container = document.getElementById(idContainer);
+    if (!container) continue;
+
+    container.innerHTML = mapeo[idContainer].map(prod => `
+      <div class="card-producto" onclick="agregarAlCarrito('${prod.nombre}', ${prod.precio})">
+        <h4>${prod.nombre}</h4>
+        <div class="precio">$${prod.precio.toFixed(2)}</div>
+      </div>
+    `).join('');
+  }
+}
+
+// Filtro de Buscador
+function filtrarProductos() {
+  const texto = document.getElementById('inputBuscador').value.toLowerCase();
+  const tarjetas = document.querySelectorAll('.card-producto');
+
+  tarjetas.forEach(card => {
+    const nombre = card.querySelector('h4').innerText.toLowerCase();
+    if (nombre.includes(texto)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
 
 function cambiarPestana(idPestana) {
   document.querySelectorAll('.seccion').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
 
-  document.getElementById(`tab-${idPestana}`).classList.add('active');
+  const tabContent = document.getElementById(`tab-${idPestana}`);
+  if (tabContent) tabContent.classList.add('active');
+
   if (event && event.target) event.target.classList.add('active');
 
   if (idPestana === 'corte') {
@@ -16,7 +239,9 @@ function cambiarPestana(idPestana) {
 function agregarAlCarrito(nombre, precioBase) {
   const lecheSelect = document.getElementById('selectLeche');
   const tipoLeche = lecheSelect ? lecheSelect.value : 'Entera';
-  let extraLeche = (tipoLeche === 'Avena' || tipoLeche === 'Almendra') ? 10 : 0;
+  
+  // Modificación del costo de la leche deslactosada y vegetal a $12
+  let extraLeche = (tipoLeche === 'Deslactosada' || tipoLeche === 'Vegetal') ? 12 : 0;
 
   carrito.push({
     idUnico: Date.now() + Math.random(),
@@ -53,7 +278,7 @@ function actualizarCarritoUI() {
         <small>Leche: ${item.leche}</small>
       </div>
       <div>
-        <span>$${item.precio}</span>
+        <span>$${item.precio.toFixed(2)}</span>
         <button class="btn-eliminar" onclick="eliminarDelCarrito(${item.idUnico})">✕</button>
       </div>
     </div>
@@ -62,17 +287,14 @@ function actualizarCarritoUI() {
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
-// 1. IMPRIMIR PRIMERA COMANDA (PEDIDO PARA COCINA / BARRA)
+// Imprimir Comanda (Cocina / Barra)
 function imprimirComanda() {
   if (carrito.length === 0) {
     alert("No hay productos en el carrito para enviar a cocina/barra.");
     return;
   }
 
-  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
   const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  // Guardar en pendientes automáticamente al sacar comanda
   guardarComandaSilencioso();
 
   const ventana = window.open('', '', 'width=400,height=600');
@@ -85,14 +307,7 @@ function imprimirComanda() {
         <meta charset="UTF-8">
         <style>
           @page { margin: 0; }
-          body { 
-            font-family: Arial, sans-serif; 
-            width: 58mm; 
-            padding: 8px 4px; 
-            margin: 0 auto; 
-            font-size: 14px; 
-            color: #000;
-          }
+          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; }
           .centro { text-align: center; }
           .linea { border-bottom: 2px solid #000; margin: 6px 0; }
           .item { font-weight: bold; font-size: 15px; margin-top: 4px; }
@@ -112,10 +327,7 @@ function imprimirComanda() {
         `).join('')}
         <div class="linea"></div>
         <script>
-          window.onload = function() { 
-            window.print(); 
-            window.close(); 
-          }
+          window.onload = function() { window.print(); window.close(); }
         </script>
       </body>
     </html>
@@ -123,7 +335,7 @@ function imprimirComanda() {
   ventana.document.close();
 }
 
-// 2. IMPRIMIR PRE-CUENTA (SEGUNDA COMANDA PARA ENTREGAR AL CLIENTE)
+// Imprimir Pre-Cuenta Cliente
 function imprimirPrecuenta() {
   if (carrito.length === 0) {
     alert("No hay productos en el carrito para generar la cuenta.");
@@ -142,20 +354,11 @@ function imprimirPrecuenta() {
         <meta charset="UTF-8">
         <style>
           @page { margin: 0; }
-          body { 
-            font-family: Arial, sans-serif; 
-            width: 58mm; 
-            padding: 8px 4px; 
-            margin: 0 auto; 
-            font-size: 14px; 
-            color: #000;
-            line-height: 1.2;
-          }
+          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
           .centro { text-align: center; }
           .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
           .flex { display: flex; justify-content: space-between; font-weight: bold; }
           .total-box { font-size: 18px; font-weight: bold; margin-top: 6px; }
-          .aviso { font-size: 11px; margin-top: 8px; font-style: italic; }
         </style>
       </head>
       <body>
@@ -177,14 +380,9 @@ function imprimirPrecuenta() {
           <span>$${total.toFixed(2)}</span>
         </div>
         <div class="linea"></div>
-        <div class="centro aviso">
-          *** ESTE TICKET NO ES UN COMPROBANTE DE PAGO ***
-        </div>
+        <div class="centro">*** ESTE TICKET NO ES UN COMPROBANTE DE PAGO ***</div>
         <script>
-          window.onload = function() { 
-            window.print(); 
-            window.close(); 
-          }
+          window.onload = function() { window.print(); window.close(); }
         </script>
       </body>
     </html>
@@ -192,7 +390,7 @@ function imprimirPrecuenta() {
   ventana.document.close();
 }
 
-// 3. COBRAR (EFECTIVO O TARJETA) E IMPRIMIR TICKET FINAL
+// Finalizar Cobro
 function finalizarCobro(metodoPago) {
   if (carrito.length === 0) {
     alert("Agrega productos a la comanda para poder cobrar.");
@@ -201,7 +399,6 @@ function finalizarCobro(metodoPago) {
 
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
 
-  // Registrar venta
   const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   historialVentas.push({
     id: Date.now(),
@@ -212,15 +409,12 @@ function finalizarCobro(metodoPago) {
   });
   localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
 
-  // Eliminar de comandas pendientes si existía
   let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   comandas = comandas.filter(c => c.id !== comandaActualId);
   localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
 
-  // Imprimir Ticket Final de Venta automáticamente
   imprimirTicketFinal(carrito, total, metodoPago);
 
-  // Limpiar carrito y reiniciar ID
   carrito = [];
   comandaActualId = Date.now();
   actualizarCarritoUI();
@@ -239,26 +433,16 @@ function imprimirTicketFinal(items, total, metodo) {
         <meta charset="UTF-8">
         <style>
           @page { margin: 0; }
-          body { 
-            font-family: Arial, sans-serif; 
-            width: 58mm; 
-            padding: 8px 4px; 
-            margin: 0 auto; 
-            font-size: 14px; 
-            color: #000;
-            line-height: 1.2;
-          }
+          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
           .centro { text-align: center; }
           .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
-          .flex { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+          .flex { display: flex; justify-content: space-between; font-weight: bold; }
           .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
-          .item-leche { font-size: 12px; margin-left: 6px; color: #333; }
-          .titulo { font-size: 16px; font-weight: bold; }
         </style>
       </head>
       <body>
         <div class="centro">
-          <div class="titulo">CAFETERÍA ESPECIALIDAD</div>
+          <h2>BLESS COFFEE</h2>
           <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
         </div>
         <div class="linea"></div>
@@ -267,7 +451,7 @@ function imprimirTicketFinal(items, total, metodo) {
             <span>${i.nombre}</span>
             <span>$${i.precio.toFixed(2)}</span>
           </div>
-          <div class="item-leche">• Leche: ${i.leche}</div>
+          <div style="font-size:12px;">• Leche: ${i.leche}</div>
         `).join('')}
         <div class="linea"></div>
         <div class="flex total-box">
@@ -277,13 +461,10 @@ function imprimirTicketFinal(items, total, metodo) {
         <div class="linea"></div>
         <div class="centro">
           Forma de Pago: <strong>${metodo}</strong><br><br>
-          ¡Gracias por tu compra!
+          ¡Gracias por tu visita!
         </div>
         <script>
-          window.onload = function() { 
-            window.print(); 
-            window.close(); 
-          }
+          window.onload = function() { window.print(); window.close(); }
         </script>
       </body>
     </html>
@@ -320,7 +501,6 @@ function guardarComandaPendiente() {
   }
 
   guardarComandaSilencioso();
-
   carrito = [];
   comandaActualId = Date.now();
   actualizarCarritoUI();
@@ -341,14 +521,14 @@ function abrirModalComandas() {
   if (comandas.length === 0) {
     contenedor.innerHTML = '<p style="color:#64748b; text-align:center;">No hay comandas pendientes.</p>';
   } else {
-    contenedor.innerHTML = comandas.map((c, index) => `
+    contenedor.innerHTML = comandas.map(c => `
       <div class="card-comanda-item">
         <div>
           <strong>Orden #${c.id.toString().slice(-4)}</strong> <small>(${c.hora})</small><br>
           <small>${c.items.map(i => i.nombre).join(', ')}</small><br>
           <strong style="color:#16a34a;">Total: $${c.total.toFixed(2)}</strong>
         </div>
-        <button class="btn-cargar-comanda" onclick="cargarComanda(${c.id})">Cobrar / Editar</button>
+        <button class="btn-tab" onclick="cargarComanda(${c.id})">Cobrar / Editar</button>
       </div>
     `).join('');
   }
@@ -377,193 +557,63 @@ function renderizarCorteCaja() {
   if (!contenedorCorte) return;
 
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  
   let totalEfectivo = 0;
   let totalTarjeta = 0;
 
   ventas.forEach(v => {
-    if (v.metodo === 'Tarjeta') {
-      totalTarjeta += v.total;
-    } else {
-      totalEfectivo += v.total;
-    }
+    if (v.metodo === 'Tarjeta') totalTarjeta += v.total;
+    else totalEfectivo += v.total;
   });
 
   const totalGeneral = totalEfectivo + totalTarjeta;
-  const fechaActual = new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   contenedorCorte.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h2>Corte de Caja Diario</h2>
-      <span style="color:#64748b; font-weight:bold;">${fechaActual} - ${horaActual}</span>
-    </div>
-    
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:15px;">
-      <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #16a34a;">
-        <span style="color:#64748b; font-size:14px;">Total en Efectivo</span>
-        <h3 style="color:#16a34a; font-size:24px;">$${totalEfectivo.toFixed(2)}</h3>
+    <h2>Corte de Caja Diario</h2>
+    <div style="display:flex; gap:15px; margin-top:15px;">
+      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #16a34a;">
+        <span>Efectivo</span>
+        <h3>$${totalEfectivo.toFixed(2)}</h3>
       </div>
-      
-      <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #2563eb;">
-        <span style="color:#64748b; font-size:14px;">Total en Tarjeta</span>
-        <h3 style="color:#2563eb; font-size:24px;">$${totalTarjeta.toFixed(2)}</h3>
+      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #2563eb;">
+        <span>Tarjeta</span>
+        <h3>$${totalTarjeta.toFixed(2)}</h3>
       </div>
-
-      <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); border-left:5px solid #0284c7;">
-        <span style="color:#64748b; font-size:14px;">Total Acumulado</span>
-        <h3 style="color:#0284c7; font-size:24px;">$${totalGeneral.toFixed(2)}</h3>
+      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #0284c7;">
+        <span>Total Acumulado</span>
+        <h3>$${totalGeneral.toFixed(2)}</h3>
       </div>
     </div>
-
-    <button class="btn-cerrar-caja" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
-
-    <h3 style="margin-top:25px; margin-bottom:10px;">Historial de Órdenes del Turno</h3>
-    <div style="background:#fff; border-radius:8px; padding:15px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-      ${ventas.length === 0 ? '<p style="color:#64748b;">No hay ventas registradas en el turno actual.</p>' : ''}
-      ${ventas.slice().reverse().map((v, i) => `
-        <div style="border-bottom:1px solid #f1f5f9; padding:10px 0; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong>Venta #${ventas.length - i}</strong> 
-            <small style="color:#64748b;">(${v.hora}) - [${v.metodo}]</small><br>
-            <small style="color:#475569;">${v.items.map(it => it.nombre).join(', ')}</small>
-          </div>
-          <strong style="color:#16a34a; font-size:16px;">$${v.total.toFixed(2)}</strong>
-        </div>
-      `).join('')}
-    </div>
+    <button class="btn-accion btn-cerrar-caja" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
   `;
 }
 
 function cerrarCajaTurno() {
   const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
 
   if (carrito.length > 0) {
-    alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito antes de cerrar caja.");
+    alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito.");
     return;
   }
 
   if (comandasPendientes.length > 0) {
-    alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar. Debes cobrarlas o eliminarlas antes de cerrar caja.`);
+    alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar.`);
     return;
   }
 
-  let efectivo = 0;
-  let tarjeta = 0;
-  ventas.forEach(v => {
-    if (v.metodo === 'Tarjeta') tarjeta += v.total;
-    else efectivo += v.total;
-  });
-  const total = efectivo + tarjeta;
-
+  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   if (ventas.length === 0) {
-    alert("No hay ventas registradas en este turno para cerrar la caja.");
+    alert("No hay ventas registradas para realizar el cierre.");
     return;
   }
 
-  const confirmar = confirm(`¿Estás seguro de cerrar la caja?\n\n- Efectivo: $${efectivo.toFixed(2)}\n- Tarjeta: $${tarjeta.toFixed(2)}\n- Total: $${total.toFixed(2)}\n\nSe imprimirá el Ticket Z y se reiniciará el día.`);
-  
-  if (confirmar) {
-    const fecha = new Date().toLocaleDateString('es-MX');
-    const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    const historialCortes = JSON.parse(localStorage.getItem('historialCortes')) || [];
-    historialCortes.push({
-      id: Date.now(),
-      fecha: fecha,
-      hora: hora,
-      efectivo: efectivo,
-      tarjeta: tarjeta,
-      total: total,
-      numVentas: ventas.length
-    });
-    
-    localStorage.setItem('historialCortes', JSON.stringify(historialCortes));
-
-    imprimirTicketCorte(fecha, hora, efectivo, tarjeta, total, ventas.length);
-
+  if (confirm("¿Confirmas cerrar la caja y reiniciar las ventas del día?")) {
     localStorage.removeItem('ventasDiarias');
-
-    alert("✅ Caja cerrada con éxito. El día ha sido reiniciado.");
+    alert("✅ Caja cerrada con éxito.");
     renderizarCorteCaja();
   }
 }
 
-function imprimirTicketCorte(fecha, hora, efectivo, tarjeta, total, numVentas) {
-  const ventana = window.open('', '', 'width=400,height=600');
-  if (!ventana) return;
-
-  ventana.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style>
-          @page { margin: 0; }
-          body { 
-            font-family: Arial, sans-serif; 
-            width: 58mm; 
-            padding: 8px 4px; 
-            margin: 0 auto; 
-            font-size: 14px; 
-            color: #000;
-            line-height: 1.2;
-          }
-          .centro { text-align: center; }
-          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
-          .flex { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
-          .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
-          .titulo { font-size: 16px; font-weight: bold; }
-        </style>
-      </head>
-      <body>
-        <div class="centro">
-          <div class="titulo">CORTE DE CAJA (Z)</div>
-          <strong>CAFETERÍA ESPECIALIDAD</strong><br>
-          <small>Fecha: ${fecha} - ${hora}</small>
-        </div>
-        <div class="linea"></div>
-        
-        <div class="flex">
-          <span>Órdenes Cobradas:</span>
-          <span>${numVentas}</span>
-        </div>
-        <div class="linea"></div>
-
-        <div class="flex">
-          <span>EFECTIVO:</span>
-          <span>$${efectivo.toFixed(2)}</span>
-        </div>
-        <div class="flex">
-          <span>TARJETA:</span>
-          <span>$${tarjeta.toFixed(2)}</span>
-        </div>
-
-        <div class="linea"></div>
-        <div class="flex total-box">
-          <span>TOTAL TURNO:</span>
-          <span>$${total.toFixed(2)}</span>
-        </div>
-        <div class="linea"></div>
-
-        <div class="centro" style="margin-top: 15px;">
-          <br><br>
-          ________________________<br>
-          Firma de Conformidad
-        </div>
-
-        <script>
-          window.onload = function() { 
-            window.print(); 
-            window.close(); 
-          }
-        </script>
-      </body>
-    </html>
-  `);
-  ventana.document.close();
-}
-
+// Inicialización
+renderizarMenu();
 actualizarCarritoUI();
 actualizarUIComandasPendientes();
