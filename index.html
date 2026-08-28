@@ -92,3 +92,12 @@
   <script src="script.js"></script>
 </body>
 </html>
+<!-- Botones de Impresión de Comanda y Cuenta -->
+<button class="btn-comanda" onclick="imprimirComanda()">📝 Imprimir Comanda (Cocina/Barra)</button>
+<button class="btn-precuenta" onclick="imprimirPrecuenta()">📄 Imprimir Pre-Cuenta</button>
+
+<!-- Botones de Pago Directo -->
+<div class="metodos-pago">
+  <button class="btn-pago efectivo" onclick="finalizarCobro('Efectivo')">💵 Cobrar Efectivo</button>
+  <button class="btn-pago tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Cobrar Tarjeta</button>
+</div>
