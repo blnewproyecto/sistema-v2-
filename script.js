@@ -598,36 +598,13 @@ function renderizarCorteCaja() {
   });
 
   const totalGeneral = totalEfectivo + totalTarjeta;
-
-  contenedorCorte.innerHTML = `
-    <h2>Corte de Caja Diario</h2>
-    <div style="display:flex; gap:15px; margin-top:15px;">
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #16a34a;">
-        <span>Efectivo</span>
-        <h3>$${totalEfectivo.toFixed(2)}</h3>
-      </div>
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #2563eb;">
-        <span>Tarjeta</span>
-        <h3>$${totalTarjeta.toFixed(2)}</h3>
-      </div>
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #0284c7;">
-        <span>Total Acumulado</span>
-        <h3>$${totalGeneral.toFixed(2)}</h3>
-      </div>
-    </div>
-    <br>
-    <button class="btn-accion btn-cancelar" style="width: auto; padding: 12px 20px;" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
-    
-}
-
-function cerrarCajaTurno() {
-    const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-
+  
+  function cerrarCajaTurno() {
     if (carrito.length > 0) {
         alert("⛔ BLOQUEADO: Hay items cargados en el carrito actual. Cóbralos o vacía el carrito.");
         return;
     }
-
+  
     if (comandasPendientes.length > 0) {
         alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar.`);
         return;
