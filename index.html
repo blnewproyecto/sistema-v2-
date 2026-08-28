@@ -66,14 +66,18 @@
             overflow: hidden;
         }
 
-        /* SECCIÓN IZQUIERDA */
-        .left-panel {
+        /* VISTAS DEL PANEL IZQUIERDO */
+        .view-section {
+            display: none;
             flex: 1;
             padding: 20px;
-            display: flex;
             flex-direction: column;
             gap: 20px;
             overflow-y: auto;
+        }
+
+        .view-section.active-view {
+            display: flex;
         }
 
         .search-input {
@@ -84,7 +88,7 @@
             font-size: 14px;
             outline: none;
             background-color: #ffffff;
-            color: #64748b;
+            color: #1e293b;
         }
 
         .section-title {
@@ -93,7 +97,56 @@
             color: #1e293b;
         }
 
-        /* METRICS CARDS */
+        /* GRID DE PRODUCTOS EN MENU */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+        }
+
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            min-height: 90px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .product-card:active {
+            background-color: #e2e8f0;
+        }
+
+        .p-name { font-size: 12px; font-weight: 600; color: #1e293b; }
+        .p-price { font-size: 14px; font-weight: 700; color: #2563eb; margin-top: 6px; }
+
+        /* LISTA DE COMANDAS PENDIENTES */
+        .comandas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .comanda-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #0284c7;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .comanda-card:hover {
+            background-color: #f8fafc;
+        }
+
+        /* METRICS CARDS EN CORTE */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -112,9 +165,7 @@
         .metric-card::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
+            left: 0; top: 0; bottom: 0;
             width: 4px;
         }
 
@@ -122,18 +173,8 @@
         .card-blue::before { background-color: #2563eb; }
         .card-darkblue::before { background-color: #1e3a8a; }
 
-        .metric-title {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .metric-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0f172a;
-        }
+        .metric-title { font-size: 13px; color: #64748b; margin-bottom: 6px; font-weight: 500; }
+        .metric-value { font-size: 18px; font-weight: 700; color: #0f172a; }
 
         .btn-cerrar-caja {
             background-color: #dc2626;
@@ -145,17 +186,10 @@
             font-size: 13px;
             cursor: pointer;
             width: fit-content;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
         }
 
-        .btn-cerrar-caja:hover {
-            background-color: #b91c1c;
-        }
-
-        /* SECCIÓN DERECHA: ORDEN ACTIVA */
+        /* PANEL DERECHO: ORDEN ACTIVA */
         .right-panel {
             width: 380px;
             background-color: #ffffff;
@@ -166,20 +200,8 @@
             padding: 20px;
         }
 
-        .cart-header-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 15px;
-        }
-
-        .label-leche {
-            font-size: 12px;
-            font-weight: 600;
-            color: #475569;
-            margin-bottom: 6px;
-            display: block;
-        }
+        .cart-header-title { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 15px; }
+        .label-leche { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 6px; display: block; }
 
         .select-leche {
             width: 100%;
@@ -187,9 +209,40 @@
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             font-size: 13px;
-            outline: none;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background-color: #ffffff;
+        }
+
+        .cart-items-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+        }
+
+        .qty-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .btn-qty {
+            background: #e2e8f0;
+            border: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         .empty-cart-msg {
@@ -197,7 +250,6 @@
             color: #94a3b8;
             font-size: 14px;
             margin-top: 40px;
-            flex: 1;
         }
 
         /* CONTROLES Y BOTONES DE COBRO */
@@ -210,23 +262,9 @@
             border-top: 1px solid #f1f5f9;
         }
 
-        .total-label {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-        }
+        .total-label, .total-amount { font-size: 18px; font-weight: 700; color: #1e293b; }
 
-        .total-amount {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .action-buttons { display: flex; flex-direction: column; gap: 10px; }
 
         .btn-action {
             width: 100%;
@@ -248,14 +286,8 @@
         .btn-danger { background-color: #dc2626; color: #ffffff; }
         .btn-success { background-color: #16a34a; color: #ffffff; }
 
-        .btn-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-row .btn-action {
-            flex: 1;
-        }
+        .btn-row { display: flex; gap: 10px; }
+        .btn-row .btn-action { flex: 1; }
 
         /* TICKET IMPRESO */
         @media print {
@@ -263,8 +295,7 @@
             #ticket-corte, #ticket-corte * { visibility: visible; }
             #ticket-corte {
                 position: absolute;
-                left: 0;
-                top: 0;
+                left: 0; top: 0;
                 width: 280px;
                 color: #000;
                 background: #fff;
@@ -278,21 +309,33 @@
 </head>
 <body>
 
-    <!-- NAVBAR SUPERIOR -->
+    <!-- NAVBAR SUPERIOR INTERACTIVO -->
     <div class="navbar">
         <div class="brand">BLESS COFFEE POS</div>
         <div class="nav-links">
-            <button class="nav-btn">Menú</button>
-            <button class="nav-btn">Comandas (0)</button>
-            <button class="nav-btn active">Corte de Caja</button>
+            <button class="nav-btn active" id="btn-nav-menu" onclick="cambiarVista('menu')">Menú</button>
+            <button class="nav-btn" id="btn-nav-comandas" onclick="cambiarVista('comandas')">Comandas (<span id="count-comandas">0</span>)</button>
+            <button class="nav-btn" id="btn-nav-corte" onclick="cambiarVista('corte')">Corte de Caja</button>
         </div>
     </div>
 
     <div class="main-container">
-        <!-- PANEL IZQUIERDO: CORTE DE CAJA -->
-        <div class="left-panel">
-            <input type="text" class="search-input" placeholder="Buscar producto...">
-            
+        <!-- VISTA 1: MENÚ DE PRODUCTOS -->
+        <div class="view-section active-view" id="view-menu">
+            <input type="text" class="search-input" id="search-input" placeholder="Buscar producto..." oninput="filtrarProductos()">
+            <div class="products-grid" id="products-grid"></div>
+        </div>
+
+        <!-- VISTA 2: COMANDAS PENDIENTES -->
+        <div class="view-section" id="view-comandas">
+            <h2 class="section-title">Comandas Pendientes</h2>
+            <div class="comandas-grid" id="comandas-grid">
+                <p style="color: #94a3b8;">No hay comandas pendientes por cobrar.</p>
+            </div>
+        </div>
+
+        <!-- VISTA 3: CORTE DE CAJA DIARIO -->
+        <div class="view-section" id="view-corte">
             <h2 class="section-title">Corte de Caja Diario</h2>
 
             <div class="metrics-grid">
@@ -328,46 +371,256 @@
                     <option>Avena (+$10)</option>
                 </select>
 
-                <div class="empty-cart-msg">
-                    No hay items en la comanda
-                </div>
+                <ul class="cart-items-list" id="cart-items-list">
+                    <div class="empty-cart-msg" id="empty-cart-msg">
+                        No hay items en la comanda
+                    </div>
+                </ul>
             </div>
 
             <div>
                 <div class="total-container">
                     <span class="total-label">Total:</span>
-                    <span class="total-amount">$0.00</span>
+                    <span class="total-amount" id="cart-total">$0.00</span>
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn-action btn-primary">📄 Imprimir Comanda</button>
+                    <button class="btn-action btn-primary" onclick="imprimirComanda()">📄 Imprimir Comanda</button>
                     
                     <div class="btn-row">
-                        <button class="btn-action btn-info">📄 Pre-Cuenta</button>
-                        <button class="btn-action btn-secondary">☕ Pendiente</button>
+                        <button class="btn-action btn-info" onclick="imprimirPrecuenta()">📄 Pre-Cuenta</button>
+                        <button class="btn-action btn-secondary" onclick="guardarPendiente()">☕ Pendiente</button>
                     </div>
 
-                    <button class="btn-action btn-danger">✕ CANCELAR CUENTA</button>
+                    <button class="btn-action btn-danger" onclick="cancelarCuenta()">✕ CANCELAR CUENTA</button>
 
                     <div class="btn-row">
-                        <button class="btn-action btn-success">💵 Efectivo</button>
-                        <button class="btn-action btn-info">💳 Tarjeta</button>
+                        <button class="btn-action btn-success" onclick="cobrar('Efectivo')">💵 Efectivo</button>
+                        <button class="btn-action btn-info" onclick="cobrar('Tarjeta')">💳 Tarjeta</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ESTRUCTURA DEL TICKET DE IMPRESIÓN -->
+    <!-- TICKET DE IMPRESIÓN DEL CORTE -->
     <div id="ticket-corte"></div>
 
     <script>
-        // Variables globales para acumulados
-        let totalEfectivo = 0.00;
-        let totalTarjeta = 0.00;
+        const menuData = [
+            { id: 1, name: "Americano (M)", price: 42 },
+            { id: 2, name: "Capuccino (M)", price: 60 },
+            { id: 3, name: "Latte (M)", price: 60 },
+            { id: 4, name: "Moka Obscuro (M)", price: 80 },
+            { id: 5, name: "Cold Brew", price: 70 },
+            { id: 6, name: "Frappé Clásico", price: 75 },
+            { id: 7, name: "Chai Latte", price: 80 },
+            { id: 8, name: "Matcha Latte", price: 80 },
+            { id: 9, name: "Molletes Sencillos", price: 80 },
+            { id: 10, name: "Chilaquiles", price: 100 },
+            { id: 11, name: "Crepa Tradicional", price: 95 },
+            { id: 12, name: "Waffles Clásicos", price: 85 }
+        ];
 
+        let ordenActual = [];
+        let comandasPendientes = [];
+        let acumuladoEfectivo = 0;
+        let acumuladoTarjeta = 0;
+
+        function init() {
+            renderProductos(menuData);
+        }
+
+        // NAVEGACIÓN DE PESTAÑAS
+        function cambiarVista(vista) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+            if (vista === 'menu') {
+                document.getElementById('view-menu').classList.add('active-view');
+                document.getElementById('btn-nav-menu').classList.add('active');
+            } else if (vista === 'comandas') {
+                document.getElementById('view-comandas').classList.add('active-view');
+                document.getElementById('btn-nav-comandas').classList.add('active');
+                renderComandas();
+            } else if (vista === 'corte') {
+                document.getElementById('view-corte').classList.add('active-view');
+                document.getElementById('btn-nav-corte').classList.add('active');
+            }
+        }
+
+        // RENDERIZAR MENÚ Y BUSCADOR
+        function renderProductos(items) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            items.forEach(prod => {
+                grid.innerHTML += `
+                    <div class="product-card" onclick="agregarAlCarrito(${prod.id})">
+                        <span class="p-name">${prod.name}</span>
+                        <span class="p-price">$${prod.price.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function filtrarProductos() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtrados = menuData.filter(p => p.name.toLowerCase().includes(query));
+            renderProductos(filtrados);
+        }
+
+        // CARRITO / ORDEN ACTIVA
+        function agregarAlCarrito(id) {
+            const prod = menuData.find(p => p.id === id);
+            const existe = ordenActual.find(item => item.id === id);
+
+            if (existe) {
+                existe.qty++;
+            } else {
+                ordenActual.push({ ...prod, qty: 1 });
+            }
+            renderCarrito();
+        }
+
+        function cambiarCantidad(id, cambio) {
+            const item = ordenActual.find(i => i.id === id);
+            if (item) {
+                item.qty += cambio;
+                if (item.qty <= 0) {
+                    ordenActual = ordenActual.filter(i => i.id !== id);
+                }
+            }
+            renderCarrito();
+        }
+
+        function renderCarrito() {
+            const list = document.getElementById('cart-items-list');
+            const totalEl = document.getElementById('cart-total');
+            list.innerHTML = '';
+
+            if (ordenActual.length === 0) {
+                list.innerHTML = `<div class="empty-cart-msg">No hay items en la comanda</div>`;
+                totalEl.textContent = '$0.00';
+                return;
+            }
+
+            let total = 0;
+            ordenActual.forEach(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                list.innerHTML += `
+                    <li class="cart-item-row">
+                        <div>
+                            <div><strong>${item.name}</strong></div>
+                            <div style="color: #64748b; font-size: 11px;">$${item.price.toFixed(2)} c/u</div>
+                        </div>
+                        <div class="qty-controls">
+                            <button class="btn-qty" onclick="cambiarCantidad(${item.id}, -1)">-</button>
+                            <span style="font-weight:bold;">${item.qty}</span>
+                            <button class="btn-qty" onclick="cambiarCantidad(${item.id}, 1)">+</button>
+                        </div>
+                    </li>
+                `;
+            });
+
+            totalEl.textContent = `$${total.toFixed(2)}`;
+        }
+
+        // BOTONES DE ACCIÓN
+        function guardarPendiente() {
+            if (ordenActual.length === 0) return alert("La orden está vacía");
+            
+            const total = ordenActual.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            const idComanda = Date.now().toString().slice(-4);
+            
+            comandasPendientes.push({
+                id: idComanda,
+                items: [...ordenActual],
+                total: total,
+                hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            ordenActual = [];
+            renderCarrito();
+            actualizarContadorComandas();
+            alert(`Comanda #${idComanda} enviada a Pendientes.`);
+        }
+
+        function renderComandas() {
+            const container = document.getElementById('comandas-grid');
+            if (comandasPendientes.length === 0) {
+                container.innerHTML = `<p style="color: #94a3b8;">No hay comandas pendientes por cobrar.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            comandasPendientes.forEach((c, index) => {
+                container.innerHTML += `
+                    <div class="comanda-card" onclick="cargarComanda(${index})">
+                        <strong style="color: #0f172a;">Comanda #${c.id}</strong>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hora: ${c.hora}</div>
+                        <div style="font-size: 14px; font-weight: bold; color: #0284c7; margin-top: 6px;">
+                            Total: $${c.total.toFixed(2)}
+                        </div>
+                        <div style="font-size: 11px; color: #16a34a; margin-top: 6px;">Clic para abrir orden</div>
+                    </div>
+                `;
+            });
+        }
+
+        function cargarComanda(index) {
+            ordenActual = [...comandasPendientes[index].items];
+            comandasPendientes.splice(index, 1);
+            actualizarContadorComandas();
+            renderCarrito();
+            cambiarVista('menu');
+        }
+
+        function actualizarContadorComandas() {
+            document.getElementById('count-comandas').textContent = comandasPendientes.length;
+        }
+
+        function cobrar(metodo) {
+            if (ordenActual.length === 0) return alert("La orden está vacía");
+
+            const total = ordenActual.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            if (metodo === 'Efectivo') {
+                acumuladoEfectivo += total;
+                document.getElementById('val-efectivo').textContent = `$${acumuladoEfectivo.toFixed(2)}`;
+            } else {
+                acumuladoTarjeta += total;
+                document.getElementById('val-tarjeta').textContent = `$${acumuladoTarjeta.toFixed(2)}`;
+            }
+
+            const totalGeneral = acumuladoEfectivo + acumuladoTarjeta;
+            document.getElementById('val-total').textContent = `$${totalGeneral.toFixed(2)}`;
+
+            alert(`Cobrado con éxito ($${metodo}): $${total.toFixed(2)}`);
+            ordenActual = [];
+            renderCarrito();
+        }
+
+        function cancelarCuenta() {
+            if (ordenActual.length === 0) return;
+            if (confirm("¿Deseas cancelar la cuenta activa?")) {
+                ordenActual = [];
+                renderCarrito();
+            }
+        }
+
+        function imprimirComanda() {
+            if (ordenActual.length === 0) return alert("No hay items para enviar a barra");
+            alert("Comanda enviada a cocina/barra.");
+        }
+
+        function imprimirPrecuenta() {
+            if (ordenActual.length === 0) return alert("No hay items en la cuenta");
+            alert("Imprimiendo pre-cuenta para cliente...");
+        }
+
+        // TICKET DE CORTE
         function ejecutarCorteCaja() {
-            const totalGeneral = totalEfectivo + totalTarjeta;
+            const totalGeneral = acumuladoEfectivo + acumuladoTarjeta;
             const fechaHora = new Date().toLocaleString();
 
             const ticketContainer = document.getElementById('ticket-corte');
@@ -380,10 +633,10 @@
                     <p style="margin: 2px 0;">--------------------------------</p>
                     <div style="text-align: left; font-size: 12px; margin: 5px 0;">
                         <p style="display: flex; justify-content: space-between;">
-                            <span>EFECTIVO:</span> <span>$${totalEfectivo.toFixed(2)}</span>
+                            <span>EFECTIVO:</span> <span>$${acumuladoEfectivo.toFixed(2)}</span>
                         </p>
                         <p style="display: flex; justify-content: space-between;">
-                            <span>TARJETA:</span> <span>$${totalTarjeta.toFixed(2)}</span>
+                            <span>TARJETA:</span> <span>$${acumuladoTarjeta.toFixed(2)}</span>
                         </p>
                     </div>
                     <p style="margin: 2px 0;">--------------------------------</p>
@@ -395,9 +648,10 @@
                 </div>
             `;
 
-            // Llama a la ventana de impresión del navegador
             window.print();
         }
+
+        init();
     </script>
 </body>
 </html>
