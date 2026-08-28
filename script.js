@@ -625,3 +625,29 @@ function cerrarCajaTurno() {
 renderizarMenu();
 actualizarCarritoUI();
 actualizarUIComandasPendientes();
+// Función para cancelar la cuenta/orden actual requiriendo contraseña (0705)
+function cancelarCuentaActual() {
+  if (carrito.length === 0) {
+    alert("No hay productos en la cuenta actual para cancelar.");
+    return;
+  }
+
+  // Solicitar la clave de autorización
+  const clave = prompt("Ingrese la contraseña de autorización para cancelar la cuenta:");
+
+  if (clave === null) {
+    // El usuario presionó Cancelar en la ventana modal
+    return;
+  }
+
+  if (clave.trim() === "0705") {
+    if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrarán todos los productos agregados a esta orden.")) {
+      carrito = [];
+      comandaActualId = Date.now();
+      actualizarCarritoUI();
+      alert("🚫 Cuenta cancelada con éxito.");
+    }
+  } else {
+    alert("⛔ Contraseña incorrecta. No se puede cancelar la cuenta.");
+  }
+}
