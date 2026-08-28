@@ -700,3 +700,4 @@ window.onload = function() {
   actualizarUIComandasPendientes();
 
 }
+}
