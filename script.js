@@ -127,6 +127,12 @@ const menuData = {
     { nombre: "Smoothie Tropical / Banana Berry", precio: 95 },
     { nombre: "Smoothie Apple Kiss / Exótico", precio: 95 }
   ],
+  friasMinerales: [
+    { nombre: "Agua Mineral Kirkland", precio: 40 },
+    { nombre: "Agua Mineral Perrier", precio: 50 },
+    { nombre: "Mineral Kirkland Preparada", precio: 65 },
+    { nombre: "Agua Mineral Perrier Preparada", precio: 65 }
+  ],
   friasMocktails: [
     { nombre: "Mocktail Frutos Rojos / Kiwi / Lichi", precio: 85 },
     { nombre: "Tizana Fría", precio: 85 },
@@ -189,6 +195,7 @@ function renderizarMenu() {
     'grid-frias-especialess': menuData.friasEspecialess,
     'grid-frias-foam-malteadas': menuData.friasFoamMalteadas,
     'grid-frias-varios': menuData.friasVarios,
+    'grid-frias-minerales': menuData.friasMinerales,
     'grid-frias-mocktails': menuData.friasMocktails,
     'grid-alimentos-salados': menuData.alimentosSalados,
     'grid-alimentos-dulces': menuData.alimentosDulces
@@ -280,7 +287,7 @@ function actualizarCarritoUI() {
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
-// CORRECCIÓN CLAVE: CANCELAR CUENTA Y ELIMINARLA DE LA NUBE/LOCALSTORAGE
+// CANCELAR CUENTA Y ELIMINARLA DE LA NUBE/LOCALSTORAGE
 function cancelarCuentaActual() {
   if (carrito.length === 0) {
     alert("No hay productos en la cuenta actual para cancelar.");
@@ -294,12 +301,12 @@ function cancelarCuentaActual() {
   if (clave.trim() === "0705") {
     if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrará de la lista de pendientes y de la nube.")) {
       
-      // 1. ELIMINAR DE LA NUBE / ALMACENAMIENTO (comandasPendientes)
+      // ELIMINAR DE LA NUBE / ALMACENAMIENTO (comandasPendientes)
       let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
       comandas = comandas.filter(c => c.id !== comandaActualId);
       localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
 
-      // 2. LIMPIAR PANTALLA Y CONTADOR
+      // LIMPIAR PANTALLA Y CONTADOR
       carrito = [];
       comandaActualId = Date.now();
       actualizarCarritoUI();
