@@ -646,6 +646,44 @@ function cerrarCajaTurno() {
   }
 }
 
+function ejecutarCorteCaja() {
+            const totalGeneral = acumuladoEfectivo + acumuladoTarjeta;
+            
+            if (totalGeneral === 0) {
+                return alert("No hay ventas registradas en el día actual.");
+            }
+
+            esProcesoCorte = true;
+            const fechaHora = new Date().toLocaleString();
+            const ticketContainer = document.getElementById('ticket-contenedor');
+            
+            ticketContainer.innerHTML = `
+                <div style="text-align: center; width: 100%; font-family: monospace; font-size: 10px;">
+                    <h2 style="margin: 0; font-size: 13px;">BLESS COFFEE</h2>
+                    <p style="margin: 2px 0; font-size: 10px;">CORTE DE CAJA</p>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <p style="text-align: left; margin: 2px 0; font-size: 10px;">FECHA: ${fechaHora}</p>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <div style="text-align: left; font-size: 10px; margin: 4px 0;">
+                        <div style="display: flex; justify-content: space-between; margin: 2px 0;">
+                            <span>EFECTIVO:</span> <span>$${acumuladoEfectivo.toFixed(2)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 2px 0;">
+                            <span>TARJETA:</span> <span>$${acumuladoTarjeta.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <h3 style="text-align: right; margin: 4px 0; font-size: 12px;">
+                        TOTAL ACUM: $${totalGeneral.toFixed(2)}
+                    </h3>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <p style="margin-top: 5px; font-weight: bold; font-size: 10px;">*** TICKET DE CORTE ***</p>
+                </div>
+            `;
+
+            document.getElementById('modal-ticket-general').style.display = 'flex';
+        }
+
 // Inicialización al cargar la página
 window.onload = function() {
   renderizarMenu();
