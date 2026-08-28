@@ -1,4 +1,4 @@
-// Base de datos completa del Menú
+// Base de datos del Menú
 const menuData = {
   calientesCafe: [
     { nombre: "Espresso Sencillo (1oz)", precio: 35 },
@@ -174,20 +174,6 @@ const menuData = {
   ]
 };
 
-// Actualización de las opciones del selector de leche en el HTML
-window.addEventListener('DOMContentLoaded', () => {
-  const selectLeche = document.getElementById('selectLeche');
-  if (selectLeche) {
-    selectLeche.innerHTML = `
-      <option value="Sin leche">Sin Leche ($0)</option>
-      <option value="Entera">Entera ($0)</option>
-      <option value="Light">Light ($0)</option>
-      <option value="Deslactosada">Deslactosada (+$12)</option>
-      <option value="Vegetal">Vegetal / Almendra / Avena (+$12)</option>
-    `;
-  }
-});
-
 let carrito = [];
 let comandaActualId = Date.now();
 
@@ -293,6 +279,31 @@ function actualizarCarritoUI() {
   `).join('');
 
   totalTxt.innerText = `$${total.toFixed(2)}`;
+}
+
+// Cancelar Cuenta (Con contraseña 0705)
+function cancelarCuentaActual() {
+  if (carrito.length === 0) {
+    alert("No hay productos en la cuenta actual para cancelar.");
+    return;
+  }
+
+  const clave = prompt("Ingrese la contraseña de autorización para cancelar la cuenta:");
+
+  if (clave === null) {
+    return;
+  }
+
+  if (clave.trim() === "0705") {
+    if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrarán todos los productos agregados a esta orden.")) {
+      carrito = [];
+      comandaActualId = Date.now();
+      actualizarCarritoUI();
+      alert("🚫 Cuenta cancelada con éxito.");
+    }
+  } else {
+    alert("⛔ Contraseña incorrecta. No se puede cancelar la cuenta.");
+  }
 }
 
 // Imprimir Comanda (Cocina / Barra)
@@ -591,7 +602,8 @@ function renderizarCorteCaja() {
         <h3>$${totalGeneral.toFixed(2)}</h3>
       </div>
     </div>
-    <button class="btn-accion btn-cerrar-caja" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
+    <br>
+    <button class="btn-accion btn-cancelar" style="width: auto; padding: 12px 20px;" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
   `;
 }
 
@@ -625,29 +637,3 @@ function cerrarCajaTurno() {
 renderizarMenu();
 actualizarCarritoUI();
 actualizarUIComandasPendientes();
-// Función para cancelar la cuenta/orden actual requiriendo contraseña (0705)
-function cancelarCuentaActual() {
-  if (carrito.length === 0) {
-    alert("No hay productos en la cuenta actual para cancelar.");
-    return;
-  }
-
-  // Solicitar la clave de autorización
-  const clave = prompt("Ingrese la contraseña de autorización para cancelar la cuenta:");
-
-  if (clave === null) {
-    // El usuario presionó Cancelar en la ventana modal
-    return;
-  }
-
-  if (clave.trim() === "0705") {
-    if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrarán todos los productos agregados a esta orden.")) {
-      carrito = [];
-      comandaActualId = Date.now();
-      actualizarCarritoUI();
-      alert("🚫 Cuenta cancelada con éxito.");
-    }
-  } else {
-    alert("⛔ Contraseña incorrecta. No se puede cancelar la cuenta.");
-  }
-}
