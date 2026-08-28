@@ -1,219 +1,654 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Menú Completo Bless Coffee</title>
-    <style>
-        @page {
-            size: A4;
-            margin: 8mm 10mm 8mm 10mm;
-            background-color: #0f172a;
-        }
+// Base de datos del Menú
+const menuData = {
+  calientesCafe: [
+    { nombre: "Espresso Sencillo (1oz)", precio: 35 },
+    { nombre: "Espresso Doble (2oz)", precio: 45 },
+    { nombre: "Doble Cortado (2oz)", precio: 50 },
+    { nombre: "Panna (2oz)", precio: 50 },
+    { nombre: "Flat White (2oz)", precio: 55 },
+    { nombre: "Affogato", precio: 65 },
+    { nombre: "Affogato Nut", precio: 95 },
+    { nombre: "Americano M", precio: 42 },
+    { nombre: "Americano G", precio: 47 },
+    { nombre: "Café de Olla M", precio: 47 },
+    { nombre: "Café de Olla G", precio: 52 },
+    { nombre: "Capuccino / Latte M", precio: 60 },
+    { nombre: "Capuccino / Latte G", precio: 65 },
+    { nombre: "Moka Obscuro M", precio: 80 },
+    { nombre: "Moka Obscuro G", precio: 85 },
+    { nombre: "Moka Blanco M", precio: 80 },
+    { nombre: "Moka Blanco G", precio: 85 },
+    { nombre: "Caramel Latte M", precio: 80 },
+    { nombre: "Caramel Latte G", precio: 85 },
+    { nombre: "Cajeta Latte M", precio: 80 },
+    { nombre: "Cajeta Latte G", precio: 85 }
+  ],
+  calientesSinCafe: [
+    { nombre: "Chocolate Obscuro M", precio: 75 },
+    { nombre: "Chocolate Obscuro G", precio: 80 },
+    { nombre: "Chocolate Blanco M", precio: 75 },
+    { nombre: "Chocolate Blanco G", precio: 80 },
+    { nombre: "Chai M", precio: 80 },
+    { nombre: "Chai G", precio: 85 },
+    { nombre: "Matcha M", precio: 80 },
+    { nombre: "Matcha G", precio: 85 },
+    { nombre: "Taro M", precio: 80 },
+    { nombre: "Taro G", precio: 85 },
+    { nombre: "Horchata M", precio: 75 },
+    { nombre: "Horchata G", precio: 80 }
+  ],
+  calientesEspecialess: [
+    { nombre: "Chai Manzana Verde M", precio: 80 },
+    { nombre: "Chai Manzana Verde G", precio: 85 },
+    { nombre: "Horchai M", precio: 80 },
+    { nombre: "Horchai G", precio: 85 },
+    { nombre: "Blessed M", precio: 90 },
+    { nombre: "Blessed G", precio: 95 },
+    { nombre: "Hope Latte M", precio: 90 },
+    { nombre: "Hope Latte G", precio: 95 },
+    { nombre: "Ferrero Sin Café M", precio: 80 },
+    { nombre: "Ferrero Sin Café G", precio: 85 },
+    { nombre: "Ferrero Con Café M", precio: 90 },
+    { nombre: "Ferrero Con Café G", precio: 95 },
+    { nombre: "Mazapán M", precio: 80 },
+    { nombre: "Mazapán G", precio: 85 }
+  ],
+  calientesInfusionables: [
+    { nombre: "Tizana Fresa Kiwi M", precio: 75 },
+    { nombre: "Tizana Fresa Kiwi G", precio: 80 },
+    { nombre: "Tizana Maracuyá M", precio: 75 },
+    { nombre: "Tizana Maracuyá G", precio: 80 },
+    { nombre: "Tizana Frutos Tropicales M", precio: 75 },
+    { nombre: "Tizana Frutos Tropicales G", precio: 80 },
+    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) M", precio: 45 },
+    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) G", precio: 50 }
+  ],
+  friasCafe: [
+    { nombre: "Americano Frío", precio: 55 },
+    { nombre: "Capuccino/Latte Frío", precio: 70 },
+    { nombre: "Capuccino/Latte Frappé", precio: 75 },
+    { nombre: "Cold Brew", precio: 70 },
+    { nombre: "Moka Frío", precio: 80 },
+    { nombre: "Moka Frappé", precio: 85 },
+    { nombre: "Moka Blanco Frío", precio: 80 },
+    { nombre: "Moka Blanco Frappé", precio: 85 },
+    { nombre: "Caramel Latte Frío", precio: 80 },
+    { nombre: "Caramel Latte Frappé", precio: 85 },
+    { nombre: "Cajeta Latte Frío", precio: 80 },
+    { nombre: "Cajeta Latte Frappé", precio: 85 }
+  ],
+  friasSinCafe: [
+    { nombre: "Chocolate Obscuro Frío", precio: 80 },
+    { nombre: "Chocolate Obscuro Frappé", precio: 85 },
+    { nombre: "Chai Frío", precio: 85 },
+    { nombre: "Chai Frappé", precio: 90 },
+    { nombre: "Matcha Frío", precio: 85 },
+    { nombre: "Matcha Frappé", precio: 90 },
+    { nombre: "Taro Frío", precio: 85 },
+    { nombre: "Taro Frappé", precio: 90 },
+    { nombre: "Cookies (Oreo) Frío", precio: 85 },
+    { nombre: "Cookies (Oreo) Frappé", precio: 90 },
+    { nombre: "Horchata Fría", precio: 85 },
+    { nombre: "Horchata Frappé", precio: 90 }
+  ],
+  friasEspecialess: [
+    { nombre: "Chai Manzana Verde Frío", precio: 85 },
+    { nombre: "Chai Manzana Verde Frappé", precio: 90 },
+    { nombre: "Horchai Frío", precio: 90 },
+    { nombre: "Horchai Frappé", precio: 95 },
+    { nombre: "Blessed Frío", precio: 90 },
+    { nombre: "Blessed Frappé", precio: 95 },
+    { nombre: "Hope Latte Frío", precio: 90 },
+    { nombre: "Hope Latte Frappé", precio: 95 },
+    { nombre: "Ferrero Sin Café Frío", precio: 80 },
+    { nombre: "Ferrero Sin Café Frappé", precio: 85 },
+    { nombre: "Ferrero Con Café Frío", precio: 90 },
+    { nombre: "Ferrero Con Café Frappé", precio: 95 },
+    { nombre: "Mazapán Frío", precio: 90 },
+    { nombre: "Mazapán Frappé", precio: 95 }
+  ],
+  friasFoamMalteadas: [
+    { nombre: "Cold Foam Vainilla/Caramelo/Moka", precio: 95 },
+    { nombre: "Cold Foam Taro Coconut", precio: 99 },
+    { nombre: "Cold Foam Berry Matcha", precio: 99 },
+    { nombre: "Cold Foam Banana Peanut Coffee", precio: 99 },
+    { nombre: "Cold Foam Strawberry Coconut", precio: 99 },
+    { nombre: "Cold Foam Matcha Coconut", precio: 99 },
+    { nombre: "Malteada Vainilla/Fresa/Chocolate", precio: 90 },
+    { nombre: "Malteada Caramelo/Oreo/Ferrero", precio: 95 }
+  ],
+  friasVarios: [
+    { nombre: "Shaken Tea", precio: 80 },
+    { nombre: "Naranjada / Limonada", precio: 60 },
+    { nombre: "Black Orange Tonic", precio: 80 },
+    { nombre: "Lemon Coffee Tonic", precio: 80 },
+    { nombre: "Chamoyada Mango/Fresa/Maracuyá", precio: 80 },
+    { nombre: "Smoothie Detox", precio: 95 },
+    { nombre: "Smoothie Tropical / Banana Berry", precio: 95 },
+    { nombre: "Smoothie Apple Kiss / Exótico", precio: 95 }
+  ],
+  friasMinerales: [
+    { nombre: "Agua Mineral Kirkland", precio: 40 },
+    { nombre: "Agua Mineral Perrier", precio: 50 },
+    { nombre: "Mineral Kirkland Preparada", precio: 65 },
+    { nombre: "Agua Mineral Perrier Preparada", precio: 65 }
+  ],
+  friasMocktails: [
+    { nombre: "Mocktail Frutos Rojos / Kiwi / Lichi", precio: 85 },
+    { nombre: "Tizana Fría", precio: 85 },
+    { nombre: "Tizana Frappé", precio: 90 },
+    { nombre: "Té Herbal Frío", precio: 65 }
+  ],
+  alimentosSalados: [
+    { nombre: "Molletes Sencillos", precio: 80 },
+    { nombre: "Molletes con Jamón", precio: 90 },
+    { nombre: "Molletes con Chorizo", precio: 99 },
+    { nombre: "Chilaquiles Sencillos", precio: 80 },
+    { nombre: "Chilaquiles c/ Huevo", precio: 95 },
+    { nombre: "Chilaquiles c/ Pollo", precio: 110 },
+    { nombre: "Chilaquiles Gratinedos", precio: 140 },
+    { nombre: "Sincronizada", precio: 70 },
+    { nombre: "Chapata Pizza", precio: 99 },
+    { nombre: "Baguette / Chapata Pechuga Pavo", precio: 90 },
+    { nombre: "Wrap Clásico", precio: 75 },
+    { nombre: "Wrap Pollo", precio: 85 },
+    { nombre: "Ensalada Bless", precio: 65 },
+    { nombre: "Especialess Salada Mexicana", precio: 120 },
+    { nombre: "Especialess Salada Hawaiiana", precio: 120 },
+    { nombre: "Especialess Salada Vegetariana", precio: 120 },
+    { nombre: "Especialess Salada Italiana", precio: 130 },
+    { nombre: "Especialess Salada Bless", precio: 130 }
+  ],
+  alimentosDulces: [
+    { nombre: "Crepa Tradicional", precio: 95 },
+    { nombre: "Crepa Frutal", precio: 99 },
+    { nombre: "Crepa Celaya", precio: 115 },
+    { nombre: "Crepa Celaya Frutal", precio: 120 },
+    { nombre: "Crepa Banana Bless", precio: 120 },
+    { nombre: "Crepa Arroz con Leche", precio: 120 },
+    { nombre: "Crepa Rompope Bless", precio: 130 },
+    { nombre: "Crepa Dulce Deseo", precio: 130 },
+    { nombre: "Hot Cakes", precio: 80 },
+    { nombre: "Hot Cakes 3 Leches", precio: 100 },
+    { nombre: "Waffles", precio: 80 },
+    { nombre: "Pastel del Día", precio: 70 },
+    { nombre: "Rol de Canela", precio: 49 },
+    { nombre: "Bisquet c/ Mermelada", precio: 35 },
+    { nombre: "Croissant c/ Mermelada", precio: 60 },
+    { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
+    { nombre: "Postre Especialess Waffles Bless", precio: 99 }
+  ]
+};
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+let carrito = [];
+let comandaActualId = Date.now();
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #f8fafc;
-            background-color: #0f172a;
-            font-size: 7.5pt;
-            line-height: 1.15;
-        }
+// Renderizar Menú
+function renderizarMenu() {
+  const mapeo = {
+    'grid-calientes-cafe': menuData.calientesCafe,
+    'grid-calientes-sincafe': menuData.calientesSinCafe,
+    'grid-calientes-especialess': menuData.calientesEspecialess,
+    'grid-calientes-infusionables': menuData.calientesInfusionables,
+    'grid-frias-cafe': menuData.friasCafe,
+    'grid-frias-sincafe': menuData.friasSinCafe,
+    'grid-frias-especialess': menuData.friasEspecialess,
+    'grid-frias-foam-malteadas': menuData.friasFoamMalteadas,
+    'grid-frias-varios': menuData.friasVarios,
+    'grid-frias-minerales': menuData.friasMinerales,
+    'grid-frias-mocktails': menuData.friasMocktails,
+    'grid-alimentos-salados': menuData.alimentosSalados,
+    'grid-alimentos-dulces': menuData.alimentosDulces
+  };
 
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #f59e0b;
-            padding-bottom: 4px;
-            margin-bottom: 8px;
-        }
+  for (let idContainer in mapeo) {
+    const container = document.getElementById(idContainer);
+    if (!container) continue;
 
-        .header h1 {
-            font-size: 16pt;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #ffffff;
-            margin: 0 0 2px 0;
-        }
+    container.innerHTML = mapeo[idContainer].map(prod => `
+      <div class="card-producto" onclick="agregarAlCarrito('${prod.nombre}', ${prod.precio})">
+        <h4>${prod.nombre}</h4>
+        <div class="precio">$${prod.precio.toFixed(2)}</div>
+      </div>
+    `).join('');
+  }
+}
 
-        .header p {
-            font-size: 8pt;
-            letter-spacing: 1px;
-            color: #f59e0b;
-            text-transform: uppercase;
-            margin: 0;
-            font-weight: 600;
-        }
+// Filtro de Buscador
+function filtrarProductos() {
+  const texto = document.getElementById('inputBuscador').value.toLowerCase();
+  const tarjetas = document.querySelectorAll('.card-producto');
 
-        .menu-grid {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
+  tarjetas.forEach(card => {
+    const nombre = card.querySelector('h4').innerText.toLowerCase();
+    card.style.display = nombre.includes(texto) ? 'block' : 'none';
+  });
+}
 
-        .column {
-            display: table-cell;
-            width: 48.5%;
-            vertical-align: top;
-        }
+function cambiarPestana(idPestana) {
+  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
 
-        .column-spacer {
-            display: table-cell;
-            width: 3%;
-        }
+  const tabContent = document.getElementById(`tab-${idPestana}`);
+  if (tabContent) tabContent.classList.add('active');
 
-        .section-title {
-            font-size: 8.5pt;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #f59e0b;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 2px;
-            margin-top: 6px;
-            margin-bottom: 4px;
-        }
+  if (event && event.target) event.target.classList.add('active');
 
-        .menu-item {
-            margin-bottom: 3px;
-            page-break-inside: avoid;
-        }
+  if (idPestana === 'corte') renderizarCorteCaja();
+}
 
-        .item-header {
-            display: table;
-            width: 100%;
-        }
+function agregarAlCarrito(nombre, precioBase) {
+  const lecheSelect = document.getElementById('selectLeche');
+  const tipoLeche = lecheSelect ? lecheSelect.value : 'Sin leche';
+  
+  let extraLeche = (tipoLeche === 'Deslactosada' || tipoLeche === 'Vegetal') ? 12 : 0;
 
-        .item-name {
-            display: table-cell;
-            font-size: 7.5pt;
-            font-weight: 500;
-            color: #e2e8f0;
-            text-align: left;
-        }
+  carrito.push({
+    idUnico: Date.now() + Math.random(),
+    nombre: nombre,
+    precio: precioBase + extraLeche,
+    leche: tipoLeche
+  });
 
-        .item-dots {
-            display: table-cell;
-            border-bottom: 1px dotted #475569;
-            width: auto;
-        }
+  actualizarCarritoUI();
+}
 
-        .item-price {
-            display: table-cell;
-            font-size: 7.5pt;
-            font-weight: 700;
-            color: #f59e0b;
-            text-align: right;
-            width: 35px;
-            white-space: nowrap;
-        }
+function eliminarDelCarrito(idUnico) {
+  carrito = carrito.filter(item => item.idUnico !== idUnico);
+  actualizarCarritoUI();
+}
 
-        .footer-note {
-            margin-top: 8px;
-            padding-top: 4px;
-            border-top: 1px solid #334155;
-            text-align: center;
-            font-size: 7pt;
-            color: #94a3b8;
-        }
-    </style>
-</head>
-<body>
+function actualizarCarritoUI() {
+  const lista = document.getElementById('listaCarrito');
+  const totalTxt = document.getElementById('montoTotal');
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
 
-    <div class="header">
-        <h1>BLESS COFFEE</h1>
-        <p>Menú Oficial & Precios</p>
+  if (!lista || !totalTxt) return;
+
+  if (carrito.length === 0) {
+    lista.innerHTML = '<p style="color:#94a3b8; text-align:center; margin-top:20px;">No hay ítems en la comanda</p>';
+    totalTxt.innerText = '$0.00';
+    return;
+  }
+
+  lista.innerHTML = carrito.map(item => `
+    <div class="item-carrito">
+      <div>
+        <strong>${item.nombre}</strong>
+        ${item.leche !== 'Sin leche' ? `<small>Leche: ${item.leche}</small>` : ''}
+      </div>
+      <div>
+        <span>$${item.precio.toFixed(2)}</span>
+        <button class="btn-eliminar" onclick="eliminarDelCarrito(${item.idUnico})">✕</button>
+      </div>
     </div>
+  `).join('');
 
-    <div class="menu-grid">
-        <!-- COLUMNA IZQUIERDA -->
-        <div class="column">
-            
-            <div class="section-title">Calientes Café</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Espresso Sencillo (1oz)</span><span class="item-dots"></span><span class="item-price">$35</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Espresso Doble (2oz)</span><span class="item-dots"></span><span class="item-price">$45</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Doble Cortado (2oz)</span><span class="item-dots"></span><span class="item-price">$50</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Panna (2oz) / Flat White (2oz)</span><span class="item-dots"></span><span class="item-price">$50 - $55</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Affogato / Affogato Nut</span><span class="item-dots"></span><span class="item-price">$65 - $95</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Americano (M / G)</span><span class="item-dots"></span><span class="item-price">$42 - $47</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Café de Olla (M / G)</span><span class="item-dots"></span><span class="item-price">$47 - $52</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Capuccino / Latte (M / G)</span><span class="item-dots"></span><span class="item-price">$60 - $65</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Moka Obscuro / Moka Blanco (M / G)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Caramel Latte / Cajeta Latte (M / G)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
+  totalTxt.innerText = `$${total.toFixed(2)}`;
+}
 
-            <div class="section-title">Calientes Sin Café</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Chocolate Obscuro / Blanco (M / G)</span><span class="item-dots"></span><span class="item-price">$75 - $80</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Chai / Matcha / Taro (M / G)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Horchata (M / G)</span><span class="item-dots"></span><span class="item-price">$75 - $80</span></div></div>
+// CANCELAR CUENTA Y ELIMINARLA DE LA NUBE/LOCALSTORAGE
+function cancelarCuentaActual() {
+  if (carrito.length === 0) {
+    alert("No hay productos en la cuenta actual para cancelar.");
+    return;
+  }
 
-            <div class="section-title">Calientes Especiales</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Chai Manzana Verde / Horchai (M / G)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Blessed / Hope Latte (M / G)</span><span class="item-dots"></span><span class="item-price">$90 - $95</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Ferrero Sin Café (M / G)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Ferrero Con Café (M / G)</span><span class="item-dots"></span><span class="item-price">$90 - $95</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Mazapán (M / G)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
+  const clave = prompt("Ingrese la contraseña de autorización para cancelar la cuenta:");
 
-            <div class="section-title">Infusionables & Tés</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Tizana (Fresa Kiwi / Maracuyá / Tropical) (M / G)</span><span class="item-dots"></span><span class="item-price">$75 - $80</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Té Herbal (Frambuesa/Menta/Negro/Verde) (M / G)</span><span class="item-dots"></span><span class="item-price">$45 - $50</span></div></div>
+  if (clave === null) return;
 
-            <div class="section-title">Bebidas Frías con Café</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Americano Frío / Cold Brew</span><span class="item-dots"></span><span class="item-price">$55 - $70</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Capuccino/Latte (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$70 - $75</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Moka / Moka Blanco (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Caramel / Cajeta Latte (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
+  if (clave.trim() === "0705") {
+    if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrará de la lista de pendientes y de la nube.")) {
+      
+      // ELIMINAR DE LA NUBE / ALMACENAMIENTO (comandasPendientes)
+      let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+      comandas = comandas.filter(c => c.id !== comandaActualId);
+      localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
 
+      // LIMPIAR PANTALLA Y CONTADOR
+      carrito = [];
+      comandaActualId = Date.now();
+      actualizarCarritoUI();
+      actualizarUIComandasPendientes();
+
+      alert("🚫 Cuenta cancelada y eliminada con éxito.");
+    }
+  } else {
+    alert("⛔ Contraseña incorrecta. No se puede cancelar la cuenta.");
+  }
+}
+
+// Imprimir Comanda (Cocina / Barra)
+function imprimirComanda() {
+  if (carrito.length === 0) {
+    alert("No hay productos en el carrito para enviar a cocina/barra.");
+    return;
+  }
+
+  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  guardarComandaSilencioso();
+
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
+
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          @page { margin: 0; }
+          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; }
+          .centro { text-align: center; }
+          .linea { border-bottom: 2px solid #000; margin: 6px 0; }
+          .item { font-weight: bold; font-size: 15px; margin-top: 4px; }
+          .subitem { font-size: 13px; margin-left: 8px; }
+        </style>
+      </head>
+      <body>
+        <div class="centro">
+          <h2>*** COMANDA ***</h2>
+          <strong>ORDEN #${comandaActualId.toString().slice(-4)}</strong><br>
+          <small>Hora: ${hora}</small>
         </div>
+        <div class="linea"></div>
+        ${carrito.map(i => `
+          <div class="item">• 1x ${i.nombre}</div>
+          ${i.leche !== 'Sin leche' ? `<div class="subitem">Leche: ${i.leche}</div>` : ''}
+        `).join('')}
+        <div class="linea"></div>
+        <script>
+          window.onload = function() { window.print(); window.close(); }
+        </script>
+      </body>
+    </html>
+  `);
+  ventana.document.close();
+}
 
-        <div class="column-spacer"></div>
+// Imprimir Pre-Cuenta Cliente
+function imprimirPrecuenta() {
+  if (carrito.length === 0) {
+    alert("No hay productos en el carrito para generar la cuenta.");
+    return;
+  }
 
-        <!-- COLUMNA DERECHA -->
-        <div class="column">
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
 
-            <div class="section-title">Frías Sin Café & Especiales</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Chocolate Obscuro (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Chai / Matcha / Taro / Oreo (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$85 - $90</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Horchata / Chai Manzana Verde (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$85 - $90</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Horchai / Blessed / Hope Latte (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$90 - $95</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Ferrero Sin Café (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$80 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Ferrero Con Café / Mazapán (Frío / Frappé)</span><span class="item-dots"></span><span class="item-price">$90 - $95</span></div></div>
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
 
-            <div class="section-title">Cold Foam, Malteadas & Varios</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Cold Foam Vainilla / Caramelo / Moka</span><span class="item-dots"></span><span class="item-price">$95</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Cold Foam (Taro, Berry, Banana, Strawb, Matcha)</span><span class="item-dots"></span><span class="item-price">$99</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Malteadas (Clásicas / Especiales)</span><span class="item-dots"></span><span class="item-price">$90 - $95</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Shaken Tea / Naranjada / Limonada</span><span class="item-dots"></span><span class="item-price">$60 - $80</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Black Orange / Lemon Coffee Tonic / Chamoyadas</span><span class="item-dots"></span><span class="item-price">$80</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Smoothies (Detox / Tropical / Apple Kiss)</span><span class="item-dots"></span><span class="item-price">$95</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Mocktails / Tizana Fría / Té Herbal Frío</span><span class="item-dots"></span><span class="item-price">$65 - $90</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Agua Mineral Kirkland / Perrier</span><span class="item-dots"></span><span class="item-price">$40 - $65</span></div></div>
-
-            <div class="section-title">Alimentos Salados</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Molletes (Sencillos / Jamón / Chorizo)</span><span class="item-dots"></span><span class="item-price">$80 - $99</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Chilaquiles (Sencillos / Huevo / Pollo / Gratinados)</span><span class="item-dots"></span><span class="item-price">$80 - $140</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Sincronizada / Chapata Pizza / Pechuga Pavo</span><span class="item-dots"></span><span class="item-price">$70 - $99</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Wraps (Clásico / Pollo)</span><span class="item-dots"></span><span class="item-price">$75 - $85</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Ensalada Bless</span><span class="item-dots"></span><span class="item-price">$65</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Especiales Saladas (Mexicana, Haw, Veg, Ita, Bless)</span><span class="item-dots"></span><span class="item-price">$120 - $130</span></div></div>
-
-            <div class="section-title">Alimentos Dulces & Repostería</div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Crepas Tradicional / Frutal / Celaya / Especiales</span><span class="item-dots"></span><span class="item-price">$95 - $130</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Hot Cakes / Hot Cakes 3 Leches / Waffles</span><span class="item-dots"></span><span class="item-price">$80 - $100</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Pastel del Día / Rol de Canela</span><span class="item-dots"></span><span class="item-price">$49 - $70</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Bisquet / Croissant c/ Mermelada</span><span class="item-dots"></span><span class="item-price">$35 - $60</span></div></div>
-            <div class="menu-item"><div class="item-header"><span class="item-name">Postres Especiales (Bisquet/Croissant/Waffles Bless)</span><span class="item-dots"></span><span class="item-price">$90 - $99</span></div></div>
-
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          @page { margin: 0; }
+          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
+          .centro { text-align: center; }
+          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+          .flex { display: flex; justify-content: space-between; font-weight: bold; }
+          .total-box { font-size: 18px; font-weight: bold; margin-top: 6px; }
+        </style>
+      </head>
+      <body>
+        <div class="centro">
+          <strong>PRE-CUENTA</strong><br>
+          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
         </div>
-    </div>
+        <div class="linea"></div>
+        ${carrito.map(i => `
+          <div class="flex">
+            <span>${i.nombre}</span>
+            <span>$${i.precio.toFixed(2)}</span>
+          </div>
+          ${i.leche !== 'Sin leche' ? `<small style="margin-left: 6px;">• Leche: ${i.leche}</small>` : ''}
+        `).join('')}
+        <div class="linea"></div>
+        <div class="flex total-box">
+          <span>TOTAL:</span>
+          <span>$${total.toFixed(2)}</span>
+        </div>
+        <div class="linea"></div>
+        <div class="centro">*** ESTE TICKET NO ES UN COMPROBANTE DE PAGO ***</div>
+        <script>
+          window.onload = function() { window.print(); window.close(); }
+        </script>
+      </body>
+    </html>
+  `);
+  ventana.document.close();
+}
 
-    <div class="footer-note">
-        * Extra de leche Deslactosada o Vegetal: +$12.00 MXN.<br>
-        Todos nuestros productos se preparan al momento. Precios expresados en Moneda Nacional (MXN).
-    </div>
+// Finalizar Cobro
+function finalizarCobro(metodoPago) {
+  if (carrito.length === 0) {
+    alert("Agrega productos a la comanda para poder cobrar.");
+    return;
+  }
 
-</body>
-</html>
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+
+  const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+  historialVentas.push({
+    id: Date.now(),
+    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    items: [...carrito],
+    total: total,
+    metodo: metodoPago
+  });
+  localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
+
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  comandas = comandas.filter(c => c.id !== comandaActualId);
+  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+
+  imprimirTicketFinal(carrito, total, metodoPago);
+
+  carrito = [];
+  comandaActualId = Date.now();
+  actualizarCarritoUI();
+  actualizarUIComandasPendientes();
+  renderizarCorteCaja();
+}
+
+function imprimirTicketFinal(items, total, metodo) {
+  const ventana = window.open('', '', 'width=400,height=600');
+  if (!ventana) return;
+  
+  ventana.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          @page { margin: 0; }
+          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
+          .centro { text-align: center; }
+          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+          .flex { display: flex; justify-content: space-between; font-weight: bold; }
+          .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
+        </style>
+      </head>
+      <body>
+        <div class="centro">
+          <h2>BLESS COFFEE</h2>
+          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
+        </div>
+        <div class="linea"></div>
+        ${items.map(i => `
+          <div class="flex">
+            <span>${i.nombre}</span>
+            <span>$${i.precio.toFixed(2)}</span>
+          </div>
+          ${i.leche !== 'Sin leche' ? `<div style="font-size:12px;">• Leche: ${i.leche}</div>` : ''}
+        `).join('')}
+        <div class="linea"></div>
+        <div class="flex total-box">
+          <span>PAGADO:</span>
+          <span>$${total.toFixed(2)}</span>
+        </div>
+        <div class="linea"></div>
+        <div class="centro">
+          Forma de Pago: <strong>${metodo}</strong><br><br>
+          ¡Gracias por tu visita!
+        </div>
+        <script>
+          window.onload = function() { window.print(); window.close(); }
+        </script>
+      </body>
+    </html>
+  `);
+  ventana.document.close();
+}
+
+function guardarComandaSilencioso() {
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+  const idx = comandas.findIndex(c => c.id === comandaActualId);
+
+  const datosComanda = {
+    id: comandaActualId,
+    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    items: [...carrito],
+    total: total
+  };
+
+  if (idx >= 0) {
+    comandas[idx] = datosComanda;
+  } else {
+    comandas.push(datosComanda);
+  }
+
+  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+  actualizarUIComandasPendientes();
+}
+
+function guardarComandaPendiente() {
+  if (carrito.length === 0) {
+    alert("Agrega productos a la comanda antes de guardarla.");
+    return;
+  }
+
+  guardarComandaSilencioso();
+  carrito = [];
+  comandaActualId = Date.now();
+  actualizarCarritoUI();
+  alert("☁️ Comanda guardada en pendientes.");
+}
+
+function actualizarUIComandasPendientes() {
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  const badge = document.getElementById('badgeComandasCount');
+  if (badge) badge.innerText = comandas.length;
+}
+
+function abrirModalComandas() {
+  const modal = document.getElementById('modalComandas');
+  const contenedor = document.getElementById('listaComandasModal');
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+
+  if (comandas.length === 0) {
+    contenedor.innerHTML = '<p style="color:#64748b; text-align:center;">No hay comandas pendientes.</p>';
+  } else {
+    contenedor.innerHTML = comandas.map(c => `
+      <div class="card-comanda-item">
+        <div>
+          <strong>Orden #${c.id.toString().slice(-4)}</strong> <small>(${c.hora})</small><br>
+          <small>${c.items.map(i => i.nombre).join(', ')}</small><br>
+          <strong style="color:#16a34a;">Total: $${c.total.toFixed(2)}</strong>
+        </div>
+        <button class="btn-tab" onclick="cargarComanda(${c.id})">Cobrar / Editar</button>
+      </div>
+    `).join('');
+  }
+
+  modal.classList.add('active');
+}
+
+function cerrarModalComandas() {
+  document.getElementById('modalComandas').classList.remove('active');
+}
+
+function cargarComanda(id) {
+  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  const comanda = comandas.find(c => c.id === id);
+
+  if (comanda) {
+    carrito = [...comanda.items];
+    comandaActualId = comanda.id;
+    actualizarCarritoUI();
+    cerrarModalComandas();
+  }
+}
+
+function renderizarCorteCaja() {
+  const contenedorCorte = document.getElementById('tab-corte');
+  if (!contenedorCorte) return;
+
+  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+  let totalEfectivo = 0;
+  let totalTarjeta = 0;
+
+  ventas.forEach(v => {
+    if (v.metodo === 'Tarjeta') totalTarjeta += v.total;
+    else totalEfectivo += v.total;
+  });
+
+  const totalGeneral = totalEfectivo + totalTarjeta;
+
+  contenedorCorte.innerHTML = `
+    <h2>Corte de Caja Diario</h2>
+    <div style="display:flex; gap:15px; margin-top:15px;">
+      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #16a34a;">
+        <span>Efectivo</span>
+        <h3>$${totalEfectivo.toFixed(2)}</h3>
+      </div>
+      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #2563eb;">
+        <span>Tarjeta</span>
+        <h3>$${totalTarjeta.toFixed(2)}</h3>
+      </div>
+      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #0284c7;">
+        <span>Total Acumulado</span>
+        <h3>$${totalGeneral.toFixed(2)}</h3>
+      </div>
+    </div>
+    <br>
+    <button class="btn-accion btn-cancelar" style="width: auto; padding: 12px 20px;" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
+  `;
+}
+
+function cerrarCajaTurno() {
+  const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+
+  if (carrito.length > 0) {
+    alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito.");
+    return;
+  }
+
+  if (comandasPendientes.length > 0) {
+    alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar.`);
+    return;
+  }
+
+  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+  if (ventas.length === 0) {
+    alert("No hay ventas registradas para realizar el cierre.");
+    return;
+  }
+
+  if (confirm("¿Confirmas cerrar la caja y reiniciar las ventas del día?")) {
+    localStorage.removeItem('ventasDiarias');
+    alert("✅ Caja cerrada con éxito.");
+    renderizarCorteCaja();
+  }
+}
+
+// Inicialización al cargar la página
+window.onload = function() {
+  renderizarMenu();
+  actualizarCarritoUI();
+  actualizarUIComandasPendientes();
+};
