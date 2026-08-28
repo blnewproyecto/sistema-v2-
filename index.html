@@ -3,250 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bless Coffee - POS</title>
+    <title>BLESS COFFEE POS</title>
     <style>
         * {
             box-sizing: border-box;
-            touch-action: manipulation;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 15px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            background-color: #f1f5f9;
+            color: #334155;
             height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
-        /* HEADER Y BUSCADOR */
-        .top-header {
+        /* NAVBAR SUPERIOR AZUL */
+        .navbar {
+            background-color: #0f172a;
+            color: #ffffff;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            gap: 10px;
+            padding: 10px 20px;
         }
 
-        .brand-title {
-            font-size: 18pt;
+        .brand {
+            font-size: 16px;
             font-weight: 800;
-            color: #0f172a;
-            margin: 0;
+            letter-spacing: 0.5px;
         }
 
-        .search-box {
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: #cbd5e1;
+            border: none;
+            padding: 6px 14px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .nav-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        /* MAIN CONTAINER */
+        .main-container {
+            display: flex;
             flex: 1;
-            max-width: 400px;
+            overflow: hidden;
+        }
+
+        /* SECCIÓN IZQUIERDA */
+        .left-panel {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
         }
 
         .search-input {
             width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 10pt;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: #0284c7;
-        }
-
-        .btn-corte {
-            background-color: #eab308;
-            color: #0f172a;
-            border: none;
-            padding: 10px 18px;
-            font-weight: bold;
-            font-size: 9.5pt;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .btn-corte:active {
-            background-color: #ca8a04;
-        }
-
-        /* CONTENEDOR PRINCIPAL */
-        .pos-container {
-            display: flex;
-            gap: 15px;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* SECCIÓN PRODUCTOS */
-        .products-section {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow: hidden;
-        }
-
-        .categories-bar {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .btn-category {
-            background-color: #ffffff;
-            color: #475569;
+            padding: 12px 16px;
             border: 1px solid #cbd5e1;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 9pt;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .btn-category.active {
-            background-color: #0284c7;
-            color: #ffffff;
-            border-color: #0284c7;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        .product-card {
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
             background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            min-height: 90px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            color: #64748b;
         }
 
-        .product-card:active {
-            background-color: #f1f5f9;
-            transform: scale(0.98);
-        }
-
-        .product-card .p-name {
-            font-size: 9pt;
-            font-weight: 600;
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
             color: #1e293b;
         }
 
-        .product-card .p-price {
-            font-size: 11pt;
-            font-weight: bold;
-            color: #0284c7;
-            margin-top: 6px;
+        /* METRICS CARDS */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
         }
 
-        /* SECCIÓN CARRITO */
-        .cart-section {
-            flex: 1;
+        .metric-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+        }
+
+        .card-green::before { background-color: #16a34a; }
+        .card-blue::before { background-color: #2563eb; }
+        .card-darkblue::before { background-color: #1e3a8a; }
+
+        .metric-title {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .btn-cerrar-caja {
+            background-color: #dc2626;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+        }
+
+        .btn-cerrar-caja:hover {
+            background-color: #b91c1c;
+        }
+
+        /* SECCIÓN DERECHA: ORDEN ACTIVA */
+        .right-panel {
+            width: 380px;
             background-color: #ffffff;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
+            border-left: 1px solid #e2e8f0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 20px;
         }
 
-        .cart-header {
-            font-size: 12pt;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #0f172a;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 6px;
+        .cart-header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 15px;
         }
 
-        .cart-items {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            overflow-y: auto;
+        .label-leche {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .select-leche {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+        }
+
+        .empty-cart-msg {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 40px;
             flex: 1;
         }
 
-        .cart-item {
+        /* CONTROLES Y BOTONES DE COBRO */
+        .total-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 9pt;
+            margin-bottom: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
         }
 
-        .qty-btns {
+        .total-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .total-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .action-buttons {
             display: flex;
-            gap: 5px;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .btn-q {
-            background-color: #e2e8f0;
-            color: #0f172a;
-            border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .cart-footer {
-            border-top: 2px solid #f1f5f9;
-            padding-top: 10px;
-            margin-top: 10px;
-        }
-
-        .total-display {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14pt;
-            font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 10px;
-        }
-
-        .btn-cobrar {
+        .btn-action {
             width: 100%;
             padding: 12px;
             border: none;
-            border-radius: 8px;
-            background-color: #16a34a;
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 10pt;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
             cursor: pointer;
-            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
-        /* IMPRESIÓN DEL TICKET DE CORTE */
+        .btn-primary { background-color: #2563eb; color: #ffffff; }
+        .btn-info { background-color: #0284c7; color: #ffffff; }
+        .btn-secondary { background-color: #64748b; color: #ffffff; }
+        .btn-danger { background-color: #dc2626; color: #ffffff; }
+        .btn-success { background-color: #16a34a; color: #ffffff; }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-row .btn-action {
+            flex: 1;
+        }
+
+        /* TICKET IMPRESO */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #ticket-impresion, #ticket-impresion * {
-                visibility: visible;
-            }
-            #ticket-impresion {
+            body * { visibility: hidden; }
+            #ticket-corte, #ticket-corte * { visibility: visible; }
+            #ticket-corte {
                 position: absolute;
                 left: 0;
                 top: 0;
@@ -258,334 +273,131 @@
             }
         }
 
-        #ticket-impresion {
-            display: none;
-        }
+        #ticket-corte { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- BARRA SUPERIOR BLANCA CON BUSCADOR Y CORTE -->
-    <div class="top-header">
-        <h1 class="brand-title">Bless Coffee</h1>
-        <div class="search-box">
-            <input type="text" id="input-search" class="search-input" placeholder="Buscar bebida o alimento..." oninput="buscarProducto()">
+    <!-- NAVBAR SUPERIOR -->
+    <div class="navbar">
+        <div class="brand">BLESS COFFEE POS</div>
+        <div class="nav-links">
+            <button class="nav-btn">Menú</button>
+            <button class="nav-btn">Comandas (0)</button>
+            <button class="nav-btn active">Corte de Caja</button>
         </div>
-        <button class="btn-corte" onclick="imprimirCorteCaja()">CERRAR CAJA</button>
     </div>
 
-    <div class="pos-container">
-        <!-- Panel de Productos Táctiles -->
-        <div class="products-section">
-            <div class="categories-bar" id="categories-bar"></div>
-            <div class="products-grid" id="products-grid"></div>
+    <div class="main-container">
+        <!-- PANEL IZQUIERDO: CORTE DE CAJA -->
+        <div class="left-panel">
+            <input type="text" class="search-input" placeholder="Buscar producto...">
+            
+            <h2 class="section-title">Corte de Caja Diario</h2>
+
+            <div class="metrics-grid">
+                <div class="metric-card card-green">
+                    <div class="metric-title">Efectivo</div>
+                    <div class="metric-value" id="val-efectivo">$0.00</div>
+                </div>
+                <div class="metric-card card-blue">
+                    <div class="metric-title">Tarjeta</div>
+                    <div class="metric-value" id="val-tarjeta">$0.00</div>
+                </div>
+                <div class="metric-card card-darkblue">
+                    <div class="metric-title">Total Acumulado</div>
+                    <div class="metric-value" id="val-total">$0.00</div>
+                </div>
+            </div>
+
+            <button class="btn-cerrar-caja" onclick="ejecutarCorteCaja()">
+                🔒 CERRAR CAJA Y REINICIAR DÍA
+            </button>
         </div>
 
-        <!-- Panel del Carrito de Ventas -->
-        <div class="cart-section">
-            <div class="cart-header">Orden Actual</div>
-            <ul class="cart-items" id="cart-items"></ul>
+        <!-- PANEL DERECHO: ORDEN ACTIVA -->
+        <div class="right-panel">
+            <div>
+                <h3 class="cart-header-title">Orden Activa</h3>
+                <label class="label-leche">Tipo de Leche predeterminada:</label>
+                <select class="select-leche">
+                    <option>Sin Leche ($0)</option>
+                    <option>Entera ($0)</option>
+                    <option>Deslactosada ($0)</option>
+                    <option>Almendra (+$10)</option>
+                    <option>Avena (+$10)</option>
+                </select>
 
-            <div class="cart-footer">
-                <div class="total-display">
-                    <span>Total:</span>
-                    <span>$<span id="total-monto">0.00</span></span>
+                <div class="empty-cart-msg">
+                    No hay items en la comanda
                 </div>
-                <button class="btn-cobrar" onclick="cobrarOrden()">Cobrar Orden</button>
+            </div>
+
+            <div>
+                <div class="total-container">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount">$0.00</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-action btn-primary">📄 Imprimir Comanda</button>
+                    
+                    <div class="btn-row">
+                        <button class="btn-action btn-info">📄 Pre-Cuenta</button>
+                        <button class="btn-action btn-secondary">☕ Pendiente</button>
+                    </div>
+
+                    <button class="btn-action btn-danger">✕ CANCELAR CUENTA</button>
+
+                    <div class="btn-row">
+                        <button class="btn-action btn-success">💵 Efectivo</button>
+                        <button class="btn-action btn-info">💳 Tarjeta</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Ticket dinámico de impresión -->
-    <div id="ticket-impresion"></div>
+    <!-- ESTRUCTURA DEL TICKET DE IMPRESIÓN -->
+    <div id="ticket-corte"></div>
 
     <script>
-        const menuData = [
-            // BEBIDAS CALIENTES - CAFÉ
-            { id: 1, name: "Espresso Sencillo (1oz)", price: 35, category: "Calientes Café" },
-            { id: 2, name: "Espresso Doble (2oz)", price: 45, category: "Calientes Café" },
-            { id: 3, name: "Doble Cortado (2oz)", price: 50, category: "Calientes Café" },
-            { id: 4, name: "Panna (2oz)", price: 50, category: "Calientes Café" },
-            { id: 5, name: "Flat White (2oz)", price: 55, category: "Calientes Café" },
-            { id: 6, name: "Affogato", price: 65, category: "Calientes Café" },
-            { id: 7, name: "Affogato Nut", price: 95, category: "Calientes Café" },
-            { id: 8, name: "Americano (M)", price: 42, category: "Calientes Café" },
-            { id: 9, name: "Americano (G)", price: 47, category: "Calientes Café" },
-            { id: 10, name: "Café de Olla (M)", price: 47, category: "Calientes Café" },
-            { id: 11, name: "Café de Olla (G)", price: 52, category: "Calientes Café" },
-            { id: 12, name: "Capuccino (M)", price: 60, category: "Calientes Café" },
-            { id: 13, name: "Capuccino (G)", price: 65, category: "Calientes Café" },
-            { id: 14, name: "Latte (M)", price: 60, category: "Calientes Café" },
-            { id: 15, name: "Latte (G)", price: 65, category: "Calientes Café" },
-            { id: 16, name: "Moka Obscuro (M)", price: 80, category: "Calientes Café" },
-            { id: 17, name: "Moka Obscuro (G)", price: 85, category: "Calientes Café" },
-            { id: 18, name: "Moka Blanco (M)", price: 80, category: "Calientes Café" },
-            { id: 19, name: "Moka Blanco (G)", price: 85, category: "Calientes Café" },
-            { id: 20, name: "Caramel Latte (M)", price: 80, category: "Calientes Café" },
-            { id: 21, name: "Caramel Latte (G)", price: 85, category: "Calientes Café" },
-            { id: 22, name: "Cajeta Latte (M)", price: 80, category: "Calientes Café" },
-            { id: 23, name: "Cajeta Latte (G)", price: 85, category: "Calientes Café" },
+        // Variables globales para acumulados
+        let totalEfectivo = 0.00;
+        let totalTarjeta = 0.00;
 
-            // BEBIDAS CALIENTES - SIN CAFÉ
-            { id: 24, name: "Chocolate Obscuro (M)", price: 75, category: "Calientes Sin Café" },
-            { id: 25, name: "Chocolate Obscuro (G)", price: 80, category: "Calientes Sin Café" },
-            { id: 26, name: "Chocolate Blanco (M)", price: 75, category: "Calientes Sin Café" },
-            { id: 27, name: "Chocolate Blanco (G)", price: 80, category: "Calientes Sin Café" },
-            { id: 28, name: "Chai (M)", price: 80, category: "Calientes Sin Café" },
-            { id: 29, name: "Chai (G)", price: 85, category: "Calientes Sin Café" },
-            { id: 30, name: "Matcha (M)", price: 80, category: "Calientes Sin Café" },
-            { id: 31, name: "Matcha (G)", price: 85, category: "Calientes Sin Café" },
-            { id: 32, name: "Taro (M)", price: 80, category: "Calientes Sin Café" },
-            { id: 33, name: "Taro (G)", price: 85, category: "Calientes Sin Café" },
-            { id: 34, name: "Horchata (M)", price: 75, category: "Calientes Sin Café" },
-            { id: 35, name: "Horchata (G)", price: 80, category: "Calientes Sin Café" },
-            { id: 36, name: "Chai Manzana Verde (M)", price: 80, category: "Calientes Sin Café" },
-            { id: 37, name: "Chai Manzana Verde (G)", price: 85, category: "Calientes Sin Café" },
-            { id: 38, name: "Horchai (M)", price: 80, category: "Calientes Sin Café" },
-            { id: 39, name: "Horchai (G)", price: 85, category: "Calientes Sin Café" },
-            { id: 40, name: "Blessed (M)", price: 90, category: "Calientes Sin Café" },
-            { id: 41, name: "Blessed (G)", price: 95, category: "Calientes Sin Café" },
-            { id: 42, name: "Hope Latte (M)", price: 90, category: "Calientes Sin Café" },
-            { id: 43, name: "Hope Latte (G)", price: 95, category: "Calientes Sin Café" },
-            { id: 44, name: "Ferrero Sin Café (M)", price: 80, category: "Calientes Sin Café" },
-            { id: 45, name: "Ferrero Sin Café (G)", price: 85, category: "Calientes Sin Café" },
-            { id: 46, name: "Ferrero Con Café (M)", price: 90, category: "Calientes Sin Café" },
-            { id: 47, name: "Ferrero Con Café (G)", price: 95, category: "Calientes Sin Café" },
-            { id: 48, name: "Mazapán (M)", price: 80, category: "Calientes Sin Café" },
-            { id: 49, name: "Mazapán (G)", price: 85, category: "Calientes Sin Café" },
+        function ejecutarCorteCaja() {
+            const totalGeneral = totalEfectivo + totalTarjeta;
+            const fechaHora = new Date().toLocaleString();
 
-            // INFUSIONES & TÉS
-            { id: 50, name: "Tizana Fresa Kiwi (M)", price: 75, category: "Tés e Infusiones" },
-            { id: 51, name: "Tizana Fresa Kiwi (G)", price: 80, category: "Tés e Infusiones" },
-            { id: 52, name: "Tizana Maracuyá (M)", price: 75, category: "Tés e Infusiones" },
-            { id: 53, name: "Tizana Maracuyá (G)", price: 80, category: "Tés e Infusiones" },
-            { id: 54, name: "Tizana Tropical (M)", price: 75, category: "Tés e Infusiones" },
-            { id: 55, name: "Tizana Tropical (G)", price: 80, category: "Tés e Infusiones" },
-            { id: 56, name: "Té Herbal (M)", price: 45, category: "Tés e Infusiones" },
-            { id: 57, name: "Té Herbal (G)", price: 50, category: "Tés e Infusiones" },
-
-            // FRÍAS & FRAPPÉS
-            { id: 58, name: "Americano Frío", price: 55, category: "Frías & Frappés" },
-            { id: 59, name: "Cold Brew", price: 70, category: "Frías & Frappés" },
-            { id: 60, name: "Capuccino Frío", price: 70, category: "Frías & Frappés" },
-            { id: 61, name: "Capuccino Frappé", price: 75, category: "Frías & Frappés" },
-            { id: 62, name: "Latte Frío", price: 70, category: "Frías & Frappés" },
-            { id: 63, name: "Latte Frappé", price: 75, category: "Frías & Frappés" },
-            { id: 64, name: "Moka Frío", price: 80, category: "Frías & Frappés" },
-            { id: 65, name: "Moka Frappé", price: 85, category: "Frías & Frappés" },
-            { id: 66, name: "Moka Blanco Frío", price: 80, category: "Frías & Frappés" },
-            { id: 67, name: "Moka Blanco Frappé", price: 85, category: "Frías & Frappés" },
-            { id: 68, name: "Caramel Latte Frío", price: 80, category: "Frías & Frappés" },
-            { id: 69, name: "Caramel Latte Frappé", price: 85, category: "Frías & Frappés" },
-            { id: 70, name: "Cajeta Latte Frío", price: 80, category: "Frías & Frappés" },
-            { id: 71, name: "Cajeta Latte Frappé", price: 85, category: "Frías & Frappés" },
-            { id: 72, name: "Chocolate Obscuro Frío", price: 80, category: "Frías & Frappés" },
-            { id: 73, name: "Chocolate Obscuro Frappé", price: 85, category: "Frías & Frappés" },
-            { id: 74, name: "Chai Frío", price: 85, category: "Frías & Frappés" },
-            { id: 75, name: "Chai Frappé", price: 90, category: "Frías & Frappés" },
-            { id: 76, name: "Matcha Frío", price: 85, category: "Frías & Frappés" },
-            { id: 77, name: "Matcha Frappé", price: 90, category: "Frías & Frappés" },
-            { id: 78, name: "Taro Frío", price: 85, category: "Frías & Frappés" },
-            { id: 79, name: "Taro Frappé", price: 90, category: "Frías & Frappés" },
-            { id: 80, name: "Oreo Frío", price: 85, category: "Frías & Frappés" },
-            { id: 81, name: "Oreo Frappé", price: 90, category: "Frías & Frappés" },
-            { id: 82, name: "Horchata Fría", price: 85, category: "Frías & Frappés" },
-            { id: 83, name: "Horchata Frappé", price: 90, category: "Frías & Frappés" },
-
-            // COLD FOAM & ESPECIALIDADES
-            { id: 84, name: "Cold Foam Vainilla", price: 95, category: "Cold Foam & Varios" },
-            { id: 85, name: "Cold Foam Caramelo", price: 95, category: "Cold Foam & Varios" },
-            { id: 86, name: "Cold Foam Moka", price: 95, category: "Cold Foam & Varios" },
-            { id: 87, name: "Cold Foam Taro", price: 99, category: "Cold Foam & Varios" },
-            { id: 88, name: "Cold Foam Berry", price: 99, category: "Cold Foam & Varios" },
-            { id: 89, name: "Cold Foam Banana", price: 99, category: "Cold Foam & Varios" },
-            { id: 90, name: "Cold Foam Strawberry", price: 99, category: "Cold Foam & Varios" },
-            { id: 91, name: "Cold Foam Matcha", price: 99, category: "Cold Foam & Varios" },
-            { id: 92, name: "Malteada Clásica", price: 90, category: "Cold Foam & Varios" },
-            { id: 93, name: "Malteada Especial", price: 95, category: "Cold Foam & Varios" },
-            { id: 94, name: "Shaken Tea", price: 60, category: "Cold Foam & Varios" },
-            { id: 95, name: "Naranjada", price: 60, category: "Cold Foam & Varios" },
-            { id: 96, name: "Limonada", price: 60, category: "Cold Foam & Varios" },
-            { id: 97, name: "Black Orange", price: 80, category: "Cold Foam & Varios" },
-            { id: 98, name: "Lemon Coffee Tonic", price: 80, category: "Cold Foam & Varios" },
-            { id: 99, name: "Chamoyadas", price: 80, category: "Cold Foam & Varios" },
-            { id: 100, name: "Smoothie Detox", price: 95, category: "Cold Foam & Varios" },
-            { id: 101, name: "Smoothie Tropical", price: 95, category: "Cold Foam & Varios" },
-            { id: 102, name: "Smoothie Apple Kiss", price: 95, category: "Cold Foam & Varios" },
-            { id: 103, name: "Mocktails", price: 90, category: "Cold Foam & Varios" },
-            { id: 104, name: "Agua Mineral Kirkland", price: 40, category: "Cold Foam & Varios" },
-            { id: 105, name: "Agua Mineral Perrier", price: 65, category: "Cold Foam & Varios" },
-
-            // ALIMENTOS SALADOS
-            { id: 106, name: "Molletes Sencillos", price: 80, category: "Alimentos Salados" },
-            { id: 107, name: "Molletes con Jamón", price: 95, category: "Alimentos Salados" },
-            { id: 108, name: "Molletes con Chorizo", price: 99, category: "Alimentos Salados" },
-            { id: 109, name: "Chilaquiles Sencillos", price: 80, category: "Alimentos Salados" },
-            { id: 110, name: "Chilaquiles con Huevo", price: 100, category: "Alimentos Salados" },
-            { id: 111, name: "Chilaquiles con Pollo", price: 120, category: "Alimentos Salados" },
-            { id: 112, name: "Chilaquiles Gratinados", price: 140, category: "Alimentos Salados" },
-            { id: 113, name: "Sincronizada", price: 70, category: "Alimentos Salados" },
-            { id: 114, name: "Chapata Pizza", price: 99, category: "Alimentos Salados" },
-            { id: 115, name: "Chapata Pechuga de Pavo", price: 99, category: "Alimentos Salados" },
-            { id: 116, name: "Wrap Clásico", price: 75, category: "Alimentos Salados" },
-            { id: 117, name: "Wrap de Pollo", price: 85, category: "Alimentos Salados" },
-            { id: 118, name: "Ensalada Bless", price: 65, category: "Alimentos Salados" },
-            { id: 119, name: "Especial Salada Mexicana", price: 120, category: "Alimentos Salados" },
-            { id: 120, name: "Especial Salada Hawaiana", price: 120, category: "Alimentos Salados" },
-            { id: 121, name: "Especial Salada Vegetariana", price: 120, category: "Alimentos Salados" },
-            { id: 122, name: "Especial Salada Italiana", price: 130, category: "Alimentos Salados" },
-            { id: 123, name: "Especial Salada Bless", price: 130, category: "Alimentos Salados" },
-
-            // ALIMENTOS DULCES & REPOSTERÍA
-            { id: 124, name: "Crepa Tradicional", price: 95, category: "Alimentos Dulces" },
-            { id: 125, name: "Crepa Frutal", price: 110, category: "Alimentos Dulces" },
-            { id: 126, name: "Crepa Celaya", price: 115, category: "Alimentos Dulces" },
-            { id: 127, name: "Crepa Especial", price: 130, category: "Alimentos Dulces" },
-            { id: 128, name: "Hot Cakes Clásicos", price: 80, category: "Alimentos Dulces" },
-            { id: 129, name: "Hot Cakes 3 Leches", price: 100, category: "Alimentos Dulces" },
-            { id: 130, name: "Waffles Clásicos", price: 85, category: "Alimentos Dulces" },
-            { id: 131, name: "Pastel del Día", price: 70, category: "Alimentos Dulces" },
-            { id: 132, name: "Rol de Canela", price: 49, category: "Alimentos Dulces" },
-            { id: 133, name: "Bisquet con Mermelada", price: 35, category: "Alimentos Dulces" },
-            { id: 134, name: "Croissant con Mermelada", price: 60, category: "Alimentos Dulces" },
-            { id: 135, name: "Bisquet Bless Especial", price: 90, category: "Alimentos Dulces" },
-            { id: 136, name: "Croissant Bless Especial", price: 95, category: "Alimentos Dulces" },
-            { id: 137, name: "Waffles Bless Especial", price: 99, category: "Alimentos Dulces" }
-        ];
-
-        let carrito = [];
-        let totalCajaAcumulado = 0;
-        let conteoVentas = 0;
-        let categoriaActual = 'Todas';
-
-        function init() {
-            const categoriesBar = document.getElementById('categories-bar');
-            const categories = [...new Set(menuData.map(item => item.category))];
-            
-            categoriesBar.innerHTML = `<button class="btn-category active" onclick="filtrarCategoria('Todas', this)">Todas</button>`;
-            categories.forEach(cat => {
-                categoriesBar.innerHTML += `<button class="btn-category" onclick="filtrarCategoria('${cat}', this)">${cat}</button>`;
-            });
-
-            renderProductos(menuData);
-        }
-
-        function renderProductos(items) {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-            items.forEach(item => {
-                grid.innerHTML += `
-                    <div class="product-card" onclick="agregarAlCarrito(${item.id})">
-                        <span class="p-name">${item.name}</span>
-                        <span class="p-price">$${item.price}</span>
-                    </div>
-                `;
-            });
-        }
-
-        function filtrarCategoria(cat, btn) {
-            categoriaActual = cat;
-            document.querySelectorAll('.btn-category').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('input-search').value = '';
-
-            if (cat === 'Todas') {
-                renderProductos(menuData);
-            } else {
-                renderProductos(menuData.filter(i => i.category === cat));
-            }
-        }
-
-        function buscarProducto() {
-            const query = document.getElementById('input-search').value.toLowerCase();
-            const filtrados = menuData.filter(p => p.name.toLowerCase().includes(query));
-            renderProductos(filtrados);
-        }
-
-        function agregarAlCarrito(id) {
-            const prod = menuData.find(p => p.id === id);
-            const existe = carrito.find(item => item.id === id);
-
-            if (existe) {
-                existe.qty++;
-            } else {
-                carrito.push({ ...prod, qty: 1 });
-            }
-            renderCarrito();
-        }
-
-        function cambiarCantidad(id, cambio) {
-            const item = carrito.find(i => i.id === id);
-            if (item) {
-                item.qty += cambio;
-                if (item.qty <= 0) {
-                    carrito = carrito.filter(i => i.id !== id);
-                }
-            }
-            renderCarrito();
-        }
-
-        function renderCarrito() {
-            const cartList = document.getElementById('cart-items');
-            cartList.innerHTML = '';
-            let total = 0;
-
-            carrito.forEach(item => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                cartList.innerHTML += `
-                    <li class="cart-item">
-                        <div>
-                            <div><strong>${item.name}</strong></div>
-                            <div style="color:#64748b;">$${item.price} c/u</div>
-                        </div>
-                        <div class="qty-btns">
-                            <button class="btn-q" onclick="cambiarCantidad(${item.id}, -1)">-</button>
-                            <span style="font-weight:bold; padding:0 4px;">${item.qty}</span>
-                            <button class="btn-q" onclick="cambiarCantidad(${item.id}, 1)">+</button>
-                        </div>
-                    </li>
-                `;
-            });
-
-            document.getElementById('total-monto').textContent = total.toFixed(2);
-        }
-
-        function cobrarOrden() {
-            if (carrito.length === 0) return alert("El carrito está vacío");
-
-            const totalOrden = carrito.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            totalCajaAcumulado += totalOrden;
-            conteoVentas++;
-
-            alert(`Cobrado con éxito: $${totalOrden.toFixed(2)}`);
-            carrito = [];
-            renderCarrito();
-        }
-
-        /* FUNCIÓN DE CORTE IMPRESO */
-        function imprimirCorteCaja() {
-            const fecha = new Date().toLocaleString();
-            const ticketContainer = document.getElementById('ticket-impresion');
-
+            const ticketContainer = document.getElementById('ticket-corte');
             ticketContainer.innerHTML = `
                 <div style="text-align: center;">
-                    <h2 style="margin: 0;">BLESS COFFEE</h2>
-                    <p style="margin: 2px 0;">CORTE DE CAJA</p>
-                    <p style="margin: 2px 0;">-----------------------</p>
-                    <p style="text-align: left; margin: 2px 0;">Fecha: ${fecha}</p>
-                    <p style="text-align: left; margin: 2px 0;">Ventas Cobradas: ${conteoVentas}</p>
-                    <p style="margin: 2px 0;">-----------------------</p>
-                    <h3 style="margin: 6px 0; text-align: right;">TOTAL: $${totalCajaAcumulado.toFixed(2)}</h3>
-                    <p style="margin: 2px 0;">-----------------------</p>
-                    <p style="margin-top: 10px;">*** CAJA CERRADA ***</p>
+                    <h2 style="margin: 0; font-size: 16px;">BLESS COFFEE POS</h2>
+                    <p style="margin: 3px 0; font-size: 12px;">CORTE DE CAJA DIARIO</p>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <p style="text-align: left; margin: 3px 0; font-size: 11px;">FECHA: ${fechaHora}</p>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <div style="text-align: left; font-size: 12px; margin: 5px 0;">
+                        <p style="display: flex; justify-content: space-between;">
+                            <span>EFECTIVO:</span> <span>$${totalEfectivo.toFixed(2)}</span>
+                        </p>
+                        <p style="display: flex; justify-content: space-between;">
+                            <span>TARJETA:</span> <span>$${totalTarjeta.toFixed(2)}</span>
+                        </p>
+                    </div>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <h3 style="text-align: right; margin: 5px 0; font-size: 14px;">
+                        TOTAL ACUMULADO: $${totalGeneral.toFixed(2)}
+                    </h3>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <p style="margin-top: 10px; font-weight: bold; font-size: 11px;">*** CAJA CERRADA Y DÍA REINICIADO ***</p>
                 </div>
             `;
 
+            // Llama a la ventana de impresión del navegador
             window.print();
         }
-
-        init();
     </script>
 </body>
 </html>
