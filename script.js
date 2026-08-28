@@ -174,10 +174,24 @@ const menuData = {
   ]
 };
 
+// Actualización de las opciones del selector de leche en el HTML
+window.addEventListener('DOMContentLoaded', () => {
+  const selectLeche = document.getElementById('selectLeche');
+  if (selectLeche) {
+    selectLeche.innerHTML = `
+      <option value="Sin leche">Sin Leche ($0)</option>
+      <option value="Entera">Entera ($0)</option>
+      <option value="Light">Light ($0)</option>
+      <option value="Deslactosada">Deslactosada (+$12)</option>
+      <option value="Vegetal">Vegetal / Almendra / Avena (+$12)</option>
+    `;
+  }
+});
+
 let carrito = [];
 let comandaActualId = Date.now();
 
-// Renderizar Menú en la Interfaz
+// Renderizar Menú
 function renderizarMenu() {
   const mapeo = {
     'grid-calientes-cafe': menuData.calientesCafe,
@@ -214,11 +228,7 @@ function filtrarProductos() {
 
   tarjetas.forEach(card => {
     const nombre = card.querySelector('h4').innerText.toLowerCase();
-    if (nombre.includes(texto)) {
-      card.style.display = 'block';
-    } else {
-      card.style.display = 'none';
-    }
+    card.style.display = nombre.includes(texto) ? 'block' : 'none';
   });
 }
 
@@ -231,16 +241,14 @@ function cambiarPestana(idPestana) {
 
   if (event && event.target) event.target.classList.add('active');
 
-  if (idPestana === 'corte') {
-    renderizarCorteCaja();
-  }
+  if (idPestana === 'corte') renderizarCorteCaja();
 }
 
 function agregarAlCarrito(nombre, precioBase) {
   const lecheSelect = document.getElementById('selectLeche');
-  const tipoLeche = lecheSelect ? lecheSelect.value : 'Entera';
+  const tipoLeche = lecheSelect ? lecheSelect.value : 'Sin leche';
   
-  // Modificación del costo de la leche deslactosada y vegetal a $12
+  // Costos por tipo de leche
   let extraLeche = (tipoLeche === 'Deslactosada' || tipoLeche === 'Vegetal') ? 12 : 0;
 
   carrito.push({
@@ -275,7 +283,7 @@ function actualizarCarritoUI() {
     <div class="item-carrito">
       <div>
         <strong>${item.nombre}</strong>
-        <small>Leche: ${item.leche}</small>
+        ${item.leche !== 'Sin leche' ? `<small>Leche: ${item.leche}</small>` : ''}
       </div>
       <div>
         <span>$${item.precio.toFixed(2)}</span>
@@ -323,7 +331,7 @@ function imprimirComanda() {
         <div class="linea"></div>
         ${carrito.map(i => `
           <div class="item">• 1x ${i.nombre}</div>
-          <div class="subitem">Leche: ${i.leche}</div>
+          ${i.leche !== 'Sin leche' ? `<div class="subitem">Leche: ${i.leche}</div>` : ''}
         `).join('')}
         <div class="linea"></div>
         <script>
@@ -372,7 +380,7 @@ function imprimirPrecuenta() {
             <span>${i.nombre}</span>
             <span>$${i.precio.toFixed(2)}</span>
           </div>
-          <small style="margin-left: 6px;">• Leche: ${i.leche}</small>
+          ${i.leche !== 'Sin leche' ? `<small style="margin-left: 6px;">• Leche: ${i.leche}</small>` : ''}
         `).join('')}
         <div class="linea"></div>
         <div class="flex total-box">
@@ -451,7 +459,7 @@ function imprimirTicketFinal(items, total, metodo) {
             <span>${i.nombre}</span>
             <span>$${i.precio.toFixed(2)}</span>
           </div>
-          <div style="font-size:12px;">• Leche: ${i.leche}</div>
+          ${i.leche !== 'Sin leche' ? `<div style="font-size:12px;">• Leche: ${i.leche}</div>` : ''}
         `).join('')}
         <div class="linea"></div>
         <div class="flex total-box">
