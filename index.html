@@ -3,101 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POS Cafetería</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>POS - Cafetería</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+    body { background-color: #f1f5f9; display: flex; height: 100vh; overflow: hidden; }
+    
+    /* Panel Izquierdo: Menú */
+    .contenedor-principal { flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+    .header-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+    .btn-tab { padding: 12px 20px; border: none; background: #cbd5e1; border-radius: 8px; cursor: pointer; font-weight: bold; color: #334155; }
+    .btn-tab.active { background: #0284c7; color: white; }
+    
+    /* Buscador */
+    .buscador-container { margin-bottom: 15px; }
+    .input-buscador { width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+    .input-buscador:focus { border-color: #0284c7; }
+
+    /* Modificadores */
+    .modificadores { background: white; padding: 12px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .modificadores select { padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 14px; }
+
+    /* Categorías de Menú (Pestañas) */
+    .seccion { display: none; }
+    .seccion.active { display: block; }
+
+    .subtitulo-menu { margin: 15px 0 10px 0; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
+    .grid-productos { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .card-producto { background: white; padding: 12px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; border: 1px solid #e2e8f0; transition: transform 0.1s; }
+    .card-producto:hover { transform: translateY(-2px); border-color: #0284c7; }
+    .card-producto h4 { font-size: 14px; color: #1e293b; margin-bottom: 5px; }
+    .card-producto .precio { font-weight: bold; color: #16a34a; font-size: 14px; }
+
+    /* Panel Derecho: Carrito / Ticket */
+    .panel-carrito { width: 380px; background: white; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; padding: 20px; box-shadow: -2px 0 10px rgba(0,0,0,0.05); }
+    .lista-carrito { flex: 1; overflow-y: auto; margin: 15px 0; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
+    .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; }
+    .item-carrito small { display: block; color: #64748b; font-size: 11px; }
+    .btn-eliminar { background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
+
+    /* Acciones y Botones */
+    .totales { font-size: 20px; font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 15px; }
+    .btn-accion { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; color: white; }
+    .btn-comanda { background: #eab308; }
+    .btn-precuenta { background: #0284c7; }
+    .btn-guardar { background: #64748b; }
+    .btn-pago-container { display: flex; gap: 8px; }
+    .btn-efectivo { background: #16a34a; flex: 1; }
+    .btn-tarjeta { background: #2563eb; flex: 1; }
+    .btn-cerrar-caja { background: #dc2626; margin-top: 15px; }
+
+    /* Modal Comandas */
+    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
+    .modal.active { display: flex; }
+    .modal-contenido { background: white; padding: 20px; border-radius: 8px; width: 400px; max-height: 80vh; overflow-y: auto; }
+    .card-comanda-item { background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+    .badge { background: #ef4444; color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px; }
+  </style>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="nav-left">
-      <button class="btn-tab active" onclick="cambiarPestana('pos')">☕ Punto de Venta</button>
-      <button class="btn-tab" onclick="cambiarPestana('inventario')">📦 Inventario</button>
+  <!-- PANEL IZQUIERDO: SECCIONES Y PRODUCTOS -->
+  <div class="contenedor-principal">
+    
+    <div class="header-tabs">
+      <button class="btn-tab active" onclick="cambiarPestana('calientes')">☕ Bebidas Calientes</button>
+      <button class="btn-tab" onclick="cambiarPestana('frias')">🧊 Bebidas Frías & Frappés</button>
+      <button class="btn-tab" onclick="cambiarPestana('alimentos')">🍽️ Alimentos & Postres</button>
       <button class="btn-tab" onclick="cambiarPestana('corte')">📊 Corte de Caja</button>
     </div>
-    <div class="nav-right">
-      <button class="btn-comandas-pendientes" onclick="abrirModalComandas()">
-        ☁️ Comandas Pendientes <span id="badgeComandasCount" class="badge">0</span>
-      </button>
+
+    <!-- Buscador General -->
+    <div class="buscador-container">
+      <input type="text" id="inputBuscador" class="input-buscador" placeholder="🔍 Buscar producto en la carta..." onkeyup="filtrarProductos()">
     </div>
-  </nav>
 
-  <main id="tab-pos" class="seccion active">
-    <div class="pos-grid">
-      
-      <section class="panel-catalogo">
-        <h2>Bebidas Reales</h2>
-        
-        <div class="modificadores">
-          <label for="selectLeche"><strong>Tipo de Leche:</strong></label>
-          <select id="selectLeche">
-            <option value="Entera">Entera ($0)</option>
-            <option value="Deslactosada">Deslactosada ($0)</option>
-            <option value="Avena">Avena (+$10)</option>
-            <option value="Almendra">Almendra (+$10)</option>
-          </select>
-        </div>
-
-        <div id="gridProductos" class="grid-productos">
-          <div class="card-producto" onclick="agregarAlCarrito('Espresso', 35)"><strong>Espresso</strong><span>$35</span></div>
-          <div class="card-producto" onclick="agregarAlCarrito('Americano', 45)"><strong>Americano</strong><span>$45</span></div>
-          <div class="card-producto" onclick="agregarAlCarrito('Cappuccino', 60)"><strong>Cappuccino</strong><span>$60</span></div>
-          <div class="card-producto" onclick="agregarAlCarrito('Flat White', 65)"><strong>Flat White</strong><span>$65</span></div>
-          <div class="card-producto" onclick="agregarAlCarrito('Latte 12oz', 65)"><strong>Latte 12oz</strong><span>$65</span></div>
-          <div class="card-producto" onclick="agregarAlCarrito('Mocha', 75)"><strong>Mocha</strong><span>$75</span></div>
-          <div class="card-producto" onclick="agregarAlCarrito('Cold Brew', 55)"><strong>Cold Brew</strong><span>$55</span></div>
-          <div class="card-producto" onclick="agregarAlCarrito('Espresso Tonic', 70)"><strong>Espresso Tonic</strong><span>$70</span></div>
-        </div>
-      </section>
-
-      <section class="panel-orden">
-        <h2>Comanda Actual</h2>
-        <div id="listaCarrito" class="lista-carrito"></div>
-
-        <div class="footer-orden">
-          <div class="monto-total">
-            <span>TOTAL:</span>
-            <strong id="montoTotal">$0.00</strong>
-          </div>
-
-          <button class="btn-guardar-comanda" onclick="guardarComandaPendiente()">☁️ Guardar Comanda Pendiente</button>
-
-          <div class="seccion-cobro">
-            <p><strong>Selecciona Método de Pago:</strong></p>
-            <div class="metodos-pago">
-              <button class="btn-pago efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
-              <button class="btn-pago tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    <!-- Configuración Global para Bebidas -->
+    <div class="modificadores">
+      <label for="selectLeche"><strong>Tipo de Leche:</strong></label>
+      <select id="selectLeche">
+        <option value="Entera">Entera ($0)</option>
+        <option value="Deslactosada">Deslactosada (+$12)</option>
+        <option value="Vegetal">Vegetal / Almendra / Avena (+$12)</option>
+      </select>
     </div>
-  </main>
 
-  <main id="tab-inventario" class="seccion">
-    <h2>Control de Inventario</h2>
-    <p style="margin-top:10px; color:#64748b;">Módulo en desarrollo.</p>
-  </main>
+    <!-- Pestaña 1: BEBIDAS CALIENTES -->
+    <div id="tab-calientes" class="seccion active">
+      <h3 class="subtitulo-menu">Con Café</h3>
+      <div class="grid-productos" id="grid-calientes-cafe"></div>
 
-  <main id="tab-corte" class="seccion"></main>
+      <h3 class="subtitulo-menu">Sin Café</h3>
+      <div class="grid-productos" id="grid-calientes-sincafe"></div>
 
-  <div id="modalComandas" class="modal-overlay">
-    <div class="modal-content modal-ancho">
-      <h3>☁️ Comandas Pendientes en Espera</h3>
-      <div id="listaComandasModal" class="lista-comandas-modal"></div>
-      <button class="btn-cancelar" style="margin-top:15px;" onclick="cerrarModalComandas()">Cerrar</button>
+      <h3 class="subtitulo-menu">Especialess</h3>
+      <div class="grid-productos" id="grid-calientes-especialess"></div>
+
+      <h3 class="subtitulo-menu">Infusionables (Tizana / Té)</h3>
+      <div class="grid-productos" id="grid-calientes-infusionables"></div>
+    </div>
+
+    <!-- Pestaña 2: BEBIDAS FRÍAS & FRAPPÉS -->
+    <div id="tab-frias" class="seccion">
+      <h3 class="subtitulo-menu">Con Café (Frío / Frappé)</h3>
+      <div class="grid-productos" id="grid-frias-cafe"></div>
+
+      <h3 class="subtitulo-menu">Sin Café (Frío / Frappé)</h3>
+      <div class="grid-productos" id="grid-frias-sincafe"></div>
+
+      <h3 class="subtitulo-menu">Especialess Frías</h3>
+      <div class="grid-productos" id="grid-frias-especialess"></div>
+
+      <h3 class="subtitulo-menu">Cold Foam & Malteadas</h3>
+      <div class="grid-productos" id="grid-frias-foam-malteadas"></div>
+
+      <h3 class="subtitulo-menu">Refrescabless, Tonic, Chamoyadas & Smoothies</h3>
+      <div class="grid-productos" id="grid-frias-varios"></div>
+
+      <h3 class="subtitulo-menu">Mocktails & Infusionables Frías</h3>
+      <div class="grid-productos" id="grid-frias-mocktails"></div>
+    </div>
+
+    <!-- Pestaña 3: ALIMENTOS Y POSTRES -->
+    <div id="tab-alimentos" class="seccion">
+      <h3 class="subtitulo-menu">Salados (Molletes, Chilaquiles, Baguettes, Saladas)</h3>
+      <div class="grid-productos" id="grid-alimentos-salados"></div>
+
+      <h3 class="subtitulo-menu">Dulces (Crepas, Hot Cakes, Waffles, Panadería)</h3>
+      <div class="grid-productos" id="grid-alimentos-dulces"></div>
+    </div>
+
+    <!-- Pestaña 4: CORTE DE CAJA -->
+    <div id="tab-corte" class="seccion">
+      <!-- Se renderiza dinámicamente -->
+    </div>
+
+  </div>
+
+  <!-- PANEL DERECHO: DETALLE DE VENTA Y ORDEN -->
+  <div class="panel-carrito">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2>Orden Actual</h2>
+      <button class="btn-tab" onclick="abrirModalComandas()">📋 Pendientes <span id="badgeComandasCount" class="badge">0</span></button>
+    </div>
+
+    <div class="lista-carrito" id="listaCarrito">
+      <!-- Items agregados -->
+    </div>
+
+    <div class="totales">
+      <span>Total:</span>
+      <span id="montoTotal">$0.00</span>
+    </div>
+
+    <button class="btn-accion btn-comanda" onclick="imprimirComanda()">📝 Imprimir Comanda (Cocina/Barra)</button>
+    <button class="btn-accion btn-precuenta" onclick="imprimirPrecuenta()">📄 Imprimir Pre-Cuenta</button>
+    <button class="btn-accion btn-guardar" onclick="guardarComandaPendiente()">☁️ Guardar en Pendientes</button>
+    
+    <div class="btn-pago-container">
+      <button class="btn-accion btn-efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
+      <button class="btn-accion btn-tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
+    </div>
+  </div>
+
+  <!-- MODAL COMANDAS PENDIENTES -->
+  <div class="modal" id="modalComandas">
+    <div class="modal-contenido">
+      <h3>Comandas Pendientes</h3>
+      <hr style="margin: 10px 0;">
+      <div id="listaComandasModal"></div>
+      <button class="btn-accion btn-guardar" style="margin-top:10px;" onclick="cerrarModalComandas()">Cerrar</button>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-<!-- Botones de Impresión de Comanda y Cuenta -->
-<button class="btn-comanda" onclick="imprimirComanda()">📝 Imprimir Comanda (Cocina/Barra)</button>
-<button class="btn-precuenta" onclick="imprimirPrecuenta()">📄 Imprimir Pre-Cuenta</button>
-
-<!-- Botones de Pago Directo -->
-<div class="metodos-pago">
-  <button class="btn-pago efectivo" onclick="finalizarCobro('Efectivo')">💵 Cobrar Efectivo</button>
-  <button class="btn-pago tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Cobrar Tarjeta</button>
-</div>
