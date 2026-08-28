@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bless Coffee - Sistema POS & Menú</title>
+    <title>Bless Coffee - Menú Oficial & POS</title>
     <style>
         @page {
             size: A4;
             margin: 8mm 10mm 8mm 10mm;
-            background-color: #0f172a;
         }
 
         *, *::before, *::after {
@@ -23,6 +22,30 @@
             background-color: #0f172a;
             font-size: 8pt;
             line-height: 1.2;
+        }
+
+        .actions-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-caja {
+            background-color: #f59e0b;
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 800;
+            font-size: 9pt;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .btn-caja:hover {
+            background-color: #d97706;
         }
 
         .header {
@@ -50,29 +73,6 @@
             font-weight: 600;
         }
 
-        .actions-bar {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .btn-caja {
-            background-color: #f59e0b;
-            color: #0f172a;
-            border: none;
-            padding: 8px 16px;
-            font-weight: bold;
-            font-size: 9pt;
-            border-radius: 4px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .btn-caja:hover {
-            background-color: #d97706;
-        }
-
         .menu-grid {
             display: flex;
             gap: 20px;
@@ -95,7 +95,7 @@
         }
 
         .menu-item {
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .item-header {
@@ -121,7 +121,7 @@
             white-space: nowrap;
         }
 
-        /* Estilos de impresión para el Ticket de Cierre */
+        /* CONFIGURACIÓN EXCLUSIVA PARA IMPRIMIR EL TICKET */
         @media print {
             body * {
                 visibility: hidden;
@@ -133,14 +133,11 @@
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 100%;
+                width: 280px;
                 color: #000;
                 background: #fff;
                 padding: 10px;
                 font-family: monospace;
-            }
-            .actions-bar {
-                display: none;
             }
         }
 
@@ -152,12 +149,12 @@
 <body>
 
     <div class="actions-bar">
-        <button class="btn-caja" onclick="cerrarCaja()">Cerrar Caja e Imprimir Ticket</button>
+        <button class="btn-caja" onclick="cerrarCaja()">CERRAR CAJA E IMPRIMIR TICKET</button>
     </div>
 
     <div class="header">
         <h1>BLESS COFFEE</h1>
-        <p>Menú Oficial & Precios</p>
+        <p>MENÚ OFICIAL & PRECIOS</p>
     </div>
 
     <div class="menu-grid">
@@ -165,203 +162,116 @@
         <div class="column" id="col-right"></div>
     </div>
 
-    <!-- Area oculta para renderizar ticket al imprimir -->
+    <!-- Contenedor del ticket que se mandará a la impresora -->
     <div id="ticket-cierre"></div>
 
     <script>
         const menuData = [
-            // BEBIDAS CALIENTES - CAFÉ
-            { id: "esp-1", name: "Espresso Sencillo (1oz)", price: 35, category: "calientes-cafe" },
-            { id: "esp-2", name: "Espresso Doble (2oz)", price: 45, category: "calientes-cafe" },
-            { id: "dob-cort", name: "Doble Cortado (2oz)", price: 50, category: "calientes-cafe" },
-            { id: "panna", name: "Panna (2oz)", price: 50, category: "calientes-cafe" },
-            { id: "flat-w", name: "Flat White (2oz)", price: 55, category: "calientes-cafe" },
-            { id: "affogato", name: "Affogato", price: 65, category: "calientes-cafe" },
-            { id: "affogato-nut", name: "Affogato Nut", price: 95, category: "calientes-cafe" },
-            { id: "ame-m", name: "Americano (M)", price: 42, category: "calientes-cafe" },
-            { id: "ame-g", name: "Americano (G)", price: 47, category: "calientes-cafe" },
-            { id: "olla-m", name: "Café de Olla (M)", price: 47, category: "calientes-cafe" },
-            { id: "olla-g", name: "Café de Olla (G)", price: 52, category: "calientes-cafe" },
-            { id: "cap-m", name: "Capuccino (M)", price: 60, category: "calientes-cafe" },
-            { id: "cap-g", name: "Capuccino (G)", price: 65, category: "calientes-cafe" },
-            { id: "latte-m", name: "Latte (M)", price: 60, category: "calientes-cafe" },
-            { id: "latte-g", name: "Latte (G)", price: 65, category: "calientes-cafe" },
-            { id: "moka-obs-m", name: "Moka Obscuro (M)", price: 80, category: "calientes-cafe" },
-            { id: "moka-obs-g", name: "Moka Obscuro (G)", price: 85, category: "calientes-cafe" },
-            { id: "moka-bla-m", name: "Moka Blanco (M)", price: 80, category: "calientes-cafe" },
-            { id: "moka-bla-g", name: "Moka Blanco (G)", price: 85, category: "calientes-cafe" },
-            { id: "caramel-l-m", name: "Caramel Latte (M)", price: 80, category: "calientes-cafe" },
-            { id: "caramel-l-g", name: "Caramel Latte (G)", price: 85, category: "calientes-cafe" },
-            { id: "cajeta-l-m", name: "Cajeta Latte (M)", price: 80, category: "calientes-cafe" },
-            { id: "cajeta-l-g", name: "Cajeta Latte (G)", price: 85, category: "calientes-cafe" },
+            // CALIENTES CAFÉ
+            { name: "Espresso Sencillo (1oz)", price: 35, category: "calientes-cafe" },
+            { name: "Espresso Doble (2oz)", price: 45, category: "calientes-cafe" },
+            { name: "Doble Cortado (2oz)", price: 50, category: "calientes-cafe" },
+            { name: "Panna (2oz)", price: 50, category: "calientes-cafe" },
+            { name: "Flat White (2oz)", price: 55, category: "calientes-cafe" },
+            { name: "Affogato", price: 65, category: "calientes-cafe" },
+            { name: "Affogato Nut", price: 95, category: "calientes-cafe" },
+            { name: "Americano (M)", price: 42, category: "calientes-cafe" },
+            { name: "Americano (G)", price: 47, category: "calientes-cafe" },
+            { name: "Café de Olla (M)", price: 47, category: "calientes-cafe" },
+            { name: "Café de Olla (G)", price: 52, category: "calientes-cafe" },
+            { name: "Capuccino (M)", price: 60, category: "calientes-cafe" },
+            { name: "Capuccino (G)", price: 65, category: "calientes-cafe" },
+            { name: "Latte (M)", price: 60, category: "calientes-cafe" },
+            { name: "Latte (G)", price: 65, category: "calientes-cafe" },
+            { name: "Moka Obscuro (M)", price: 80, category: "calientes-cafe" },
+            { name: "Moka Obscuro (G)", price: 85, category: "calientes-cafe" },
+            { name: "Moka Blanco (M)", price: 80, category: "calientes-cafe" },
+            { name: "Moka Blanco (G)", price: 85, category: "calientes-cafe" },
+            { name: "Caramel Latte (M)", price: 80, category: "calientes-cafe" },
+            { name: "Caramel Latte (G)", price: 85, category: "calientes-cafe" },
+            { name: "Cajeta Latte (M)", price: 80, category: "calientes-cafe" },
+            { name: "Cajeta Latte (G)", price: 85, category: "calientes-cafe" },
 
-            // BEBIDAS CALIENTES - SIN CAFÉ
-            { id: "choc-obs-m", name: "Chocolate Obscuro (M)", price: 75, category: "calientes-sin-cafe" },
-            { id: "choc-obs-g", name: "Chocolate Obscuro (G)", price: 80, category: "calientes-sin-cafe" },
-            { id: "choc-bla-m", name: "Chocolate Blanco (M)", price: 75, category: "calientes-sin-cafe" },
-            { id: "choc-bla-g", name: "Chocolate Blanco (G)", price: 80, category: "calientes-sin-cafe" },
-            { id: "chai-m", name: "Chai (M)", price: 80, category: "calientes-sin-cafe" },
-            { id: "chai-g", name: "Chai (G)", price: 85, category: "calientes-sin-cafe" },
-            { id: "matcha-m", name: "Matcha (M)", price: 80, category: "calientes-sin-cafe" },
-            { id: "matcha-g", name: "Matcha (G)", price: 85, category: "calientes-sin-cafe" },
-            { id: "taro-m", name: "Taro (M)", price: 80, category: "calientes-sin-cafe" },
-            { id: "taro-g", name: "Taro (G)", price: 85, category: "calientes-sin-cafe" },
-            { id: "horchata-m", name: "Horchata (M)", price: 75, category: "calientes-sin-cafe" },
-            { id: "horchata-g", name: "Horchata (G)", price: 80, category: "calientes-sin-cafe" },
+            // CALIENTES SIN CAFÉ
+            { name: "Chocolate Obscuro (M)", price: 75, category: "calientes-sin-cafe" },
+            { name: "Chocolate Obscuro (G)", price: 80, category: "calientes-sin-cafe" },
+            { name: "Chocolate Blanco (M)", price: 75, category: "calientes-sin-cafe" },
+            { name: "Chocolate Blanco (G)", price: 80, category: "calientes-sin-cafe" },
+            { name: "Chai (M)", price: 80, category: "calientes-sin-cafe" },
+            { name: "Chai (G)", price: 85, category: "calientes-sin-cafe" },
+            { name: "Matcha (M)", price: 80, category: "calientes-sin-cafe" },
+            { name: "Matcha (G)", price: 85, category: "calientes-sin-cafe" },
+            { name: "Taro (M)", price: 80, category: "calientes-sin-cafe" },
+            { name: "Taro (G)", price: 85, category: "calientes-sin-cafe" },
+            { name: "Horchata (M)", price: 75, category: "calientes-sin-cafe" },
+            { name: "Horchata (G)", price: 80, category: "calientes-sin-cafe" },
 
-            // ESPECIALES CALIENTES
-            { id: "chai-manz-m", name: "Chai Manzana Verde (M)", price: 80, category: "especiales-calientes" },
-            { id: "chai-manz-g", name: "Chai Manzana Verde (G)", price: 85, category: "especiales-calientes" },
-            { id: "horchai-m", name: "Horchai (M)", price: 80, category: "especiales-calientes" },
-            { id: "horchai-g", name: "Horchai (G)", price: 85, category: "especiales-calientes" },
-            { id: "blessed-m", name: "Blessed (M)", price: 90, category: "especiales-calientes" },
-            { id: "blessed-g", name: "Blessed (G)", price: 95, category: "especiales-calientes" },
-            { id: "hope-m", name: "Hope Latte (M)", price: 90, category: "especiales-calientes" },
-            { id: "hope-g", name: "Hope Latte (G)", price: 95, category: "especiales-calientes" },
-            { id: "ferrero-s-m", name: "Ferrero Sin Café (M)", price: 80, category: "especiales-calientes" },
-            { id: "ferrero-s-g", name: "Ferrero Sin Café (G)", price: 85, category: "especiales-calientes" },
-            { id: "ferrero-c-m", name: "Ferrero Con Café (M)", price: 90, category: "especiales-calientes" },
-            { id: "ferrero-c-g", name: "Ferrero Con Café (G)", price: 95, category: "especiales-calientes" },
-            { id: "mazapan-m", name: "Mazapán (M)", price: 80, category: "especiales-calientes" },
-            { id: "mazapan-g", name: "Mazapán (G)", price: 85, category: "especiales-calientes" },
-
-            // INFUSIONABLES & TÉS
-            { id: "tizana-fk-m", name: "Tizana Fresa Kiwi (M)", price: 75, category: "infusionables" },
-            { id: "tizana-fk-g", name: "Tizana Fresa Kiwi (G)", price: 80, category: "infusionables" },
-            { id: "tizana-mar-m", name: "Tizana Maracuyá (M)", price: 75, category: "infusionables" },
-            { id: "tizana-mar-g", name: "Tizana Maracuyá (G)", price: 80, category: "infusionables" },
-            { id: "tizana-trop-m", name: "Tizana Tropical (M)", price: 75, category: "infusionables" },
-            { id: "tizana-trop-g", name: "Tizana Tropical (G)", price: 80, category: "infusionables" },
-            { id: "te-herb-m", name: "Té Herbal (M)", price: 45, category: "infusionables" },
-            { id: "te-herb-g", name: "Té Herbal (G)", price: 50, category: "infusionables" },
-
-            // FRÍAS CON CAFÉ
-            { id: "frio-ame", name: "Americano Frío", price: 55, category: "frias-cafe" },
-            { id: "cold-brew", name: "Cold Brew", price: 70, category: "frias-cafe" },
-            { id: "cap-frio", name: "Capuccino Frío", price: 70, category: "frias-cafe" },
-            { id: "cap-frappe", name: "Capuccino Frappé", price: 75, category: "frias-cafe" },
-            { id: "latte-frio", name: "Latte Frío", price: 70, category: "frias-cafe" },
-            { id: "latte-frappe", name: "Latte Frappé", price: 75, category: "frias-cafe" },
-            { id: "moka-frio", name: "Moka Frío", price: 80, category: "frias-cafe" },
-            { id: "moka-frappe", name: "Moka Frappé", price: 85, category: "frias-cafe" },
-            { id: "moka-b-frio", name: "Moka Blanco Frío", price: 80, category: "frias-cafe" },
-            { id: "moka-b-frappe", name: "Moka Blanco Frappé", price: 85, category: "frias-cafe" },
-            { id: "caramel-frio", name: "Caramel Latte Frío", price: 80, category: "frias-cafe" },
-            { id: "caramel-frappe", name: "Caramel Latte Frappé", price: 85, category: "frias-cafe" },
-            { id: "cajeta-frio", name: "Cajeta Latte Frío", price: 80, category: "frias-cafe" },
-            { id: "cajeta-frappe", name: "Cajeta Latte Frappé", price: 85, category: "frias-cafe" },
+            // CALIENTES ESPECIALES
+            { name: "Chai Manzana Verde (M)", price: 80, category: "especiales-calientes" },
+            { name: "Chai Manzana Verde (G)", price: 85, category: "especiales-calientes" },
+            { name: "Horchai (M)", price: 80, category: "especiales-calientes" },
 
             // FRÍAS SIN CAFÉ & ESPECIALES
-            { id: "choc-obs-frio", name: "Chocolate Obscuro Frío", price: 80, category: "frias-sin-cafe" },
-            { id: "choc-obs-frappe", name: "Chocolate Obscuro Frappé", price: 85, category: "frias-sin-cafe" },
-            { id: "chai-frio", name: "Chai Frío", price: 85, category: "frias-sin-cafe" },
-            { id: "chai-frappe", name: "Chai Frappé", price: 90, category: "frias-sin-cafe" },
-            { id: "matcha-frio", name: "Matcha Frío", price: 85, category: "frias-sin-cafe" },
-            { id: "matcha-frappe", name: "Matcha Frappé", price: 90, category: "frias-sin-cafe" },
-            { id: "taro-frio", name: "Taro Frío", price: 85, category: "frias-sin-cafe" },
-            { id: "taro-frappe", name: "Taro Frappé", price: 90, category: "frias-sin-cafe" },
-            { id: "oreo-frio", name: "Oreo Frío", price: 85, category: "frias-sin-cafe" },
-            { id: "oreo-frappe", name: "Oreo Frappé", price: 90, category: "frias-sin-cafe" },
-            { id: "horchata-frio", name: "Horchata Fría", price: 85, category: "frias-sin-cafe" },
-            { id: "horchata-frappe", name: "Horchata Frappé", price: 90, category: "frias-sin-cafe" },
-            { id: "chai-mv-frio", name: "Chai Manzana Verde Frío", price: 85, category: "frias-sin-cafe" },
-            { id: "chai-mv-frappe", name: "Chai Manzana Verde Frappé", price: 90, category: "frias-sin-cafe" },
-            { id: "horchai-frio", name: "Horchai Frío", price: 90, category: "frias-sin-cafe" },
-            { id: "horchai-frappe", name: "Horchai Frappé", price: 95, category: "frias-sin-cafe" },
-            { id: "blessed-frio", name: "Blessed Frío", price: 90, category: "frias-sin-cafe" },
-            { id: "blessed-frappe", name: "Blessed Frappé", price: 95, category: "frias-sin-cafe" },
-            { id: "hope-frio", name: "Hope Latte Frío", price: 90, category: "frias-sin-cafe" },
-            { id: "hope-frappe", name: "Hope Latte Frappé", price: 95, category: "frias-sin-cafe" },
-            { id: "ferrero-sc-frio", name: "Ferrero Sin Café Frío", price: 80, category: "frias-sin-cafe" },
-            { id: "ferrero-sc-frappe", name: "Ferrero Sin Café Frappé", price: 85, category: "frias-sin-cafe" },
-            { id: "ferrero-cc-frio", name: "Ferrero Con Café Frío", price: 90, category: "frias-sin-cafe" },
-            { id: "ferrero-cc-frappe", name: "Ferrero Con Café Frappé", price: 95, category: "frias-sin-cafe" },
-            { id: "mazapan-frio", name: "Mazapán Frío", price: 90, category: "frias-sin-cafe" },
-            { id: "mazapan-frappe", name: "Mazapán Frappé", price: 95, category: "frias-sin-cafe" },
+            { name: "Chocolate Obscuro Frío", price: 80, category: "frias-especiales" },
+            { name: "Chocolate Obscuro Frappé", price: 85, category: "frias-especiales" },
+            { name: "Chai Frío", price: 85, category: "frias-especiales" },
+            { name: "Chai Frappé", price: 90, category: "frias-especiales" },
+            { name: "Matcha Frío", price: 85, category: "frias-especiales" },
+            { name: "Matcha Frappé", price: 90, category: "frias-especiales" },
+            { name: "Taro Frío", price: 85, category: "frias-especiales" },
+            { name: "Taro Frappé", price: 90, category: "frias-especiales" },
+            { name: "Oreo Frío", price: 85, category: "frias-especiales" },
+            { name: "Oreo Frappé", price: 90, category: "frias-especiales" },
+            { name: "Horchata Fría", price: 85, category: "frias-especiales" },
+            { name: "Horchata Frappé", price: 90, category: "frias-especiales" },
+            { name: "Chai Manzana Verde Frío", price: 85, category: "frias-especiales" },
+            { name: "Chai Manzana Verde Frappé", price: 90, category: "frias-especiales" },
+            { name: "Horchai Frío", price: 90, category: "frias-especiales" },
+            { name: "Horchai Frappé", price: 95, category: "frias-especiales" },
+            { name: "Blessed Frío", price: 90, category: "frias-especiales" },
+            { name: "Blessed Frappé", price: 95, category: "frias-especiales" },
+            { name: "Hope Latte Frío", price: 90, category: "frias-especiales" },
+            { name: "Hope Latte Frappé", price: 95, category: "frias-especiales" },
+            { name: "Ferrero Sin Café Frío", price: 80, category: "frias-especiales" },
+            { name: "Ferrero Sin Café Frappé", price: 85, category: "frias-especiales" },
+            { name: "Ferrero Con Café Frío", price: 90, category: "frias-especiales" },
+            { name: "Ferrero Con Café Frappé", price: 95, category: "frias-especiales" },
+            { name: "Mazapán Frío", price: 90, category: "frias-especiales" },
+            { name: "Mazapán Frappé", price: 95, category: "frias-especiales" },
 
-            // COLD FOAM, MALTEADAS & BEBIDAS VARIAS
-            { id: "cf-vainilla", name: "Cold Foam Vainilla", price: 95, category: "cold-foam-varios" },
-            { id: "cf-caramelo", name: "Cold Foam Caramelo", price: 95, category: "cold-foam-varios" },
-            { id: "cf-moka", name: "Cold Foam Moka", price: 95, category: "cold-foam-varios" },
-            { id: "cf-taro", name: "Cold Foam Taro", price: 99, category: "cold-foam-varios" },
-            { id: "cf-berry", name: "Cold Foam Berry", price: 99, category: "cold-foam-varios" },
-            { id: "cf-banana", name: "Cold Foam Banana", price: 99, category: "cold-foam-varios" },
-            { id: "cf-strawberry", name: "Cold Foam Strawberry", price: 99, category: "cold-foam-varios" },
-            { id: "cf-matcha", name: "Cold Foam Matcha", price: 99, category: "cold-foam-varios" },
-            { id: "malt-clasica", name: "Malteada Clásica", price: 90, category: "cold-foam-varios" },
-            { id: "malt-especial", name: "Malteada Especial", price: 95, category: "cold-foam-varios" },
-            { id: "shaken-tea", name: "Shaken Tea", price: 60, category: "cold-foam-varios" },
-            { id: "naranjada", name: "Naranjada", price: 60, category: "cold-foam-varios" },
-            { id: "limonada", name: "Limonada", price: 60, category: "cold-foam-varios" },
-            { id: "black-orange", name: "Black Orange", price: 80, category: "cold-foam-varios" },
-            { id: "lemon-coffee-tonic", name: "Lemon Coffee Tonic", price: 80, category: "cold-foam-varios" },
-            { id: "chamoyadas", name: "Chamoyadas", price: 80, category: "cold-foam-varios" },
-            { id: "smoothie-detox", name: "Smoothie Detox", price: 95, category: "cold-foam-varios" },
-            { id: "smoothie-trop", name: "Smoothie Tropical", price: 95, category: "cold-foam-varios" },
-            { id: "smoothie-ak", name: "Smoothie Apple Kiss", price: 95, category: "cold-foam-varios" },
-            { id: "mocktails", name: "Mocktails", price: 90, category: "cold-foam-varios" },
-            { id: "tizana-fria", name: "Tizana Fría", price: 80, category: "cold-foam-varios" },
-            { id: "te-herbal-frio", name: "Té Herbal Frío", price: 65, category: "cold-foam-varios" },
+            // COLD FOAM, MALTEADAS & VARIOS
+            { name: "Cold Foam Vainilla", price: 95, category: "cold-foam-varios" },
+            { name: "Cold Foam Caramelo", price: 95, category: "cold-foam-varios" },
+            { name: "Cold Foam Moka", price: 95, category: "cold-foam-varios" },
+            { name: "Cold Foam Taro", price: 99, category: "cold-foam-varios" },
+            { name: "Cold Foam Berry", price: 99, category: "cold-foam-varios" },
+            { name: "Cold Foam Banana", price: 99, category: "cold-foam-varios" },
+            { name: "Cold Foam Strawberry", price: 99, category: "cold-foam-varios" },
+            { name: "Cold Foam Matcha", price: 99, category: "cold-foam-varios" },
+            { name: "Malteada Clásica", price: 90, category: "cold-foam-varios" },
+            { name: "Malteada Especial", price: 95, category: "cold-foam-varios" },
+            { name: "Shaken Tea", price: 60, category: "cold-foam-varios" },
+            { name: "Naranjada", price: 60, category: "cold-foam-varios" },
+            { name: "Limonada", price: 60, category: "cold-foam-varios" },
 
-            // AGUAS MINERALES
-            { id: "agua-kirkland", name: "Agua Mineral Kirkland", price: 40, category: "cold-foam-varios" },
-            { id: "agua-perrier", name: "Agua Mineral Perrier", price: 65, category: "cold-foam-varios" },
-
-            // ALIMENTOS SALADOS
-            { id: "mollete-senc", name: "Molletes Sencillos", price: 80, category: "salados" },
-            { id: "mollete-jamon", name: "Molletes con Jamón", price: 95, category: "salados" },
-            { id: "mollete-chorizo", name: "Molletes con Chorizo", price: 99, category: "salados" },
-            { id: "chil-senc", name: "Chilaquiles Sencillos", price: 80, category: "salados" },
-            { id: "chil-huevo", name: "Chilaquiles con Huevo", price: 100, category: "salados" },
-            { id: "chil-pollo", name: "Chilaquiles con Pollo", price: 120, category: "salados" },
-            { id: "chil-grat", name: "Chilaquiles Gratinados", price: 140, category: "salados" },
-            { id: "sincronizada", name: "Sincronizada", price: 70, category: "salados" },
-            { id: "chapata-pizza", name: "Chapata Pizza", price: 99, category: "salados" },
-            { id: "chapata-pavo", name: "Chapata Pechuga de Pavo", price: 99, category: "salados" },
-            { id: "wrap-clasico", name: "Wrap Clásico", price: 75, category: "salados" },
-            { id: "wrap-pollo", name: "Wrap de Pollo", price: 85, category: "salados" },
-            { id: "ensalada-bless", name: "Ensalada Bless", price: 65, category: "salados" },
-            { id: "esp-sal-mex", name: "Especial Salada Mexicana", price: 120, category: "salados" },
-            { id: "esp-sal-haw", name: "Especial Salada Hawaiana", price: 120, category: "salados" },
-            { id: "esp-sal-veg", name: "Especial Salada Vegetariana", price: 120, category: "salados" },
-            { id: "esp-sal-ita", name: "Especial Salada Italiana", price: 130, category: "salados" },
-            { id: "esp-sal-bless", name: "Especial Salada Bless", price: 130, category: "salados" },
-
-            // ALIMENTOS DULCES & REPOSTERÍA
-            { id: "crepa-trad", name: "Crepa Tradicional", price: 95, category: "dulces" },
-            { id: "crepa-frutal", name: "Crepa Frutal", price: 110, category: "dulces" },
-            { id: "crepa-celaya", name: "Crepa Celaya", price: 115, category: "dulces" },
-            { id: "crepa-esp", name: "Crepa Especial", price: 130, category: "dulces" },
-            { id: "hc-clasicos", name: "Hot Cakes Clásicos", price: 80, category: "dulces" },
-            { id: "hc-3leches", name: "Hot Cakes 3 Leches", price: 100, category: "dulces" },
-            { id: "waffles-clasicos", name: "Waffles Clásicos", price: 85, category: "dulces" },
-            { id: "pastel-dia", name: "Pastel del Día", price: 70, category: "dulces" },
-            { id: "rol-canela", name: "Rol de Canela", price: 49, category: "dulces" },
-            { id: "bisquet-merm", name: "Bisquet con Mermelada", price: 35, category: "dulces" },
-            { id: "croissant-merm", name: "Croissant con Mermelada", price: 60, category: "dulces" },
-            { id: "postre-esp-bisquet", name: "Bisquet Bless Especial", price: 90, category: "dulces" },
-            { id: "postre-esp-croissant", name: "Croissant Bless Especial", price: 95, category: "dulces" },
-            { id: "postre-esp-waffle", name: "Waffles Bless Especial", price: 99, category: "dulces" }
+            // AGUAS MINERALES (AQUÍ ESTÁN AGREGADAS EN LA COLUMNA DERECHA)
+            { name: "Agua Mineral Kirkland", price: 40, category: "cold-foam-varios" },
+            { name: "Agua Mineral Perrier", price: 65, category: "cold-foam-varios" }
         ];
 
-        // Función para renderizar el menú en pantalla
         function renderMenu() {
             const leftCol = document.getElementById('col-left');
             const rightCol = document.getElementById('col-right');
 
             const categories = [
-                { id: "calientes-cafe", title: "Calientes Café" },
-                { id: "calientes-sin-cafe", title: "Calientes Sin Café" },
-                { id: "especiales-calientes", title: "Calientes Especiales" },
-                { id: "infusionables", title: "Infusionables & Tés" },
-                { id: "frias-cafe", title: "Bebidas Frías con Café" },
-                { id: "frias-sin-cafe", title: "Frías Sin Café & Especiales" },
-                { id: "cold-foam-varios", title: "Cold Foam, Malteadas & Varios" },
-                { id: "salados", title: "Alimentos Salados" },
-                { id: "dulces", title: "Alimentos Dulces & Repostería" }
+                { id: "calientes-cafe", title: "CALIENTES CAFÉ", col: "left" },
+                { id: "calientes-sin-cafe", title: "CALIENTES SIN CAFÉ", col: "left" },
+                { id: "especiales-calientes", title: "CALIENTES ESPECIALES", col: "left" },
+                { id: "frias-especiales", title: "FRÍAS SIN CAFÉ & ESPECIALES", col: "right" },
+                { id: "cold-foam-varios", title: "COLD FOAM, MALTEADAS & VARIOS", col: "right" }
             ];
 
-            categories.forEach((cat, index) => {
+            categories.forEach(cat => {
                 const items = menuData.filter(i => i.category === cat.id);
                 if (items.length === 0) return;
 
@@ -378,7 +288,7 @@
                     `;
                 });
 
-                if (index < 5) {
+                if (cat.col === "left") {
                     leftCol.innerHTML += html;
                 } else {
                     rightCol.innerHTML += html;
@@ -386,30 +296,26 @@
             });
         }
 
-        // Función para ejecutar el cierre de caja e imprimir el ticket
+        // Función para enviar la orden de impresión de caja
         function cerrarCaja() {
             const fecha = new Date().toLocaleString();
             const ticketContainer = document.getElementById('ticket-cierre');
 
-            // Generar la plantilla del ticket de corte
             ticketContainer.innerHTML = `
-                <div style="text-align: center; width: 280px; font-family: monospace;">
+                <div style="text-align: center;">
                     <h2 style="margin: 0;">BLESS COFFEE</h2>
-                    <p style="margin: 2px 0;">Corte de Caja - Cierre Turno</p>
-                    <p style="margin: 2px 0;">Fecha: ${fecha}</p>
-                    <hr style="border-top: 1px dashed #000;">
-                    <p style="text-align: left; margin: 4px 0;">Estado: CAJA CERRADA</p>
-                    <p style="text-align: left; margin: 4px 0;">Total Productos Registrados: ${menuData.length}</p>
-                    <hr style="border-top: 1px dashed #000;">
-                    <p style="margin-top: 15px;">*** CORTE COMPLETO ***</p>
+                    <p style="margin: 3px 0;">CORTE DE CAJA - TURNO</p>
+                    <p style="margin: 3px 0;">---------------------------</p>
+                    <p style="text-align: left; margin: 3px 0;">Fecha: ${fecha}</p>
+                    <p style="text-align: left; margin: 3px 0;">Estatus: Cierre Generado</p>
+                    <p style="margin: 3px 0;">---------------------------</p>
+                    <p style="margin-top: 10px;">*** CORTE DE CAJA COMPLETO ***</p>
                 </div>
             `;
 
-            // Ejecutar la orden de impresión del navegador
             window.print();
         }
 
-        // Inicializar renderizado
         renderMenu();
     </script>
 </body>
