@@ -11,6 +11,13 @@ const menuData = {
         { nombre: "Matcha Latte Frío", descripcion: "Té matcha ceremonial con leche y hielo", precio: 65 },
         { nombre: "Chai Latte Frío", descripcion: "Concentrado de especias chai con leche fría", precio: 60 }
     ],
+    // NUEVO ARREGLO DE PRODUCTOS DE AGUA MINERAL Y PREPARADAS
+    friasMinerales: [
+        { nombre: "Agua Mineral Natural", descripcion: "Agua embotellada con gas 355ml", precio: 30 },
+        { nombre: "Agua Mineral Preparada", descripcion: "Con sal, limón y hielo", precio: 40 },
+        { nombre: "Naranjada / Limonada", descripcion: "Mineral o natural recién hecha", precio: 45 },
+        { nombre: "Rusa", descripcion: "Agua mineral con limón, sal y refresco de toronja", precio: 45 }
+    ],
     calientesCafe: [
         { nombre: "Espresso", descripcion: "Extracción concentrada de café", precio: 35 },
         { nombre: "Americano", descripcion: "Espresso diluido en agua caliente", precio: 40 },
@@ -36,6 +43,18 @@ function renderizarMenu() {
     const gridFriasSinCafe = document.getElementById("grid-frias-sincafe");
     if (gridFriasSinCafe) {
         gridFriasSinCafe.innerHTML = menuData.friasSinCafe.map(producto => `
+            <div class="producto-card">
+                <h4>${producto.nombre}</h4>
+                <p>${producto.descripcion}</p>
+                <span class="precio">$${producto.precio}</span>
+            </div>
+        `).join("");
+    }
+
+    // NUEVO: Renderizar Agua Mineral / Preparadas
+    const gridFriasMinerales = document.getElementById("grid-frias-minerales");
+    if (gridFriasMinerales) {
+        gridFriasMinerales.innerHTML = menuData.friasMinerales.map(producto => `
             <div class="producto-card">
                 <h4>${producto.nombre}</h4>
                 <p>${producto.descripcion}</p>
