@@ -134,14 +134,15 @@
       color: #16a34a;
     }
 
-    /* Panel Carrito */
+    /* Panel Carrito Lateral */
     .panel-carrito {
-      width: 380px;
+      width: 400px;
       background: white;
-      border-left: 1px solid #e2e8f0;
+      border-left: 2px solid #cbd5e1;
       display: flex;
       flex-direction: column;
       padding: 15px;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.05);
     }
 
     .opcion-leche {
@@ -167,9 +168,10 @@
     .lista-carrito {
       flex: 1;
       overflow-y: auto;
-      border-top: 1px solid #f1f5f9;
-      border-bottom: 1px solid #f1f5f9;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
       margin-bottom: 10px;
+      padding: 5px 0;
     }
 
     .item-carrito {
@@ -200,34 +202,51 @@
     .resumen-total {
       display: flex;
       justify-content: space-between;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
-      margin-bottom: 12px;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #f8fafc;
+      border-radius: 6px;
     }
 
     .acciones-carrito {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .btn-accion {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       border: none;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
       font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
     }
 
-    .btn-comanda { background: #3b82f6; color: white; }
+    .btn-comanda { background: #2563eb; color: white; }
     .btn-precuenta { background: #0284c7; color: white; }
-    .btn-cancelar { background: #dc2626; color: white; }
-    .btn-cancelar:hover { background: #b91c1c; }
+    
+    /* BOTÓN CANCELAR RESALTADO */
+    .btn-cancelar { 
+      background: #dc2626 !important; 
+      color: white !important; 
+      border: 2px solid #991b1b !important;
+      font-size: 14px !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-cancelar:hover { background: #b91c1c !important; }
+    
     .btn-guardar { background: #64748b; color: white; }
-    .btn-efectivo { background: #16a34a; color: white; }
-    .btn-tarjeta { background: #0284c7; color: white; }
+    .btn-efectivo { background: #16a34a; color: white; font-size: 14px; }
+    .btn-tarjeta { background: #0284c7; color: white; font-size: 14px; }
 
     /* Modal Comandas */
     .modal {
@@ -237,6 +256,7 @@
       background: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
+      z-index: 999;
     }
 
     .modal.active {
@@ -347,11 +367,17 @@
       </div>
 
       <div class="acciones-carrito">
-        <button class="btn-accion btn-comanda" onclick="imprimirComanda()">📝 Imprimir Comanda (Cocina/Barra)</button>
-        <button class="btn-accion btn-precuenta" onclick="imprimirPrecuenta()">📄 Imprimir Pre-Cuenta</button>
-        <button class="btn-accion btn-cancelar" onclick="cancelarCuentaActual()">❌ Cancelar Cuenta</button>
-        <button class="btn-accion btn-guardar" onclick="guardarComandaPendiente()">☁️ Guardar en Pendientes</button>
+        <button class="btn-accion btn-comanda" onclick="imprimirComanda()">📝 Imprimir Comanda</button>
+        
         <div style="display: flex; gap: 8px;">
+          <button class="btn-accion btn-precuenta" onclick="imprimirPrecuenta()">📄 Pre-Cuenta</button>
+          <button class="btn-accion btn-guardar" onclick="guardarComandaPendiente()">☁️ Pendiente</button>
+        </div>
+
+        <!-- BOTÓN DE CANCELAR CUENTA (NUEVA UBICACIÓN DESTACADA) -->
+        <button class="btn-accion btn-cancelar" id="btnCancelarCuenta" onclick="cancelarCuentaActual()">❌ CANCELAR CUENTA</button>
+
+        <div style="display: flex; gap: 8px; margin-top: 5px;">
           <button class="btn-accion btn-efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
           <button class="btn-accion btn-tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
         </div>
