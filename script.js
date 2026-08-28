@@ -688,8 +688,7 @@ function ejecutarCorteCaja() {
                     </h3>
                     <p style="margin: 2px 0;">--------------------------------</p>
                     <p style="margin-top: 5px; font-weight: bold; font-size: 10px;">*** TICKET DE CORTE ***</p>
-                </div>
-            `;
+                </div>`;
 
             document.getElementById('modal-ticket-general').style.display = 'flex';
         }
@@ -699,4 +698,5 @@ window.onload = function() {
   renderizarMenu();
   actualizarCarritoUI();
   actualizarUIComandasPendientes();
-};
+
+}
