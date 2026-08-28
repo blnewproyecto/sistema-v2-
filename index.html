@@ -1,647 +1,404 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLESS COFFEE POS</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLESS COFFEE - POS</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        body {
-            background-color: #f1f5f9;
-            color: #334155;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+    body {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        /* NAVBAR SUPERIOR */
-        .navbar {
-            background-color: #0f172a;
-            color: #ffffff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-        }
+    header {
+      background-color: #0f172a;
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .brand {
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
+    header h1 {
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+    }
 
-        .nav-btn {
-            background: transparent;
-            color: #cbd5e1;
-            border: none;
-            padding: 6px 14px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            border-radius: 6px;
-        }
+    .btn-tab {
+      background-color: #334155;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-        .nav-btn.active {
-            background-color: #2563eb;
-            color: #ffffff;
-        }
+    .btn-tab.active {
+      background-color: #2563eb;
+    }
 
-        /* LAYOUT PRINCIPAL */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
 
-        .view-section {
-            display: none;
-            flex: 1;
-            padding: 20px;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-        }
+    /* Contenido Principal / Menú */
+    .contenido-principal {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      overflow-y: auto;
+    }
 
-        .view-section.active-view {
-            display: flex;
-        }
+    .buscador-bar {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+    }
 
-        .search-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            background-color: #ffffff;
-            color: #1e293b;
-        }
+    .buscador-bar input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 16px;
+    }
 
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1e293b;
-        }
+    .seccion {
+      display: none;
+    }
 
-        /* GRID DE PRODUCTOS */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 12px;
-        }
+    .seccion.active {
+      display: block;
+    }
 
-        .product-card {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            min-height: 90px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+    .categoria-titulo {
+      font-size: 16px;
+      margin: 15px 0 10px 0;
+      color: #475569;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
 
-        .product-card:active {
-            background-color: #e2e8f0;
-        }
+    .grid-productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
 
-        .p-name { font-size: 12px; font-weight: 600; color: #1e293b; }
-        .p-price { font-size: 14px; font-weight: 700; color: #2563eb; margin-top: 6px; }
+    .card-producto {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 90px;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
 
-        /* COMANDAS PENDIENTES */
-        .comandas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-        }
+    .card-producto:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
 
-        .comanda-card {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 4px solid #0284c7;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            cursor: pointer;
-        }
+    .card-producto h4 {
+      font-size: 13px;
+      color: #0f172a;
+    }
 
-        .comanda-card:hover {
-            background-color: #f8fafc;
-        }
+    .card-producto .precio {
+      font-size: 14px;
+      font-weight: bold;
+      color: #16a34a;
+    }
 
-        /* METRICAS Y BOTON CORTE */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
+    /* Panel Carrito Lateral */
+    .panel-carrito {
+      width: 400px;
+      background: white;
+      border-left: 2px solid #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+    }
 
-        .metric-card {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            position: relative;
-            overflow: hidden;
-        }
+    .opcion-leche {
+      margin-bottom: 12px;
+    }
 
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 4px;
-        }
+    .opcion-leche label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #64748b;
+      display: block;
+      margin-bottom: 4px;
+    }
 
-        .card-green::before { background-color: #16a34a; }
-        .card-blue::before { background-color: #2563eb; }
-        .card-darkblue::before { background-color: #1e3a8a; }
+    .opcion-leche select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-        .metric-title { font-size: 13px; color: #64748b; margin-bottom: 6px; font-weight: 500; }
-        .metric-value { font-size: 18px; font-weight: 700; color: #0f172a; }
+    .lista-carrito {
+      flex: 1;
+      overflow-y: auto;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 10px;
+      padding: 5px 0;
+    }
 
-        .btn-cerrar-caja {
-            background-color: #dc2626;
-            color: #ffffff;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            width: fit-content;
-            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
-        }
+    .item-carrito {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f8fafc;
+    }
 
-        /* PANEL DERECHO */
-        .right-panel {
-            width: 380px;
-            background-color: #ffffff;
-            border-left: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-        }
+    .item-carrito small {
+      display: block;
+      color: #64748b;
+      font-size: 11px;
+    }
 
-        .cart-header-title { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 15px; }
-        .label-leche { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 6px; display: block; }
+    .btn-eliminar {
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
 
-        .select-leche {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 15px;
-            background-color: #ffffff;
-        }
+    .resumen-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #f8fafc;
+      border-radius: 6px;
+    }
 
-        .cart-items-list {
-            list-style: none;
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 15px;
-        }
+    .acciones-carrito {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        .cart-item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 13px;
-        }
+    .btn-accion {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
 
-        .qty-controls {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
+    .btn-comanda { background: #2563eb; color: white; }
+    .btn-precuenta { background: #0284c7; color: white; }
+    
+    /* BOTÓN CANCELAR RESALTADO */
+    .btn-cancelar { 
+      background: #dc2626 !important; 
+      color: white !important; 
+      border: 2px solid #991b1b !important;
+      font-size: 14px !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-cancelar:hover { background: #b91c1c !important; }
+    
+    .btn-guardar { background: #64748b; color: white; }
+    .btn-efectivo { background: #16a34a; color: white; font-size: 14px; }
+    .btn-tarjeta { background: #0284c7; color: white; font-size: 14px; }
 
-        .btn-qty {
-            background: #e2e8f0;
-            border: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    /* Modal Comandas */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
 
-        .empty-cart-msg {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 14px;
-            margin-top: 40px;
-        }
+    .modal.active {
+      display: flex;
+    }
 
-        .total-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #f1f5f9;
-        }
+    .modal-contenido {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 450px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
 
-        .total-label, .total-amount { font-size: 18px; font-weight: 700; color: #1e293b; }
-
-        .action-buttons { display: flex; flex-direction: column; gap: 10px; }
-
-        .btn-action {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .btn-primary { background-color: #2563eb; color: #ffffff; }
-        .btn-info { background-color: #0284c7; color: #ffffff; }
-        .btn-secondary { background-color: #64748b; color: #ffffff; }
-        .btn-danger { background-color: #dc2626; color: #ffffff; }
-        .btn-success { background-color: #16a34a; color: #ffffff; }
-
-        .btn-row { display: flex; gap: 10px; }
-        .btn-row .btn-action { flex: 1; }
-
-        /* IMPRESIÓN EXCLUSIVA DEL TICKET DE CORTE */
-        @media print {
-            body * { visibility: hidden; }
-            #ticket-corte, #ticket-corte * { visibility: visible; }
-            #ticket-corte {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 280px;
-                font-family: monospace;
-                font-size: 12px;
-                color: #000;
-                background: #fff;
-                padding: 10px;
-            }
-        }
-
-        #ticket-corte { display: none; }
-    </style>
+    .card-comanda-item {
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="brand">BLESS COFFEE POS</div>
-        <div class="nav-links">
-            <button class="nav-btn active" id="btn-nav-menu" onclick="cambiarVista('menu')">Menú</button>
-            <button class="nav-btn" id="btn-nav-comandas" onclick="cambiarVista('comandas')">Comandas (<span id="count-comandas">0</span>)</button>
-            <button class="nav-btn" id="btn-nav-corte" onclick="cambiarVista('corte')">Corte de Caja</button>
-        </div>
+  <header>
+    <h1>BLESS COFFEE POS</h1>
+    <div class="nav-tabs">
+      <button class="btn-tab active" onclick="cambiarPestana('menu')">Menú</button>
+      <button class="btn-tab" onclick="abrirModalComandas()">Comandas (<span id="badgeComandasCount">0</span>)</button>
+      <button class="btn-tab" onclick="cambiarPestana('corte')">Corte de Caja</button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Contenido Izquierdo (Menú) -->
+    <div class="contenido-principal">
+      <div class="buscador-bar">
+        <input type="text" id="inputBuscador" placeholder="Buscar producto..." onkeyup="filtrarProductos()">
+      </div>
+
+      <div id="tab-menu" class="seccion active">
+        <h3 class="categoria-titulo">Bebidas Calientes - Café</h3>
+        <div class="grid-productos" id="grid-calientes-cafe"></div>
+
+        <h3 class="categoria-titulo">Bebidas Calientes - Sin Café</h3>
+        <div class="grid-productos" id="grid-calientes-sincafe"></div>
+
+        <h3 class="categoria-titulo">Bebidas Calientes - Especiales</h3>
+        <div class="grid-productos" id="grid-calientes-especialess"></div>
+
+        <h3 class="categoria-titulo">Bebidas Calientes - Infusionables</h3>
+        <div class="grid-productos" id="grid-calientes-infusionables"></div>
+
+        <h3 class="categoria-titulo">Bebidas Frías - Café</h3>
+        <div class="grid-productos" id="grid-frias-cafe"></div>
+        
+        <h3 class="categoria-titulo">Agua Mineral / Preparadas</h3>
+        <div class="grid-productos" id="grid-frias-minerales"></div>
+
+        <h3 class="categoria-titulo">Bebidas Frías - Sin Café</h3>
+        <div class="grid-productos" id="grid-frias-sincafe"></div>
+
+        <h3 class="categoria-titulo">Bebidas Frías - Especiales</h3>
+        <div class="grid-productos" id="grid-frias-especialess"></div>
+
+        <h3 class="categoria-titulo">Cold Foam / Malteadas</h3>
+        <div class="grid-productos" id="grid-frias-foam-malteadas"></div>
+
+        <h3 class="categoria-titulo">Bebidas Frías - Varios</h3>
+        <div class="grid-productos" id="grid-frias-varios"></div>
+
+        <h3 class="categoria-titulo">Mocktails / Tizanas Frías</h3>
+        <div class="grid-productos" id="grid-frias-mocktails"></div>
+
+        <h3 class="categoria-titulo">Alimentos Salados</h3>
+        <div class="grid-productos" id="grid-alimentos-salados"></div>
+
+        <h3 class="categoria-titulo">Alimentos Dulces</h3>
+        <div class="grid-productos" id="grid-alimentos-dulces"></div>
+      </div>
+
+      <div id="tab-corte" class="seccion">
+        <!-- Generado dinámicamente -->
+      </div>
     </div>
 
-    <div class="main-container">
-        <div class="view-section active-view" id="view-menu">
-            <input type="text" class="search-input" id="search-input" placeholder="Buscar producto..." oninput="filtrarProductos()">
-            <div class="products-grid" id="products-grid"></div>
+    <!-- Panel Derecho (Orden Actual / Carrito) -->
+    <div class="panel-carrito">
+      <h3>Orden Activa</h3>
+      <br>
+      <div class="opcion-leche">
+        <label for="selectLeche">Tipo de Leche predeterminada:</label>
+        <select id="selectLeche">
+          <option value="Sin leche">Sin Leche ($0)</option>
+          <option value="Entera">Entera ($0)</option>
+          <option value="Light">Light ($0)</option>
+          <option value="Deslactosada">Deslactosada (+$12)</option>
+          <option value="Vegetal">Vegetal / Almendra / Avena (+$12)</option>
+        </select>
+      </div>
+
+      <div class="lista-carrito" id="listaCarrito"></div>
+
+      <div class="resumen-total">
+        <span>Total:</span>
+        <span id="montoTotal">$0.00</span>
+      </div>
+
+      <div class="acciones-carrito">
+        <button class="btn-accion btn-comanda" onclick="imprimirComanda()">📝 Imprimir Comanda</button>
+        
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-accion btn-precuenta" onclick="imprimirPrecuenta()">📄 Pre-Cuenta</button>
+          <button class="btn-accion btn-guardar" onclick="guardarComandaPendiente()">☁️ Pendiente</button>
         </div>
 
-        <div class="view-section" id="view-comandas">
-            <h2 class="section-title">Comandas Pendientes</h2>
-            <div class="comandas-grid" id="comandas-grid">
-                <p style="color: #94a3b8;">No hay comandas pendientes por cobrar.</p>
-            </div>
+        <!-- BOTÓN DE CANCELAR CUENTA (NUEVA UBICACIÓN DESTACADA) -->
+        <button class="btn-accion btn-cancelar" id="btnCancelarCuenta" onclick="cancelarCuentaActual()">❌ CANCELAR CUENTA</button>
+
+        <div style="display: flex; gap: 8px; margin-top: 5px;">
+          <button class="btn-accion btn-efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
+          <button class="btn-accion btn-tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
         </div>
-
-        <div class="view-section" id="view-corte">
-            <h2 class="section-title">Corte de Caja Diario</h2>
-
-            <div class="metrics-grid">
-                <div class="metric-card card-green">
-                    <div class="metric-title">Efectivo</div>
-                    <div class="metric-value" id="val-efectivo">$0.00</div>
-                </div>
-                <div class="metric-card card-blue">
-                    <div class="metric-title">Tarjeta</div>
-                    <div class="metric-value" id="val-tarjeta">$0.00</div>
-                </div>
-                <div class="metric-card card-darkblue">
-                    <div class="metric-title">Total Acumulado</div>
-                    <div class="metric-value" id="val-total">$0.00</div>
-                </div>
-            </div>
-
-            <button class="btn-cerrar-caja" onclick="ejecutarCorteCaja()">
-                🔒 CERRAR CAJA Y REINICIAR DÍA
-            </button>
-        </div>
-
-        <div class="right-panel">
-            <div>
-                <h3 class="cart-header-title">Orden Activa</h3>
-                <label class="label-leche">Tipo de Leche predeterminada:</label>
-                <select class="select-leche">
-                    <option>Sin Leche ($0)</option>
-                    <option>Entera ($0)</option>
-                    <option>Deslactosada ($0)</option>
-                    <option>Almendra (+$10)</option>
-                    <option>Avena (+$10)</option>
-                </select>
-
-                <ul class="cart-items-list" id="cart-items-list">
-                    <div class="empty-cart-msg" id="empty-cart-msg">
-                        No hay items en la comanda
-                    </div>
-                </ul>
-            </div>
-
-            <div>
-                <div class="total-container">
-                    <span class="total-label">Total:</span>
-                    <span class="total-amount" id="cart-total">$0.00</span>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-action btn-primary" onclick="imprimirComanda()">📄 Imprimir Comanda</button>
-                    
-                    <div class="btn-row">
-                        <button class="btn-action btn-info" onclick="imprimirPrecuenta()">📄 Pre-Cuenta</button>
-                        <button class="btn-action btn-secondary" onclick="guardarPendiente()">☕ Pendiente</button>
-                    </div>
-
-                    <button class="btn-action btn-danger" onclick="cancelarCuenta()">✕ CANCELAR CUENTA</button>
-
-                    <div class="btn-row">
-                        <button class="btn-action btn-success" onclick="cobrar('Efectivo')">💵 Efectivo</button>
-                        <button class="btn-action btn-info" onclick="cobrar('Tarjeta')">💳 Tarjeta</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <div id="ticket-corte"></div>
+  <!-- Modal Comandas Pendientes -->
+  <div class="modal" id="modalComandas">
+    <div class="modal-contenido">
+      <h3>Comandas Pendientes</h3>
+      <br>
+      <div id="listaComandasModal"></div>
+      <br>
+      <button class="btn-accion btn-guardar" onclick="cerrarModalComandas()">Cerrar</button>
+    </div>
+  </div>
 
-    <script>
-        const menuData = [
-            { id: 1, name: "Americano (M)", price: 42 },
-            { id: 2, name: "Capuccino (M)", price: 60 },
-            { id: 3, name: "Latte (M)", price: 60 },
-            { id: 4, name: "Moka Obscuro (M)", price: 80 },
-            { id: 5, name: "Cold Brew", price: 70 },
-            { id: 6, name: "Frappé Clásico", price: 75 },
-            { id: 7, name: "Chai Latte", price: 80 },
-            { id: 8, name: "Matcha Latte", price: 80 },
-            { id: 9, name: "Molletes Sencillos", price: 80 },
-            { id: 10, name: "Chilaquiles", price: 100 },
-            { id: 11, name: "Crepa Tradicional", price: 95 },
-            { id: 12, name: "Waffles Clásicos", price: 85 }
-        ];
-
-        let ordenActual = [];
-        let comandasPendientes = [];
-        let acumuladoEfectivo = 0;
-        let acumuladoTarjeta = 0;
-
-        function init() {
-            renderProductos(menuData);
-        }
-
-        function cambiarVista(vista) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-            if (vista === 'menu') {
-                document.getElementById('view-menu').classList.add('active-view');
-                document.getElementById('btn-nav-menu').classList.add('active');
-            } else if (vista === 'comandas') {
-                document.getElementById('view-comandas').classList.add('active-view');
-                document.getElementById('btn-nav-comandas').classList.add('active');
-                renderComandas();
-            } else if (vista === 'corte') {
-                document.getElementById('view-corte').classList.add('active-view');
-                document.getElementById('btn-nav-corte').classList.add('active');
-            }
-        }
-
-        function renderProductos(items) {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-            items.forEach(prod => {
-                grid.innerHTML += `
-                    <div class="product-card" onclick="agregarAlCarrito(${prod.id})">
-                        <span class="p-name">${prod.name}</span>
-                        <span class="p-price">$${prod.price.toFixed(2)}</span>
-                    </div>
-                `;
-            });
-        }
-
-        function filtrarProductos() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtrados = menuData.filter(p => p.name.toLowerCase().includes(query));
-            renderProductos(filtrados);
-        }
-
-        function agregarAlCarrito(id) {
-            const prod = menuData.find(p => p.id === id);
-            const existe = ordenActual.find(item => item.id === id);
-
-            if (existe) {
-                existe.qty++;
-            } else {
-                ordenActual.push({ ...prod, qty: 1 });
-            }
-            renderCarrito();
-        }
-
-        function cambiarCantidad(id, cambio) {
-            const item = ordenActual.find(i => i.id === id);
-            if (item) {
-                item.qty += cambio;
-                if (item.qty <= 0) {
-                    ordenActual = ordenActual.filter(i => i.id !== id);
-                }
-            }
-            renderCarrito();
-        }
-
-        function renderCarrito() {
-            const list = document.getElementById('cart-items-list');
-            const totalEl = document.getElementById('cart-total');
-            list.innerHTML = '';
-
-            if (ordenActual.length === 0) {
-                list.innerHTML = `<div class="empty-cart-msg">No hay items en la comanda</div>`;
-                totalEl.textContent = '$0.00';
-                return;
-            }
-
-            let total = 0;
-            ordenActual.forEach(item => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                list.innerHTML += `
-                    <li class="cart-item-row">
-                        <div>
-                            <div><strong>${item.name}</strong></div>
-                            <div style="color: #64748b; font-size: 11px;">$${item.price.toFixed(2)} c/u</div>
-                        </div>
-                        <div class="qty-controls">
-                            <button class="btn-qty" onclick="cambiarCantidad(${item.id}, -1)">-</button>
-                            <span style="font-weight:bold;">${item.qty}</span>
-                            <button class="btn-qty" onclick="cambiarCantidad(${item.id}, 1)">+</button>
-                        </div>
-                    </li>
-                `;
-            });
-
-            totalEl.textContent = `$${total.toFixed(2)}`;
-        }
-
-        function guardarPendiente() {
-            if (ordenActual.length === 0) return alert("La orden está vacía");
-            
-            const total = ordenActual.reduce((acc, i) => acc + (i.price * i.qty), 0);
-            const idComanda = Date.now().toString().slice(-4);
-            
-            comandasPendientes.push({
-                id: idComanda,
-                items: [...ordenActual],
-                total: total,
-                hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            });
-
-            ordenActual = [];
-            renderCarrito();
-            actualizarContadorComandas();
-            alert(`Comanda #${idComanda} enviada a Pendientes.`);
-        }
-
-        function renderComandas() {
-            const container = document.getElementById('comandas-grid');
-            if (comandasPendientes.length === 0) {
-                container.innerHTML = `<p style="color: #94a3b8;">No hay comandas pendientes por cobrar.</p>`;
-                return;
-            }
-
-            container.innerHTML = '';
-            comandasPendientes.forEach((c, index) => {
-                container.innerHTML += `
-                    <div class="comanda-card" onclick="cargarComanda(${index})">
-                        <strong style="color: #0f172a;">Comanda #${c.id}</strong>
-                        <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hora: ${c.hora}</div>
-                        <div style="font-size: 14px; font-weight: bold; color: #0284c7; margin-top: 6px;">
-                            Total: $${c.total.toFixed(2)}
-                        </div>
-                        <div style="font-size: 11px; color: #16a34a; margin-top: 6px;">Clic para abrir orden</div>
-                    </div>
-                `;
-            });
-        }
-
-        function cargarComanda(index) {
-            ordenActual = [...comandasPendientes[index].items];
-            comandasPendientes.splice(index, 1);
-            actualizarContadorComandas();
-            renderCarrito();
-            cambiarVista('menu');
-        }
-
-        function actualizarContadorComandas() {
-            document.getElementById('count-comandas').textContent = comandasPendientes.length;
-        }
-
-        function cobrar(metodo) {
-            if (ordenActual.length === 0) return alert("La orden está vacía");
-
-            const total = ordenActual.reduce((acc, i) => acc + (i.price * i.qty), 0);
-            if (metodo === 'Efectivo') {
-                acumuladoEfectivo += total;
-                document.getElementById('val-efectivo').textContent = `$${acumuladoEfectivo.toFixed(2)}`;
-            } else {
-                acumuladoTarjeta += total;
-                document.getElementById('val-tarjeta').textContent = `$${acumuladoTarjeta.toFixed(2)}`;
-            }
-
-            const totalGeneral = acumuladoEfectivo + acumuladoTarjeta;
-            document.getElementById('val-total').textContent = `$${totalGeneral.toFixed(2)}`;
-
-            alert(`Cobrado con éxito ($${metodo}): $${total.toFixed(2)}`);
-            ordenActual = [];
-            renderCarrito();
-        }
-
-        function cancelarCuenta() {
-            if (ordenActual.length === 0) return;
-            if (confirm("¿Deseas cancelar la cuenta activa?")) {
-                ordenActual = [];
-                renderCarrito();
-            }
-        }
-
-        function imprimirComanda() {
-            if (ordenActual.length === 0) return alert("No hay items para enviar a barra");
-            alert("Comanda enviada a cocina/barra.");
-        }
-
-        function imprimirPrecuenta() {
-            if (ordenActual.length === 0) return alert("No hay items en la cuenta");
-            alert("Imprimiendo pre-cuenta para cliente...");
-        }
-
-        /* FUNCIÓN AGREGADA PARA ENVIAR CORTE A LA MINIPRINTER */
-        function ejecutarCorteCaja() {
-            const totalGeneral = acumuladoEfectivo + acumuladoTarjeta;
-            const fechaHora = new Date().toLocaleString();
-
-            const ticketContainer = document.getElementById('ticket-corte');
-            ticketContainer.innerHTML = `
-                <div style="text-align: center;">
-                    <h2 style="margin: 0; font-size: 16px;">BLESS COFFEE POS</h2>
-                    <p style="margin: 3px 0; font-size: 12px;">CORTE DE CAJA DIARIO</p>
-                    <p style="margin: 2px 0;">--------------------------------</p>
-                    <p style="text-align: left; margin: 3px 0; font-size: 11px;">FECHA: ${fechaHora}</p>
-                    <p style="margin: 2px 0;">--------------------------------</p>
-                    <div style="text-align: left; font-size: 12px; margin: 5px 0;">
-                        <p style="display: flex; justify-content: space-between;">
-                            <span>EFECTIVO:</span> <span>$${acumuladoEfectivo.toFixed(2)}</span>
-                        </p>
-                        <p style="display: flex; justify-content: space-between;">
-                            <span>TARJETA:</span> <span>$${acumuladoTarjeta.toFixed(2)}</span>
-                        </p>
-                    </div>
-                    <p style="margin: 2px 0;">--------------------------------</p>
-                    <h3 style="text-align: right; margin: 5px 0; font-size: 14px;">
-                        TOTAL ACUMULADO: $${totalGeneral.toFixed(2)}
-                    </h3>
-                    <p style="margin: 2px 0;">--------------------------------</p>
-                    <p style="margin-top: 10px; font-weight: bold; font-size: 11px;">*** CAJA CERRADA Y DÍA REINICIADO ***</p>
-                </div>
-            `;
-
-            window.print();
-        }
-
-        init();
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
