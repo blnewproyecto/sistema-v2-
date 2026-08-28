@@ -699,5 +699,4 @@ window.onload = function() {
   actualizarCarritoUI();
   actualizarUIComandasPendientes();
 
-}
-}
+};
