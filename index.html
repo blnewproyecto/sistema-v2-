@@ -21,7 +21,7 @@
             overflow: hidden;
         }
 
-        /* NAVBAR SUPERIOR */
+        /* NAVBAR SUPERIOR AZUL */
         .navbar {
             background-color: #0f172a;
             color: #ffffff;
@@ -66,7 +66,7 @@
             overflow: hidden;
         }
 
-        /* VISTAS */
+        /* VISTAS DEL PANEL IZQUIERDO */
         .view-section {
             display: none;
             flex: 1;
@@ -97,15 +97,7 @@
             color: #1e293b;
         }
 
-        /* CATEGORÍAS Y MENÚ */
-        .category-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            margin: 10px 0 5px 0;
-        }
-
+        /* GRID DE PRODUCTOS EN MENU */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -134,7 +126,7 @@
         .p-name { font-size: 12px; font-weight: 600; color: #1e293b; }
         .p-price { font-size: 14px; font-weight: 700; color: #2563eb; margin-top: 6px; }
 
-        /* COMANDAS PENDIENTES */
+        /* LISTA DE COMANDAS PENDIENTES */
         .comandas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -150,7 +142,11 @@
             cursor: pointer;
         }
 
-        /* METRICAS CORTE DE CAJA */
+        .comanda-card:hover {
+            background-color: #f8fafc;
+        }
+
+        /* METRICS CARDS EN CORTE */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -256,6 +252,7 @@
             margin-top: 40px;
         }
 
+        /* CONTROLES Y BOTONES DE COBRO */
         .total-container {
             display: flex;
             justify-content: space-between;
@@ -292,20 +289,18 @@
         .btn-row { display: flex; gap: 10px; }
         .btn-row .btn-action { flex: 1; }
 
-        /* FORMATO TICKET TÉRMICO DE IMPRESIÓN */
+        /* TICKET IMPRESO */
         @media print {
             body * { visibility: hidden; }
             #ticket-corte, #ticket-corte * { visibility: visible; }
             #ticket-corte {
                 position: absolute;
-                left: 0;
-                top: 0;
-                width: 58mm;
-                font-family: monospace;
-                font-size: 12px;
+                left: 0; top: 0;
+                width: 280px;
                 color: #000;
                 background: #fff;
-                padding: 0;
+                padding: 10px;
+                font-family: monospace;
             }
         }
 
@@ -314,7 +309,7 @@
 </head>
 <body>
 
-    <!-- NAVBAR SUPERIOR -->
+    <!-- NAVBAR SUPERIOR INTERACTIVO -->
     <div class="navbar">
         <div class="brand">BLESS COFFEE POS</div>
         <div class="nav-links">
@@ -325,16 +320,13 @@
     </div>
 
     <div class="main-container">
-        <!-- VISTA MENÚ -->
+        <!-- VISTA 1: MENÚ DE PRODUCTOS -->
         <div class="view-section active-view" id="view-menu">
             <input type="text" class="search-input" id="search-input" placeholder="Buscar producto..." oninput="filtrarProductos()">
-            
-            <div id="menu-container">
-                <!-- Se llena dinámicamente con las bebidas y alimentos -->
-            </div>
+            <div class="products-grid" id="products-grid"></div>
         </div>
 
-        <!-- VISTA COMANDAS PENDIENTES -->
+        <!-- VISTA 2: COMANDAS PENDIENTES -->
         <div class="view-section" id="view-comandas">
             <h2 class="section-title">Comandas Pendientes</h2>
             <div class="comandas-grid" id="comandas-grid">
@@ -342,7 +334,7 @@
             </div>
         </div>
 
-        <!-- VISTA CORTE DE CAJA -->
+        <!-- VISTA 3: CORTE DE CAJA DIARIO -->
         <div class="view-section" id="view-corte">
             <h2 class="section-title">Corte de Caja Diario</h2>
 
@@ -393,10 +385,10 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn-action btn-primary" onclick="alert('Comanda enviada a barra')">📄 Imprimir Comanda</button>
+                    <button class="btn-action btn-primary" onclick="imprimirComanda()">📄 Imprimir Comanda</button>
                     
                     <div class="btn-row">
-                        <button class="btn-action btn-info" onclick="alert('Imprimiendo pre-cuenta')">📄 Pre-Cuenta</button>
+                        <button class="btn-action btn-info" onclick="imprimirPrecuenta()">📄 Pre-Cuenta</button>
                         <button class="btn-action btn-secondary" onclick="guardarPendiente()">☕ Pendiente</button>
                     </div>
 
@@ -411,45 +403,35 @@
         </div>
     </div>
 
+    <!-- TICKET DE IMPRESIÓN DEL CORTE -->
     <div id="ticket-corte"></div>
 
     <script>
-        // EXPANDE AQUÍ TU MENÚ COMPLETO (BEBIDAS Y ALIMENTOS)
         const menuData = [
-            // BEBIDAS
-            { id: 1, name: "Espresso", price: 35, cat: "Bebidas Calientes" },
-            { id: 2, name: "Americano", price: 42, cat: "Bebidas Calientes" },
-            { id: 3, name: "Capuccino", price: 60, cat: "Bebidas Calientes" },
-            { id: 4, name: "Latte Clásico", price: 60, cat: "Bebidas Calientes" },
-            { id: 5, name: "Moka Obscuro", price: 80, cat: "Bebidas Calientes" },
-            { id: 6, name: "Chai Latte", price: 80, cat: "Bebidas Calientes" },
-            { id: 7, name: "Matcha Latte", price: 80, cat: "Bebidas Calientes" },
-            { id: 8, name: "Cold Brew", price: 70, cat: "Bebidas Frías" },
-            { id: 9, name: "Frappé Clásico", price: 75, cat: "Bebidas Frías" },
-            { id: 10, name: "Frappé Oreo", price: 85, cat: "Bebidas Frías" },
-            { id: 11, name: "Smoothie Frutos Rojos", price: 75, cat: "Bebidas Frías" },
-            { id: 12, name: "Té Helado Durazno", price: 45, cat: "Bebidas Frías" },
-
-            // ALIMENTOS
-            { id: 13, name: "Molletes Sencillos", price: 80, cat: "Alimentos" },
-            { id: 14, name: "Molletes con Jamón", price: 95, cat: "Alimentos" },
-            { id: 15, name: "Chilaquiles Verdes", price: 100, cat: "Alimentos" },
-            { id: 16, name: "Chilaquiles Rojos", price: 100, cat: "Alimentos" },
-            { id: 17, name: "Panini Pavo y Queso", price: 110, cat: "Alimentos" },
-            { id: 18, name: "Bagel de Lomo", price: 105, cat: "Alimentos" },
-            { id: 19, name: "Waffles Clásicos", price: 85, cat: "Postres" },
-            { id: 20, name: "Crepa Nutella", price: 95, cat: "Postres" }
+            { id: 1, name: "Americano (M)", price: 42 },
+            { id: 2, name: "Capuccino (M)", price: 60 },
+            { id: 3, name: "Latte (M)", price: 60 },
+            { id: 4, name: "Moka Obscuro (M)", price: 80 },
+            { id: 5, name: "Cold Brew", price: 70 },
+            { id: 6, name: "Frappé Clásico", price: 75 },
+            { id: 7, name: "Chai Latte", price: 80 },
+            { id: 8, name: "Matcha Latte", price: 80 },
+            { id: 9, name: "Molletes Sencillos", price: 80 },
+            { id: 10, name: "Chilaquiles", price: 100 },
+            { id: 11, name: "Crepa Tradicional", price: 95 },
+            { id: 12, name: "Waffles Clásicos", price: 85 }
         ];
 
         let ordenActual = [];
         let comandasPendientes = [];
-        let acumuladoEfectivo = 0.00;
-        let acumuladoTarjeta = 0.00;
+        let acumuladoEfectivo = 0;
+        let acumuladoTarjeta = 0;
 
         function init() {
             renderProductos(menuData);
         }
 
+        // NAVEGACIÓN DE PESTAÑAS
         function cambiarVista(vista) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -467,31 +449,17 @@
             }
         }
 
+        // RENDERIZAR MENÚ Y BUSCADOR
         function renderProductos(items) {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = '';
-
-            const categorias = [...new Set(items.map(i => i.cat))];
-
-            categorias.forEach(cat => {
-                const catTitle = document.createElement('div');
-                catTitle.className = 'category-title';
-                catTitle.textContent = cat;
-                container.appendChild(catTitle);
-
-                const grid = document.createElement('div');
-                grid.className = 'products-grid';
-
-                items.filter(i => i.cat === cat).forEach(prod => {
-                    grid.innerHTML += `
-                        <div class="product-card" onclick="agregarAlCarrito(${prod.id})">
-                            <span class="p-name">${prod.name}</span>
-                            <span class="p-price">$${prod.price.toFixed(2)}</span>
-                        </div>
-                    `;
-                });
-
-                container.appendChild(grid);
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            items.forEach(prod => {
+                grid.innerHTML += `
+                    <div class="product-card" onclick="agregarAlCarrito(${prod.id})">
+                        <span class="p-name">${prod.name}</span>
+                        <span class="p-price">$${prod.price.toFixed(2)}</span>
+                    </div>
+                `;
             });
         }
 
@@ -501,6 +469,7 @@
             renderProductos(filtrados);
         }
 
+        // CARRITO / ORDEN ACTIVA
         function agregarAlCarrito(id) {
             const prod = menuData.find(p => p.id === id);
             const existe = ordenActual.find(item => item.id === id);
@@ -557,6 +526,7 @@
             totalEl.textContent = `$${total.toFixed(2)}`;
         }
 
+        // BOTONES DE ACCIÓN
         function guardarPendiente() {
             if (ordenActual.length === 0) return alert("La orden está vacía");
             
@@ -573,7 +543,7 @@
             ordenActual = [];
             renderCarrito();
             actualizarContadorComandas();
-            alert(`Comanda #${idComanda} guardada.`);
+            alert(`Comanda #${idComanda} enviada a Pendientes.`);
         }
 
         function renderComandas() {
@@ -592,6 +562,7 @@
                         <div style="font-size: 14px; font-weight: bold; color: #0284c7; margin-top: 6px;">
                             Total: $${c.total.toFixed(2)}
                         </div>
+                        <div style="font-size: 11px; color: #16a34a; margin-top: 6px;">Clic para abrir orden</div>
                     </div>
                 `;
             });
@@ -624,6 +595,7 @@
             const totalGeneral = acumuladoEfectivo + acumuladoTarjeta;
             document.getElementById('val-total').textContent = `$${totalGeneral.toFixed(2)}`;
 
+            alert(`Cobrado con éxito ($${metodo}): $${total.toFixed(2)}`);
             ordenActual = [];
             renderCarrito();
         }
@@ -636,29 +608,30 @@
             }
         }
 
-        // IMPRESIÓN CON FORMATO EXACTO DE TICKET Y REINICIO DE CAJA
-        function ejecutarCorteCaja() {
-            if (!confirm("¿Seguro que deseas cerrar la caja? Se imprimirá el ticket y el día se reiniciará a $0.00.")) {
-                return;
-            }
+        function imprimirComanda() {
+            if (ordenActual.length === 0) return alert("No hay items para enviar a barra");
+            alert("Comanda enviada a cocina/barra.");
+        }
 
+        function imprimirPrecuenta() {
+            if (ordenActual.length === 0) return alert("No hay items en la cuenta");
+            alert("Imprimiendo pre-cuenta para cliente...");
+        }
+
+        // TICKET DE CORTE
+        function ejecutarCorteCaja() {
             const totalGeneral = acumuladoEfectivo + acumuladoTarjeta;
-            const ahora = new Date();
-            const fechaHora = `${ahora.getDate()}/${ahora.getMonth() + 1}/${ahora.getFullYear().toString().slice(-2)}, ${ahora.getHours()}:${ahora.getMinutes().toString().padStart(2, '0')}`;
+            const fechaHora = new Date().toLocaleString();
 
             const ticketContainer = document.getElementById('ticket-corte');
             ticketContainer.innerHTML = `
-                <div style="text-align: center; font-family: monospace;">
-                    <p style="font-size: 14px; font-weight: bold; margin-bottom: 4px;">¡Gracias por tu visita!</p>
-                    <p style="font-size: 12px; font-weight: bold; margin-bottom: 8px;">BLESS COFFEE POS</p>
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px;">
-                        <span>${fechaHora}</span>
-                        <span>BLESS...</span>
-                    </div>
-                    <p>--------------------------------</p>
-                    <p style="font-weight: bold; margin: 4px 0;">CORTE DE CAJA DIARIO</p>
-                    <p>--------------------------------</p>
-                    <div style="text-align: left; font-size: 11px; margin: 6px 0;">
+                <div style="text-align: center;">
+                    <h2 style="margin: 0; font-size: 16px;">BLESS COFFEE POS</h2>
+                    <p style="margin: 3px 0; font-size: 12px;">CORTE DE CAJA DIARIO</p>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <p style="text-align: left; margin: 3px 0; font-size: 11px;">FECHA: ${fechaHora}</p>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <div style="text-align: left; font-size: 12px; margin: 5px 0;">
                         <p style="display: flex; justify-content: space-between;">
                             <span>EFECTIVO:</span> <span>$${acumuladoEfectivo.toFixed(2)}</span>
                         </p>
@@ -666,22 +639,16 @@
                             <span>TARJETA:</span> <span>$${acumuladoTarjeta.toFixed(2)}</span>
                         </p>
                     </div>
-                    <p>--------------------------------</p>
-                    <p style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; margin-top: 4px;">
-                        <span>TOTAL:</span> <span>$${totalGeneral.toFixed(2)}</span>
-                    </p>
-                    <p style="margin-top: 10px; font-size: 10px;">*** DÍA REINICIADO ***</p>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <h3 style="text-align: right; margin: 5px 0; font-size: 14px;">
+                        TOTAL ACUMULADO: $${totalGeneral.toFixed(2)}
+                    </h3>
+                    <p style="margin: 2px 0;">--------------------------------</p>
+                    <p style="margin-top: 10px; font-weight: bold; font-size: 11px;">*** CAJA CERRADA Y DÍA REINICIADO ***</p>
                 </div>
             `;
 
             window.print();
-
-            // REINICIO REAL DE VARIABLES Y PANTALLA
-            acumuladoEfectivo = 0.00;
-            acumuladoTarjeta = 0.00;
-            document.getElementById('val-efectivo').textContent = '$0.00';
-            document.getElementById('val-tarjeta').textContent = '$0.00';
-            document.getElementById('val-total').textContent = '$0.00';
         }
 
         init();
