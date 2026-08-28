@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bless Coffee - POS Completo</title>
+    <title>Bless Coffee - POS</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,55 +12,66 @@
 
         body {
             margin: 0;
-            padding: 10px;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            padding: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
             height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* BARRA SUPERIOR CON EL BOTÓN DE CORTE */
-        .top-bar {
+        /* HEADER Y BUSCADOR */
+        .top-header {
             display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 10px;
         }
 
-        .btn-corte-top {
-            background-color: #f59e0b;
+        .brand-title {
+            font-size: 18pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 10pt;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #0284c7;
+        }
+
+        .btn-corte {
+            background-color: #eab308;
             color: #0f172a;
             border: none;
-            padding: 10px 25px;
-            font-weight: 800;
-            font-size: 10pt;
-            border-radius: 6px;
+            padding: 10px 18px;
+            font-weight: bold;
+            font-size: 9.5pt;
+            border-radius: 8px;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .btn-corte-top:active {
-            background-color: #d97706;
-            transform: scale(0.98);
+        .btn-corte:active {
+            background-color: #ca8a04;
         }
 
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #f59e0b;
-            padding-bottom: 4px;
-            margin-bottom: 10px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 18pt;
-            letter-spacing: 2px;
-            color: #ffffff;
-        }
-
+        /* CONTENEDOR PRINCIPAL */
         .pos-container {
             display: flex;
             gap: 15px;
@@ -68,8 +79,8 @@
             overflow: hidden;
         }
 
-        /* PANEL IZQUIERDO: SELECCIÓN DE PRODUCTOS */
-        .products-panel {
+        /* SECCIÓN PRODUCTOS */
+        .products-section {
             flex: 2;
             display: flex;
             flex-direction: column;
@@ -77,83 +88,95 @@
             overflow: hidden;
         }
 
-        .categories {
+        .categories-bar {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             overflow-x: auto;
-            padding-bottom: 6px;
+            padding-bottom: 5px;
         }
 
-        .btn-cat {
-            background-color: #1e293b;
-            color: #f59e0b;
-            border: 1px solid #f59e0b;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 8.5pt;
+        .btn-category {
+            background-color: #ffffff;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 9pt;
             cursor: pointer;
             white-space: nowrap;
         }
 
-        .btn-cat.active {
-            background-color: #f59e0b;
-            color: #0f172a;
+        .btn-category.active {
+            background-color: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
         }
 
-        .grid-products {
+        .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 8px;
+            gap: 10px;
             overflow-y: auto;
-            padding-right: 5px;
+            padding-right: 4px;
         }
 
-        .btn-product {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 10px;
-            color: #ffffff;
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
             text-align: center;
             cursor: pointer;
-            min-height: 80px;
+            min-height: 90px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .btn-product:active {
-            background-color: #334155;
-            transform: scale(0.96);
+        .product-card:active {
+            background-color: #f1f5f9;
+            transform: scale(0.98);
         }
 
-        .btn-product .name {
-            font-size: 8.5pt;
+        .product-card .p-name {
+            font-size: 9pt;
             font-weight: 600;
+            color: #1e293b;
         }
 
-        .btn-product .price {
-            font-size: 10.5pt;
+        .product-card .p-price {
+            font-size: 11pt;
             font-weight: bold;
-            color: #f59e0b;
-            margin-top: 4px;
+            color: #0284c7;
+            margin-top: 6px;
         }
 
-        /* PANEL DERECHO: CARRITO Y VENTA */
-        .cart-panel {
+        /* SECCIÓN CARRITO */
+        .cart-section {
             flex: 1;
-            background-color: #1e293b;
-            border-radius: 8px;
-            padding: 12px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 1px solid #334155;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .cart-list {
+        .cart-header {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #0f172a;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 6px;
+        }
+
+        .cart-items {
             list-style: none;
             padding: 0;
             margin: 0;
@@ -165,65 +188,65 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid #334155;
-            font-size: 8.5pt;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 9pt;
         }
 
-        .qty-controls {
+        .qty-btns {
             display: flex;
-            gap: 4px;
+            gap: 5px;
             align-items: center;
         }
 
-        .btn-qty {
-            background-color: #334155;
-            color: white;
+        .btn-q {
+            background-color: #e2e8f0;
+            color: #0f172a;
             border: none;
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .cart-totals {
-            border-top: 2px solid #f59e0b;
-            padding-top: 8px;
-            margin-top: 8px;
+        .cart-footer {
+            border-top: 2px solid #f1f5f9;
+            padding-top: 10px;
+            margin-top: 10px;
         }
 
-        .total-row {
+        .total-display {
             display: flex;
             justify-content: space-between;
-            font-size: 13pt;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 8px;
+            font-size: 14pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 10px;
         }
 
         .btn-cobrar {
             width: 100%;
             padding: 12px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
+            background-color: #16a34a;
+            color: #ffffff;
             font-weight: bold;
             font-size: 10pt;
             cursor: pointer;
             text-transform: uppercase;
-            background-color: #22c55e;
-            color: #ffffff;
         }
 
-        /* FORMATO EXCLUSIVO TICKET IMPRESO */
+        /* IMPRESIÓN DEL TICKET DE CORTE */
         @media print {
             body * {
                 visibility: hidden;
             }
-            #ticket-cierre, #ticket-cierre * {
+            #ticket-impresion, #ticket-impresion * {
                 visibility: visible;
             }
-            #ticket-cierre {
+            #ticket-impresion {
                 position: absolute;
                 left: 0;
                 top: 0;
@@ -235,37 +258,37 @@
             }
         }
 
-        #ticket-cierre {
+        #ticket-impresion {
             display: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- BOTÓN DE CERRAR CAJA EN LA PARTE SUPERIOR -->
-    <div class="top-bar">
-        <button class="btn-corte-top" onclick="cerrarCaja()">CERRAR CAJA E IMPRIMIR TICKET</button>
-    </div>
-
-    <div class="header">
-        <h1>BLESS COFFEE - POS</h1>
+    <!-- BARRA SUPERIOR BLANCA CON BUSCADOR Y CORTE -->
+    <div class="top-header">
+        <h1 class="brand-title">Bless Coffee</h1>
+        <div class="search-box">
+            <input type="text" id="input-search" class="search-input" placeholder="Buscar bebida o alimento..." oninput="buscarProducto()">
+        </div>
+        <button class="btn-corte" onclick="imprimirCorteCaja()">CERRAR CAJA</button>
     </div>
 
     <div class="pos-container">
-        <!-- Panel de Categorías y Botones Táctiles -->
-        <div class="products-panel">
-            <div class="categories" id="categories-bar"></div>
-            <div class="grid-products" id="products-grid"></div>
+        <!-- Panel de Productos Táctiles -->
+        <div class="products-section">
+            <div class="categories-bar" id="categories-bar"></div>
+            <div class="products-grid" id="products-grid"></div>
         </div>
 
-        <!-- Panel del Carrito y Registro de Cobro -->
-        <div class="cart-panel">
-            <h3 style="margin-top:0; font-size:11pt; color:#f59e0b;">ORDEN ACTUAL</h3>
-            <ul class="cart-list" id="cart-items"></ul>
+        <!-- Panel del Carrito de Ventas -->
+        <div class="cart-section">
+            <div class="cart-header">Orden Actual</div>
+            <ul class="cart-items" id="cart-items"></ul>
 
-            <div class="cart-totals">
-                <div class="total-row">
-                    <span>TOTAL:</span>
+            <div class="cart-footer">
+                <div class="total-display">
+                    <span>Total:</span>
                     <span>$<span id="total-monto">0.00</span></span>
                 </div>
                 <button class="btn-cobrar" onclick="cobrarOrden()">Cobrar Orden</button>
@@ -274,10 +297,9 @@
     </div>
 
     <!-- Ticket dinámico de impresión -->
-    <div id="ticket-cierre"></div>
+    <div id="ticket-impresion"></div>
 
     <script>
-        // BASE DE DATOS COMPLETA DE BLESS COFFEE
         const menuData = [
             // BEBIDAS CALIENTES - CAFÉ
             { id: 1, name: "Espresso Sencillo (1oz)", price: 35, category: "Calientes Café" },
@@ -304,7 +326,7 @@
             { id: 22, name: "Cajeta Latte (M)", price: 80, category: "Calientes Café" },
             { id: 23, name: "Cajeta Latte (G)", price: 85, category: "Calientes Café" },
 
-            // BEBIDAS CALIENTES - SIN CAFÉ & ESPECIALES
+            // BEBIDAS CALIENTES - SIN CAFÉ
             { id: 24, name: "Chocolate Obscuro (M)", price: 75, category: "Calientes Sin Café" },
             { id: 25, name: "Chocolate Obscuro (G)", price: 80, category: "Calientes Sin Café" },
             { id: 26, name: "Chocolate Blanco (M)", price: 75, category: "Calientes Sin Café" },
@@ -332,7 +354,7 @@
             { id: 48, name: "Mazapán (M)", price: 80, category: "Calientes Sin Café" },
             { id: 49, name: "Mazapán (G)", price: 85, category: "Calientes Sin Café" },
 
-            // INFUSIONABLES & TÉS
+            // INFUSIONES & TÉS
             { id: 50, name: "Tizana Fresa Kiwi (M)", price: 75, category: "Tés e Infusiones" },
             { id: 51, name: "Tizana Fresa Kiwi (G)", price: 80, category: "Tés e Infusiones" },
             { id: 52, name: "Tizana Maracuyá (M)", price: 75, category: "Tés e Infusiones" },
@@ -342,7 +364,7 @@
             { id: 56, name: "Té Herbal (M)", price: 45, category: "Tés e Infusiones" },
             { id: 57, name: "Té Herbal (G)", price: 50, category: "Tés e Infusiones" },
 
-            // BEBIDAS FRÍAS & FRAPPÉS
+            // FRÍAS & FRAPPÉS
             { id: 58, name: "Americano Frío", price: 55, category: "Frías & Frappés" },
             { id: 59, name: "Cold Brew", price: 70, category: "Frías & Frappés" },
             { id: 60, name: "Capuccino Frío", price: 70, category: "Frías & Frappés" },
@@ -370,7 +392,7 @@
             { id: 82, name: "Horchata Fría", price: 85, category: "Frías & Frappés" },
             { id: 83, name: "Horchata Frappé", price: 90, category: "Frías & Frappés" },
 
-            // COLD FOAM, MALTEADAS & BEBIDAS VARIAS
+            // COLD FOAM & ESPECIALIDADES
             { id: 84, name: "Cold Foam Vainilla", price: 95, category: "Cold Foam & Varios" },
             { id: 85, name: "Cold Foam Caramelo", price: 95, category: "Cold Foam & Varios" },
             { id: 86, name: "Cold Foam Moka", price: 95, category: "Cold Foam & Varios" },
@@ -432,16 +454,17 @@
         ];
 
         let carrito = [];
-        let acumuladoTotalCaja = 0;
-        let totalOrdenesCobradas = 0;
+        let totalCajaAcumulado = 0;
+        let conteoVentas = 0;
+        let categoriaActual = 'Todas';
 
         function init() {
             const categoriesBar = document.getElementById('categories-bar');
             const categories = [...new Set(menuData.map(item => item.category))];
             
-            categoriesBar.innerHTML = `<button class="btn-cat active" onclick="filtrarCategoria('Todas', this)">Todas</button>`;
+            categoriesBar.innerHTML = `<button class="btn-category active" onclick="filtrarCategoria('Todas', this)">Todas</button>`;
             categories.forEach(cat => {
-                categoriesBar.innerHTML += `<button class="btn-cat" onclick="filtrarCategoria('${cat}', this)">${cat}</button>`;
+                categoriesBar.innerHTML += `<button class="btn-category" onclick="filtrarCategoria('${cat}', this)">${cat}</button>`;
             });
 
             renderProductos(menuData);
@@ -452,23 +475,31 @@
             grid.innerHTML = '';
             items.forEach(item => {
                 grid.innerHTML += `
-                    <div class="btn-product" onclick="agregarAlCarrito(${item.id})">
-                        <span class="name">${item.name}</span>
-                        <span class="price">$${item.price}</span>
+                    <div class="product-card" onclick="agregarAlCarrito(${item.id})">
+                        <span class="p-name">${item.name}</span>
+                        <span class="p-price">$${item.price}</span>
                     </div>
                 `;
             });
         }
 
         function filtrarCategoria(cat, btn) {
-            document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active'));
+            categoriaActual = cat;
+            document.querySelectorAll('.btn-category').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            document.getElementById('input-search').value = '';
 
             if (cat === 'Todas') {
                 renderProductos(menuData);
             } else {
                 renderProductos(menuData.filter(i => i.category === cat));
             }
+        }
+
+        function buscarProducto() {
+            const query = document.getElementById('input-search').value.toLowerCase();
+            const filtrados = menuData.filter(p => p.name.toLowerCase().includes(query));
+            renderProductos(filtrados);
         }
 
         function agregarAlCarrito(id) {
@@ -506,12 +537,12 @@
                     <li class="cart-item">
                         <div>
                             <div><strong>${item.name}</strong></div>
-                            <div>$${item.price} c/u</div>
+                            <div style="color:#64748b;">$${item.price} c/u</div>
                         </div>
-                        <div class="qty-controls">
-                            <button class="btn-qty" onclick="cambiarCantidad(${item.id}, -1)">-</button>
-                            <span style="padding:0 4px;">${item.qty}</span>
-                            <button class="btn-qty" onclick="cambiarCantidad(${item.id}, 1)">+</button>
+                        <div class="qty-btns">
+                            <button class="btn-q" onclick="cambiarCantidad(${item.id}, -1)">-</button>
+                            <span style="font-weight:bold; padding:0 4px;">${item.qty}</span>
+                            <button class="btn-q" onclick="cambiarCantidad(${item.id}, 1)">+</button>
                         </div>
                     </li>
                 `;
@@ -521,33 +552,33 @@
         }
 
         function cobrarOrden() {
-            if (carrito.length === 0) return alert("El carrito está vacío.");
+            if (carrito.length === 0) return alert("El carrito está vacío");
 
             const totalOrden = carrito.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            acumuladoTotalCaja += totalOrden;
-            totalOrdenesCobradas++;
+            totalCajaAcumulado += totalOrden;
+            conteoVentas++;
 
-            alert(`Venta cobrada con éxito: $${totalOrden.toFixed(2)}`);
+            alert(`Cobrado con éxito: $${totalOrden.toFixed(2)}`);
             carrito = [];
             renderCarrito();
         }
 
-        // FUNCIÓN DE CORTE FINAL QUE IMPRIME EL TICKET
-        function cerrarCaja() {
+        /* FUNCIÓN DE CORTE IMPRESO */
+        function imprimirCorteCaja() {
             const fecha = new Date().toLocaleString();
-            const ticketContainer = document.getElementById('ticket-cierre');
+            const ticketContainer = document.getElementById('ticket-impresion');
 
             ticketContainer.innerHTML = `
                 <div style="text-align: center;">
-                    <h2 style="margin: 0; font-size: 16px;">BLESS COFFEE</h2>
-                    <p style="margin: 3px 0;">CORTE DE CAJA FINAL</p>
-                    <p style="margin: 3px 0;">---------------------------</p>
-                    <p style="text-align: left; margin: 3px 0;">Fecha: ${fecha}</p>
-                    <p style="text-align: left; margin: 3px 0;">Órdenes cobradas: ${totalOrdenesCobradas}</p>
-                    <p style="margin: 3px 0;">---------------------------</p>
-                    <h3 style="margin: 5px 0; text-align: right; font-size: 15px;">TOTAL CAJA: $${acumuladoTotalCaja.toFixed(2)}</h3>
-                    <p style="margin: 3px 0;">---------------------------</p>
-                    <p style="margin-top: 10px;">*** CAJA CERRADA EXITOSAMENTE ***</p>
+                    <h2 style="margin: 0;">BLESS COFFEE</h2>
+                    <p style="margin: 2px 0;">CORTE DE CAJA</p>
+                    <p style="margin: 2px 0;">-----------------------</p>
+                    <p style="text-align: left; margin: 2px 0;">Fecha: ${fecha}</p>
+                    <p style="text-align: left; margin: 2px 0;">Ventas Cobradas: ${conteoVentas}</p>
+                    <p style="margin: 2px 0;">-----------------------</p>
+                    <h3 style="margin: 6px 0; text-align: right;">TOTAL: $${totalCajaAcumulado.toFixed(2)}</h3>
+                    <p style="margin: 2px 0;">-----------------------</p>
+                    <p style="margin-top: 10px;">*** CAJA CERRADA ***</p>
                 </div>
             `;
 
