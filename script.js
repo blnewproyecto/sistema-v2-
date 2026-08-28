@@ -617,33 +617,66 @@ function renderizarCorteCaja() {
     </div>
     <br>
     <button class="btn-accion btn-cancelar" style="width: auto; padding: 12px 20px;" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
-  `;
+    
 }
 
 function cerrarCajaTurno() {
-  const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+    const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
 
-  if (carrito.length > 0) {
-    alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito.");
-    return;
-  }
+    if (carrito.length > 0) {
+        alert("⛔ BLOQUEADO: Hay items cargados en el carrito actual. Cóbralos o vacía el carrito.");
+        return;
+    }
 
-  if (comandasPendientes.length > 0) {
-    alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar.`);
-    return;
-  }
+    if (comandasPendientes.length > 0) {
+        alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar.`);
+        return;
+    }
 
-  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  if (ventas.length === 0) {
-    alert("No hay ventas registradas para realizar el cierre.");
-    return;
-  }
+    const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+    if (ventas.length === 0) {
+        alert("No hay ventas registradas para realizar el cierre.");
+        return;
+    }
 
-  if (confirm("¿Confirmas cerrar la caja y reiniciar las ventas del día?")) {
-    localStorage.removeItem('ventasDiarias');
-    alert("✅ Caja cerrada con éxito.");
-    renderizarCorteCaja();
-  }
+    // Calculamos los totales
+    let efec = 0;
+    let tarj = 0;
+    ventas.forEach(v => {
+        if (v.metodo === 'Efectivo') efec += v.total;
+        else tarj += v.total;
+    });
+    const total = efec + tarj;
+
+    // Generamos el texto del ticket dentro del modal HTML
+    const ticketHTML = document.getElementById('ticket-contenedor');
+    if (ticketHTML) {
+        ticketHTML.innerHTML = `
+            <div style="text-align: center; width: 240px; font-family: monospace; font-size: 11px; color: #000;">
+                <h2 style="margin:0; font-size:14px;">BLESS COFFEE</h2>
+                <p style="margin:2px 0;">CORTE DE CAJA DIARIO</p>
+                <p style="margin:2px 0;">--------------------------------</p>
+                <p style="text-align:left; margin:2px 0;">FECHA: ${new Date().toLocaleString()}</p>
+                <p style="margin:2px 0;">--------------------------------</p>
+                <div style="text-align:left; margin:5px 0;">
+                    <p style="display:flex; justify-content:space-between; margin:2px 0;"><span>EFECTIVO:</span> <span>$${efec.toFixed(2)}</span></p>
+                    <p style="display:flex; justify-content:space-between; margin:2px 0;"><span>TARJETA:</span> <span>$${tarj.toFixed(2)}</span></p>
+                </div>
+                <p style="margin:2px 0;">--------------------------------</p>
+                <h3 style="text-align:right; margin:5px 0; font-size:13px;">TOTAL: $${total.toFixed(2)}</h3>
+                <p style="margin:2px 0;">--------------------------------</p>
+                <p style="margin-top:5px; font-weight:bold;">*** CORTE FINAL ***</p>
+            </div>
+        `;
+        
+        // Muestra el modal en pantalla
+        document.getElementById('modal-ticket-general').style.display = 'flex';
+    }
+
+    if (confirm("¿Confirmas cerrar la caja y reiniciar las ventas del día?")) {
+        localStorage.removeItem('ventasDiarias');
+        renderizarCorteCaja();
+    }
 }
 
 function ejecutarCorteCaja() {
