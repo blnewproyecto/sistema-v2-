@@ -1,654 +1,404 @@
-// Base de datos del Menú
-const menuData = {
-  calientesCafe: [
-    { nombre: "Espresso Sencillo (1oz)", precio: 35 },
-    { nombre: "Espresso Doble (2oz)", precio: 45 },
-    { nombre: "Doble Cortado (2oz)", precio: 50 },
-    { nombre: "Panna (2oz)", precio: 50 },
-    { nombre: "Flat White (2oz)", precio: 55 },
-    { nombre: "Affogato", precio: 65 },
-    { nombre: "Affogato Nut", precio: 95 },
-    { nombre: "Americano M", precio: 42 },
-    { nombre: "Americano G", precio: 47 },
-    { nombre: "Café de Olla M", precio: 47 },
-    { nombre: "Café de Olla G", precio: 52 },
-    { nombre: "Capuccino / Latte M", precio: 60 },
-    { nombre: "Capuccino / Latte G", precio: 65 },
-    { nombre: "Moka Obscuro M", precio: 80 },
-    { nombre: "Moka Obscuro G", precio: 85 },
-    { nombre: "Moka Blanco M", precio: 80 },
-    { nombre: "Moka Blanco G", precio: 85 },
-    { nombre: "Caramel Latte M", precio: 80 },
-    { nombre: "Caramel Latte G", precio: 85 },
-    { nombre: "Cajeta Latte M", precio: 80 },
-    { nombre: "Cajeta Latte G", precio: 85 }
-  ],
-  calientesSinCafe: [
-    { nombre: "Chocolate Obscuro M", precio: 75 },
-    { nombre: "Chocolate Obscuro G", precio: 80 },
-    { nombre: "Chocolate Blanco M", precio: 75 },
-    { nombre: "Chocolate Blanco G", precio: 80 },
-    { nombre: "Chai M", precio: 80 },
-    { nombre: "Chai G", precio: 85 },
-    { nombre: "Matcha M", precio: 80 },
-    { nombre: "Matcha G", precio: 85 },
-    { nombre: "Taro M", precio: 80 },
-    { nombre: "Taro G", precio: 85 },
-    { nombre: "Horchata M", precio: 75 },
-    { nombre: "Horchata G", precio: 80 }
-  ],
-  calientesEspecialess: [
-    { nombre: "Chai Manzana Verde M", precio: 80 },
-    { nombre: "Chai Manzana Verde G", precio: 85 },
-    { nombre: "Horchai M", precio: 80 },
-    { nombre: "Horchai G", precio: 85 },
-    { nombre: "Blessed M", precio: 90 },
-    { nombre: "Blessed G", precio: 95 },
-    { nombre: "Hope Latte M", precio: 90 },
-    { nombre: "Hope Latte G", precio: 95 },
-    { nombre: "Ferrero Sin Café M", precio: 80 },
-    { nombre: "Ferrero Sin Café G", precio: 85 },
-    { nombre: "Ferrero Con Café M", precio: 90 },
-    { nombre: "Ferrero Con Café G", precio: 95 },
-    { nombre: "Mazapán M", precio: 80 },
-    { nombre: "Mazapán G", precio: 85 }
-  ],
-  calientesInfusionables: [
-    { nombre: "Tizana Fresa Kiwi M", precio: 75 },
-    { nombre: "Tizana Fresa Kiwi G", precio: 80 },
-    { nombre: "Tizana Maracuyá M", precio: 75 },
-    { nombre: "Tizana Maracuyá G", precio: 80 },
-    { nombre: "Tizana Frutos Tropicales M", precio: 75 },
-    { nombre: "Tizana Frutos Tropicales G", precio: 80 },
-    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) M", precio: 45 },
-    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) G", precio: 50 }
-  ],
-  friasCafe: [
-    { nombre: "Americano Frío", precio: 55 },
-    { nombre: "Capuccino/Latte Frío", precio: 70 },
-    { nombre: "Capuccino/Latte Frappé", precio: 75 },
-    { nombre: "Cold Brew", precio: 70 },
-    { nombre: "Moka Frío", precio: 80 },
-    { nombre: "Moka Frappé", precio: 85 },
-    { nombre: "Moka Blanco Frío", precio: 80 },
-    { nombre: "Moka Blanco Frappé", precio: 85 },
-    { nombre: "Caramel Latte Frío", precio: 80 },
-    { nombre: "Caramel Latte Frappé", precio: 85 },
-    { nombre: "Cajeta Latte Frío", precio: 80 },
-    { nombre: "Cajeta Latte Frappé", precio: 85 }
-  ],
-  friasSinCafe: [
-    { nombre: "Chocolate Obscuro Frío", precio: 80 },
-    { nombre: "Chocolate Obscuro Frappé", precio: 85 },
-    { nombre: "Chai Frío", precio: 85 },
-    { nombre: "Chai Frappé", precio: 90 },
-    { nombre: "Matcha Frío", precio: 85 },
-    { nombre: "Matcha Frappé", precio: 90 },
-    { nombre: "Taro Frío", precio: 85 },
-    { nombre: "Taro Frappé", precio: 90 },
-    { nombre: "Cookies (Oreo) Frío", precio: 85 },
-    { nombre: "Cookies (Oreo) Frappé", precio: 90 },
-    { nombre: "Horchata Fría", precio: 85 },
-    { nombre: "Horchata Frappé", precio: 90 }
-  ],
-  friasEspecialess: [
-    { nombre: "Chai Manzana Verde Frío", precio: 85 },
-    { nombre: "Chai Manzana Verde Frappé", precio: 90 },
-    { nombre: "Horchai Frío", precio: 90 },
-    { nombre: "Horchai Frappé", precio: 95 },
-    { nombre: "Blessed Frío", precio: 90 },
-    { nombre: "Blessed Frappé", precio: 95 },
-    { nombre: "Hope Latte Frío", precio: 90 },
-    { nombre: "Hope Latte Frappé", precio: 95 },
-    { nombre: "Ferrero Sin Café Frío", precio: 80 },
-    { nombre: "Ferrero Sin Café Frappé", precio: 85 },
-    { nombre: "Ferrero Con Café Frío", precio: 90 },
-    { nombre: "Ferrero Con Café Frappé", precio: 95 },
-    { nombre: "Mazapán Frío", precio: 90 },
-    { nombre: "Mazapán Frappé", precio: 95 }
-  ],
-  friasFoamMalteadas: [
-    { nombre: "Cold Foam Vainilla/Caramelo/Moka", precio: 95 },
-    { nombre: "Cold Foam Taro Coconut", precio: 99 },
-    { nombre: "Cold Foam Berry Matcha", precio: 99 },
-    { nombre: "Cold Foam Banana Peanut Coffee", precio: 99 },
-    { nombre: "Cold Foam Strawberry Coconut", precio: 99 },
-    { nombre: "Cold Foam Matcha Coconut", precio: 99 },
-    { nombre: "Malteada Vainilla/Fresa/Chocolate", precio: 90 },
-    { nombre: "Malteada Caramelo/Oreo/Ferrero", precio: 95 }
-  ],
-  friasVarios: [
-    { nombre: "Shaken Tea", precio: 80 },
-    { nombre: "Naranjada / Limonada", precio: 60 },
-    { nombre: "Black Orange Tonic", precio: 80 },
-    { nombre: "Lemon Coffee Tonic", precio: 80 },
-    { nombre: "Chamoyada Mango/Fresa/Maracuyá", precio: 80 },
-    { nombre: "Smoothie Detox", precio: 95 },
-    { nombre: "Smoothie Tropical / Banana Berry", precio: 95 },
-    { nombre: "Smoothie Apple Kiss / Exótico", precio: 95 }
-  ],
-  friasMinerales: [
-    { nombre: "Agua Mineral Kirkland", precio: 40 },
-    { nombre: "Agua Mineral Perrier", precio: 50 },
-    { nombre: "Mineral Kirkland Preparada", precio: 65 },
-    { nombre: "Agua Mineral Perrier Preparada", precio: 65 }
-  ],
-  friasMocktails: [
-    { nombre: "Mocktail Frutos Rojos / Kiwi / Lichi", precio: 85 },
-    { nombre: "Tizana Fría", precio: 85 },
-    { nombre: "Tizana Frappé", precio: 90 },
-    { nombre: "Té Herbal Frío", precio: 65 }
-  ],
-  alimentosSalados: [
-    { nombre: "Molletes Sencillos", precio: 80 },
-    { nombre: "Molletes con Jamón", precio: 90 },
-    { nombre: "Molletes con Chorizo", precio: 99 },
-    { nombre: "Chilaquiles Sencillos", precio: 80 },
-    { nombre: "Chilaquiles c/ Huevo", precio: 95 },
-    { nombre: "Chilaquiles c/ Pollo", precio: 110 },
-    { nombre: "Chilaquiles Gratinedos", precio: 140 },
-    { nombre: "Sincronizada", precio: 70 },
-    { nombre: "Chapata Pizza", precio: 99 },
-    { nombre: "Baguette / Chapata Pechuga Pavo", precio: 90 },
-    { nombre: "Wrap Clásico", precio: 75 },
-    { nombre: "Wrap Pollo", precio: 85 },
-    { nombre: "Ensalada Bless", precio: 65 },
-    { nombre: "Especialess Salada Mexicana", precio: 120 },
-    { nombre: "Especialess Salada Hawaiiana", precio: 120 },
-    { nombre: "Especialess Salada Vegetariana", precio: 120 },
-    { nombre: "Especialess Salada Italiana", precio: 130 },
-    { nombre: "Especialess Salada Bless", precio: 130 }
-  ],
-  alimentosDulces: [
-    { nombre: "Crepa Tradicional", precio: 95 },
-    { nombre: "Crepa Frutal", precio: 99 },
-    { nombre: "Crepa Celaya", precio: 115 },
-    { nombre: "Crepa Celaya Frutal", precio: 120 },
-    { nombre: "Crepa Banana Bless", precio: 120 },
-    { nombre: "Crepa Arroz con Leche", precio: 120 },
-    { nombre: "Crepa Rompope Bless", precio: 130 },
-    { nombre: "Crepa Dulce Deseo", precio: 130 },
-    { nombre: "Hot Cakes", precio: 80 },
-    { nombre: "Hot Cakes 3 Leches", precio: 100 },
-    { nombre: "Waffles", precio: 80 },
-    { nombre: "Pastel del Día", precio: 70 },
-    { nombre: "Rol de Canela", precio: 49 },
-    { nombre: "Bisquet c/ Mermelada", precio: 35 },
-    { nombre: "Croissant c/ Mermelada", precio: 60 },
-    { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
-    { nombre: "Postre Especialess Waffles Bless", precio: 99 }
-  ]
-};
-
-let carrito = [];
-let comandaActualId = Date.now();
-
-// Renderizar Menú
-function renderizarMenu() {
-  const mapeo = {
-    'grid-calientes-cafe': menuData.calientesCafe,
-    'grid-calientes-sincafe': menuData.calientesSinCafe,
-    'grid-calientes-especialess': menuData.calientesEspecialess,
-    'grid-calientes-infusionables': menuData.calientesInfusionables,
-    'grid-frias-cafe': menuData.friasCafe,
-    'grid-frias-sincafe': menuData.friasSinCafe,
-    'grid-frias-especialess': menuData.friasEspecialess,
-    'grid-frias-foam-malteadas': menuData.friasFoamMalteadas,
-    'grid-frias-varios': menuData.friasVarios,
-    'grid-frias-minerales': menuData.friasMinerales,
-    'grid-frias-mocktails': menuData.friasMocktails,
-    'grid-alimentos-salados': menuData.alimentosSalados,
-    'grid-alimentos-dulces': menuData.alimentosDulces
-  };
-
-  for (let idContainer in mapeo) {
-    const container = document.getElementById(idContainer);
-    if (!container) continue;
-
-    container.innerHTML = mapeo[idContainer].map(prod => `
-      <div class="card-producto" onclick="agregarAlCarrito('${prod.nombre}', ${prod.precio})">
-        <h4>${prod.nombre}</h4>
-        <div class="precio">$${prod.precio.toFixed(2)}</div>
-      </div>
-    `).join('');
-  }
-}
-
-// Filtro de Buscador
-function filtrarProductos() {
-  const texto = document.getElementById('inputBuscador').value.toLowerCase();
-  const tarjetas = document.querySelectorAll('.card-producto');
-
-  tarjetas.forEach(card => {
-    const nombre = card.querySelector('h4').innerText.toLowerCase();
-    card.style.display = nombre.includes(texto) ? 'block' : 'none';
-  });
-}
-
-function cambiarPestana(idPestana) {
-  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-
-  const tabContent = document.getElementById(`tab-${idPestana}`);
-  if (tabContent) tabContent.classList.add('active');
-
-  if (event && event.target) event.target.classList.add('active');
-
-  if (idPestana === 'corte') renderizarCorteCaja();
-}
-
-function agregarAlCarrito(nombre, precioBase) {
-  const lecheSelect = document.getElementById('selectLeche');
-  const tipoLeche = lecheSelect ? lecheSelect.value : 'Sin leche';
-  
-  let extraLeche = (tipoLeche === 'Deslactosada' || tipoLeche === 'Vegetal') ? 12 : 0;
-
-  carrito.push({
-    idUnico: Date.now() + Math.random(),
-    nombre: nombre,
-    precio: precioBase + extraLeche,
-    leche: tipoLeche
-  });
-
-  actualizarCarritoUI();
-}
-
-function eliminarDelCarrito(idUnico) {
-  carrito = carrito.filter(item => item.idUnico !== idUnico);
-  actualizarCarritoUI();
-}
-
-function actualizarCarritoUI() {
-  const lista = document.getElementById('listaCarrito');
-  const totalTxt = document.getElementById('montoTotal');
-  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
-
-  if (!lista || !totalTxt) return;
-
-  if (carrito.length === 0) {
-    lista.innerHTML = '<p style="color:#94a3b8; text-align:center; margin-top:20px;">No hay ítems en la comanda</p>';
-    totalTxt.innerText = '$0.00';
-    return;
-  }
-
-  lista.innerHTML = carrito.map(item => `
-    <div class="item-carrito">
-      <div>
-        <strong>${item.nombre}</strong>
-        ${item.leche !== 'Sin leche' ? `<small>Leche: ${item.leche}</small>` : ''}
-      </div>
-      <div>
-        <span>$${item.precio.toFixed(2)}</span>
-        <button class="btn-eliminar" onclick="eliminarDelCarrito(${item.idUnico})">✕</button>
-      </div>
-    </div>
-  `).join('');
-
-  totalTxt.innerText = `$${total.toFixed(2)}`;
-}
-
-// CANCELAR CUENTA Y ELIMINARLA DE LA NUBE/LOCALSTORAGE
-function cancelarCuentaActual() {
-  if (carrito.length === 0) {
-    alert("No hay productos en la cuenta actual para cancelar.");
-    return;
-  }
-
-  const clave = prompt("Ingrese la contraseña de autorización para cancelar la cuenta:");
-
-  if (clave === null) return;
-
-  if (clave.trim() === "0705") {
-    if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrará de la lista de pendientes y de la nube.")) {
-      
-      // ELIMINAR DE LA NUBE / ALMACENAMIENTO (comandasPendientes)
-      let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-      comandas = comandas.filter(c => c.id !== comandaActualId);
-      localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
-
-      // LIMPIAR PANTALLA Y CONTADOR
-      carrito = [];
-      comandaActualId = Date.now();
-      actualizarCarritoUI();
-      actualizarUIComandasPendientes();
-
-      alert("🚫 Cuenta cancelada y eliminada con éxito.");
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLESS COFFEE - POS</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-  } else {
-    alert("⛔ Contraseña incorrecta. No se puede cancelar la cuenta.");
-  }
-}
 
-// Imprimir Comanda (Cocina / Barra)
-function imprimirComanda() {
-  if (carrito.length === 0) {
-    alert("No hay productos en el carrito para enviar a cocina/barra.");
-    return;
-  }
+    body {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  guardarComandaSilencioso();
+    header {
+      background-color: #0f172a;
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  const ventana = window.open('', '', 'width=400,height=600');
-  if (!ventana) return;
+    header h1 {
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
 
-  ventana.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style>
-          @page { margin: 0; }
-          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; }
-          .centro { text-align: center; }
-          .linea { border-bottom: 2px solid #000; margin: 6px 0; }
-          .item { font-weight: bold; font-size: 15px; margin-top: 4px; }
-          .subitem { font-size: 13px; margin-left: 8px; }
-        </style>
-      </head>
-      <body>
-        <div class="centro">
-          <h2>*** COMANDA ***</h2>
-          <strong>ORDEN #${comandaActualId.toString().slice(-4)}</strong><br>
-          <small>Hora: ${hora}</small>
-        </div>
-        <div class="linea"></div>
-        ${carrito.map(i => `
-          <div class="item">• 1x ${i.nombre}</div>
-          ${i.leche !== 'Sin leche' ? `<div class="subitem">Leche: ${i.leche}</div>` : ''}
-        `).join('')}
-        <div class="linea"></div>
-        <script>
-          window.onload = function() { window.print(); window.close(); }
-        </script>
-      </body>
-    </html>
-  `);
-  ventana.document.close();
-}
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+    }
 
-// Imprimir Pre-Cuenta Cliente
-function imprimirPrecuenta() {
-  if (carrito.length === 0) {
-    alert("No hay productos en el carrito para generar la cuenta.");
-    return;
-  }
+    .btn-tab {
+      background-color: #334155;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+    .btn-tab.active {
+      background-color: #2563eb;
+    }
 
-  const ventana = window.open('', '', 'width=400,height=600');
-  if (!ventana) return;
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
 
-  ventana.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style>
-          @page { margin: 0; }
-          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
-          .centro { text-align: center; }
-          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
-          .flex { display: flex; justify-content: space-between; font-weight: bold; }
-          .total-box { font-size: 18px; font-weight: bold; margin-top: 6px; }
-        </style>
-      </head>
-      <body>
-        <div class="centro">
-          <strong>PRE-CUENTA</strong><br>
-          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
-        </div>
-        <div class="linea"></div>
-        ${carrito.map(i => `
-          <div class="flex">
-            <span>${i.nombre}</span>
-            <span>$${i.precio.toFixed(2)}</span>
-          </div>
-          ${i.leche !== 'Sin leche' ? `<small style="margin-left: 6px;">• Leche: ${i.leche}</small>` : ''}
-        `).join('')}
-        <div class="linea"></div>
-        <div class="flex total-box">
-          <span>TOTAL:</span>
-          <span>$${total.toFixed(2)}</span>
-        </div>
-        <div class="linea"></div>
-        <div class="centro">*** ESTE TICKET NO ES UN COMPROBANTE DE PAGO ***</div>
-        <script>
-          window.onload = function() { window.print(); window.close(); }
-        </script>
-      </body>
-    </html>
-  `);
-  ventana.document.close();
-}
+    /* Contenido Principal / Menú */
+    .contenido-principal {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      overflow-y: auto;
+    }
 
-// Finalizar Cobro
-function finalizarCobro(metodoPago) {
-  if (carrito.length === 0) {
-    alert("Agrega productos a la comanda para poder cobrar.");
-    return;
-  }
+    .buscador-bar {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+    }
 
-  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+    .buscador-bar input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 16px;
+    }
 
-  const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  historialVentas.push({
-    id: Date.now(),
-    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    items: [...carrito],
-    total: total,
-    metodo: metodoPago
-  });
-  localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
+    .seccion {
+      display: none;
+    }
 
-  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-  comandas = comandas.filter(c => c.id !== comandaActualId);
-  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+    .seccion.active {
+      display: block;
+    }
 
-  imprimirTicketFinal(carrito, total, metodoPago);
+    .categoria-titulo {
+      font-size: 16px;
+      margin: 15px 0 10px 0;
+      color: #475569;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
 
-  carrito = [];
-  comandaActualId = Date.now();
-  actualizarCarritoUI();
-  actualizarUIComandasPendientes();
-  renderizarCorteCaja();
-}
+    .grid-productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
 
-function imprimirTicketFinal(items, total, metodo) {
-  const ventana = window.open('', '', 'width=400,height=600');
-  if (!ventana) return;
-  
-  ventana.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style>
-          @page { margin: 0; }
-          body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
-          .centro { text-align: center; }
-          .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
-          .flex { display: flex; justify-content: space-between; font-weight: bold; }
-          .total-box { font-size: 18px; font-weight: bold; margin-top: 4px; }
-        </style>
-      </head>
-      <body>
-        <div class="centro">
-          <h2>BLESS COFFEE</h2>
-          <small>${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
-        </div>
-        <div class="linea"></div>
-        ${items.map(i => `
-          <div class="flex">
-            <span>${i.nombre}</span>
-            <span>$${i.precio.toFixed(2)}</span>
-          </div>
-          ${i.leche !== 'Sin leche' ? `<div style="font-size:12px;">• Leche: ${i.leche}</div>` : ''}
-        `).join('')}
-        <div class="linea"></div>
-        <div class="flex total-box">
-          <span>PAGADO:</span>
-          <span>$${total.toFixed(2)}</span>
-        </div>
-        <div class="linea"></div>
-        <div class="centro">
-          Forma de Pago: <strong>${metodo}</strong><br><br>
-          ¡Gracias por tu visita!
-        </div>
-        <script>
-          window.onload = function() { window.print(); window.close(); }
-        </script>
-      </body>
-    </html>
-  `);
-  ventana.document.close();
-}
+    .card-producto {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 90px;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
 
-function guardarComandaSilencioso() {
-  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
-  const idx = comandas.findIndex(c => c.id === comandaActualId);
+    .card-producto:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
 
-  const datosComanda = {
-    id: comandaActualId,
-    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    items: [...carrito],
-    total: total
-  };
+    .card-producto h4 {
+      font-size: 13px;
+      color: #0f172a;
+    }
 
-  if (idx >= 0) {
-    comandas[idx] = datosComanda;
-  } else {
-    comandas.push(datosComanda);
-  }
+    .card-producto .precio {
+      font-size: 14px;
+      font-weight: bold;
+      color: #16a34a;
+    }
 
-  localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
-  actualizarUIComandasPendientes();
-}
+    /* Panel Carrito Lateral */
+    .panel-carrito {
+      width: 400px;
+      background: white;
+      border-left: 2px solid #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+    }
 
-function guardarComandaPendiente() {
-  if (carrito.length === 0) {
-    alert("Agrega productos a la comanda antes de guardarla.");
-    return;
-  }
+    .opcion-leche {
+      margin-bottom: 12px;
+    }
 
-  guardarComandaSilencioso();
-  carrito = [];
-  comandaActualId = Date.now();
-  actualizarCarritoUI();
-  alert("☁️ Comanda guardada en pendientes.");
-}
+    .opcion-leche label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #64748b;
+      display: block;
+      margin-bottom: 4px;
+    }
 
-function actualizarUIComandasPendientes() {
-  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-  const badge = document.getElementById('badgeComandasCount');
-  if (badge) badge.innerText = comandas.length;
-}
+    .opcion-leche select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-function abrirModalComandas() {
-  const modal = document.getElementById('modalComandas');
-  const contenedor = document.getElementById('listaComandasModal');
-  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+    .lista-carrito {
+      flex: 1;
+      overflow-y: auto;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 10px;
+      padding: 5px 0;
+    }
 
-  if (comandas.length === 0) {
-    contenedor.innerHTML = '<p style="color:#64748b; text-align:center;">No hay comandas pendientes.</p>';
-  } else {
-    contenedor.innerHTML = comandas.map(c => `
-      <div class="card-comanda-item">
-        <div>
-          <strong>Orden #${c.id.toString().slice(-4)}</strong> <small>(${c.hora})</small><br>
-          <small>${c.items.map(i => i.nombre).join(', ')}</small><br>
-          <strong style="color:#16a34a;">Total: $${c.total.toFixed(2)}</strong>
-        </div>
-        <button class="btn-tab" onclick="cargarComanda(${c.id})">Cobrar / Editar</button>
+    .item-carrito {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f8fafc;
+    }
+
+    .item-carrito small {
+      display: block;
+      color: #64748b;
+      font-size: 11px;
+    }
+
+    .btn-eliminar {
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .resumen-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #f8fafc;
+      border-radius: 6px;
+    }
+
+    .acciones-carrito {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-accion {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-comanda { background: #2563eb; color: white; }
+    .btn-precuenta { background: #0284c7; color: white; }
+    
+    /* BOTÓN CANCELAR RESALTADO */
+    .btn-cancelar { 
+      background: #dc2626 !important; 
+      color: white !important; 
+      border: 2px solid #991b1b !important;
+      font-size: 14px !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-cancelar:hover { background: #b91c1c !important; }
+    
+    .btn-guardar { background: #64748b; color: white; }
+    .btn-efectivo { background: #16a34a; color: white; font-size: 14px; }
+    .btn-tarjeta { background: #0284c7; color: white; font-size: 14px; }
+
+    /* Modal Comandas */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-contenido {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 450px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .card-comanda-item {
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>BLESS COFFEE POS</h1>
+    <div class="nav-tabs">
+      <button class="btn-tab active" onclick="cambiarPestana('menu')">Menú</button>
+      <button class="btn-tab" onclick="abrirModalComandas()">Comandas (<span id="badgeComandasCount">0</span>)</button>
+      <button class="btn-tab" onclick="cambiarPestana('corte')">Corte de Caja</button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Contenido Izquierdo (Menú) -->
+    <div class="contenido-principal">
+      <div class="buscador-bar">
+        <input type="text" id="inputBuscador" placeholder="Buscar producto..." onkeyup="filtrarProductos()">
       </div>
-    `).join('');
-  }
 
-  modal.classList.add('active');
-}
+      <div id="tab-menu" class="seccion active">
+        <h3 class="categoria-titulo">Bebidas Calientes - Café</h3>
+        <div class="grid-productos" id="grid-calientes-cafe"></div>
 
-function cerrarModalComandas() {
-  document.getElementById('modalComandas').classList.remove('active');
-}
+        <h3 class="categoria-titulo">Bebidas Calientes - Sin Café</h3>
+        <div class="grid-productos" id="grid-calientes-sincafe"></div>
 
-function cargarComanda(id) {
-  let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
-  const comanda = comandas.find(c => c.id === id);
+        <h3 class="categoria-titulo">Bebidas Calientes - Especiales</h3>
+        <div class="grid-productos" id="grid-calientes-especialess"></div>
 
-  if (comanda) {
-    carrito = [...comanda.items];
-    comandaActualId = comanda.id;
-    actualizarCarritoUI();
-    cerrarModalComandas();
-  }
-}
+        <h3 class="categoria-titulo">Bebidas Calientes - Infusionables</h3>
+        <div class="grid-productos" id="grid-calientes-infusionables"></div>
 
-function renderizarCorteCaja() {
-  const contenedorCorte = document.getElementById('tab-corte');
-  if (!contenedorCorte) return;
+        <h3 class="categoria-titulo">Bebidas Frías - Café</h3>
+        <div class="grid-productos" id="grid-frias-cafe"></div>
+        
+        <h3 class="categoria-titulo">Agua Mineral / Preparadas</h3>
+        <div class="grid-productos" id="grid-frias-minerales"></div>
 
-  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  let totalEfectivo = 0;
-  let totalTarjeta = 0;
+        <h3 class="categoria-titulo">Bebidas Frías - Sin Café</h3>
+        <div class="grid-productos" id="grid-frias-sincafe"></div>
 
-  ventas.forEach(v => {
-    if (v.metodo === 'Tarjeta') totalTarjeta += v.total;
-    else totalEfectivo += v.total;
-  });
+        <h3 class="categoria-titulo">Bebidas Frías - Especiales</h3>
+        <div class="grid-productos" id="grid-frias-especialess"></div>
 
-  const totalGeneral = totalEfectivo + totalTarjeta;
+        <h3 class="categoria-titulo">Cold Foam / Malteadas</h3>
+        <div class="grid-productos" id="grid-frias-foam-malteadas"></div>
 
-  contenedorCorte.innerHTML = `
-    <h2>Corte de Caja Diario</h2>
-    <div style="display:flex; gap:15px; margin-top:15px;">
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #16a34a;">
-        <span>Efectivo</span>
-        <h3>$${totalEfectivo.toFixed(2)}</h3>
+        <h3 class="categoria-titulo">Bebidas Frías - Varios</h3>
+        <div class="grid-productos" id="grid-frias-varios"></div>
+
+        <h3 class="categoria-titulo">Mocktails / Tizanas Frías</h3>
+        <div class="grid-productos" id="grid-frias-mocktails"></div>
+
+        <h3 class="categoria-titulo">Alimentos Salados</h3>
+        <div class="grid-productos" id="grid-alimentos-salados"></div>
+
+        <h3 class="categoria-titulo">Alimentos Dulces</h3>
+        <div class="grid-productos" id="grid-alimentos-dulces"></div>
       </div>
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #2563eb;">
-        <span>Tarjeta</span>
-        <h3>$${totalTarjeta.toFixed(2)}</h3>
-      </div>
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #0284c7;">
-        <span>Total Acumulado</span>
-        <h3>$${totalGeneral.toFixed(2)}</h3>
+
+      <div id="tab-corte" class="seccion">
+        <!-- Generado dinámicamente -->
       </div>
     </div>
-    <br>
-    <button class="btn-accion btn-cancelar" style="width: auto; padding: 12px 20px;" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
-  `;
-}
 
-function cerrarCajaTurno() {
-  const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+    <!-- Panel Derecho (Orden Actual / Carrito) -->
+    <div class="panel-carrito">
+      <h3>Orden Activa</h3>
+      <br>
+      <div class="opcion-leche">
+        <label for="selectLeche">Tipo de Leche predeterminada:</label>
+        <select id="selectLeche">
+          <option value="Sin leche">Sin Leche ($0)</option>
+          <option value="Entera">Entera ($0)</option>
+          <option value="Light">Light ($0)</option>
+          <option value="Deslactosada">Deslactosada (+$12)</option>
+          <option value="Vegetal">Vegetal / Almendra / Avena (+$12)</option>
+        </select>
+      </div>
 
-  if (carrito.length > 0) {
-    alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito.");
-    return;
-  }
+      <div class="lista-carrito" id="listaCarrito"></div>
 
-  if (comandasPendientes.length > 0) {
-    alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar.`);
-    return;
-  }
+      <div class="resumen-total">
+        <span>Total:</span>
+        <span id="montoTotal">$0.00</span>
+      </div>
 
-  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  if (ventas.length === 0) {
-    alert("No hay ventas registradas para realizar el cierre.");
-    return;
-  }
+      <div class="acciones-carrito">
+        <button class="btn-accion btn-comanda" onclick="imprimirComanda()">📝 Imprimir Comanda</button>
+        
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-accion btn-precuenta" onclick="imprimirPrecuenta()">📄 Pre-Cuenta</button>
+          <button class="btn-accion btn-guardar" onclick="guardarComandaPendiente()">☁️ Pendiente</button>
+        </div>
 
-  if (confirm("¿Confirmas cerrar la caja y reiniciar las ventas del día?")) {
-    localStorage.removeItem('ventasDiarias');
-    alert("✅ Caja cerrada con éxito.");
-    renderizarCorteCaja();
-  }
-}
+        <!-- BOTÓN DE CANCELAR CUENTA (NUEVA UBICACIÓN DESTACADA) -->
+        <button class="btn-accion btn-cancelar" id="btnCancelarCuenta" onclick="cancelarCuentaActual()">❌ CANCELAR CUENTA</button>
 
-// Inicialización al cargar la página
-window.onload = function() {
-  renderizarMenu();
-  actualizarCarritoUI();
-  actualizarUIComandasPendientes();
-};
+        <div style="display: flex; gap: 8px; margin-top: 5px;">
+          <button class="btn-accion btn-efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
+          <button class="btn-accion btn-tarjeta" onclick="finalizarCobro('Tarjeta')">💳 Tarjeta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Comandas Pendientes -->
+  <div class="modal" id="modalComandas">
+    <div class="modal-contenido">
+      <h3>Comandas Pendientes</h3>
+      <br>
+      <div id="listaComandasModal"></div>
+      <br>
+      <button class="btn-accion btn-guardar" onclick="cerrarModalComandas()">Cerrar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
