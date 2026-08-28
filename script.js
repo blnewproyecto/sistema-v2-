@@ -639,7 +639,64 @@ function cerrarCajaTurno() {
     return;
   }
 
-  if (confirm("¿Confirmas cerrar la caja y reiniciar las ventas del día?")) {
+  if (confirm("¿Confirmas cerrar la caja, imprimir el ticket de corte y reiniciar las ventas del día?")) {
+    let totalEfectivo = 0;
+    let totalTarjeta = 0;
+    ventas.forEach(v => {
+      if (v.metodo === 'Tarjeta') totalTarjeta += v.total;
+      else totalEfectivo += v.total;
+    });
+    const totalGeneral = totalEfectivo + totalTarjeta;
+    const fechaHora = new Date().toLocaleString();
+
+    // Imprimir ticket de cierre de caja automáticamente
+    const ventana = window.open('', '', 'width=400,height=600');
+    if (ventana) {
+      ventana.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <style>
+              @page { margin: 0; }
+              body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
+              .centro { text-align: center; }
+              .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+              .flex { display: flex; justify-content: space-between; font-weight: bold; }
+              .total-box { font-size: 18px; font-weight: bold; margin-top: 6px; }
+            </style>
+          </head>
+          <body>
+            <div class="centro">
+              <h2>BLESS COFFEE</h2>
+              <strong>CORTE DE CAJA / CIERRE</strong><br>
+              <small>${fechaHora}</small>
+            </div>
+            <div class="linea"></div>
+            <div class="flex">
+              <span>EFECTIVO:</span>
+              <span>$${totalEfectivo.toFixed(2)}</span>
+            </div>
+            <div class="flex">
+              <span>TARJETA:</span>
+              <span>$${totalTarjeta.toFixed(2)}</span>
+            </div>
+            <div class="linea"></div>
+            <div class="flex total-box">
+              <span>TOTAL ACUM:</span>
+              <span>$${totalGeneral.toFixed(2)}</span>
+            </div>
+            <div class="linea"></div>
+            <div class="centro">*** FIN DE CORTE ***</div>
+            <script>
+              window.onload = function() { window.print(); window.close(); }
+            </script>
+          </body>
+        </html>
+      `);
+      ventana.document.close();
+    }
+
     localStorage.removeItem('ventasDiarias');
     alert("✅ Caja cerrada con éxito.");
     renderizarCorteCaja();
