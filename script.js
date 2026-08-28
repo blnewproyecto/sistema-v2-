@@ -234,7 +234,6 @@ function agregarAlCarrito(nombre, precioBase) {
   const lecheSelect = document.getElementById('selectLeche');
   const tipoLeche = lecheSelect ? lecheSelect.value : 'Sin leche';
   
-  // Costos por tipo de leche
   let extraLeche = (tipoLeche === 'Deslactosada' || tipoLeche === 'Vegetal') ? 12 : 0;
 
   carrito.push({
@@ -281,7 +280,7 @@ function actualizarCarritoUI() {
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
-// Cancelar Cuenta (Con contraseña 0705)
+// CORRECCIÓN CLAVE: CANCELAR CUENTA Y ELIMINARLA DE LA NUBE/LOCALSTORAGE
 function cancelarCuentaActual() {
   if (carrito.length === 0) {
     alert("No hay productos en la cuenta actual para cancelar.");
@@ -290,16 +289,23 @@ function cancelarCuentaActual() {
 
   const clave = prompt("Ingrese la contraseña de autorización para cancelar la cuenta:");
 
-  if (clave === null) {
-    return;
-  }
+  if (clave === null) return;
 
   if (clave.trim() === "0705") {
-    if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrarán todos los productos agregados a esta orden.")) {
+    if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrará de la lista de pendientes y de la nube.")) {
+      
+      // 1. ELIMINAR DE LA NUBE / ALMACENAMIENTO (comandasPendientes)
+      let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+      comandas = comandas.filter(c => c.id !== comandaActualId);
+      localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
+
+      // 2. LIMPIAR PANTALLA Y CONTADOR
       carrito = [];
       comandaActualId = Date.now();
       actualizarCarritoUI();
-      alert("🚫 Cuenta cancelada con éxito.");
+      actualizarUIComandasPendientes();
+
+      alert("🚫 Cuenta cancelada y eliminada con éxito.");
     }
   } else {
     alert("⛔ Contraseña incorrecta. No se puede cancelar la cuenta.");
@@ -633,7 +639,9 @@ function cerrarCajaTurno() {
   }
 }
 
-// Inicialización
-renderizarMenu();
-actualizarCarritoUI();
-actualizarUIComandasPendientes();
+// Inicialización al cargar la página
+window.onload = function() {
+  renderizarMenu();
+  actualizarCarritoUI();
+  actualizarUIComandasPendientes();
+};
