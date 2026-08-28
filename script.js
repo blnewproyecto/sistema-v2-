@@ -691,7 +691,8 @@ function ejecutarCorteCaja() {
                 </div>`;
 
             document.getElementById('modal-ticket-general').style.display = 'flex';
-        }
+      
+}
 
 // Inicialización al cargar la página
 window.onload = function() {
