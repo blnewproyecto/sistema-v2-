@@ -791,7 +791,7 @@ function mostrarDetalleDiaCalendario(dia, mesAnio, totalVentaDia) {
   alert(`📅 Fecha: ${dia} de ${mesAnio}\n💰 Total vendido este día: $${totalVentaDia.toFixed(2)}`);
 }
 
-// CIERRE DE CAJA, IMPRESIÓN DE TICKET Y ENVÍO A CORREOS (CORREGIDO)
+// CIERRE DE CAJA, IMPRESIÓN DE TICKET Y ENVÍO A CORREOS
 function realizarCierreYEnviarCorreo() {
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   if (ventas.length === 0) {
@@ -882,3 +882,7 @@ function realizarCierreYEnviarCorreo() {
 
   alert("✅ Caja cerrada, resguardo mensual actualizado y registro diario reiniciado con éxito.");
 }
+
+// INICIALIZACIÓN AL CARGAR LA PÁGINA
+renderizarMenu();
+actualizarUIComandasPendientes();
