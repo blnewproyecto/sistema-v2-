@@ -698,7 +698,7 @@ function renderizarCorteCaja() {
   }
 }
 
-// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR RESUMEN MENSUAL Y CALENDARIO (CORREGIDO)
+// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR RESUMEN MENSUAL Y CALENDARIO
 function verInformacionMensualPrivada() {
   const clave = prompt("Ingrese la contraseña de seguridad para acceder al mes:");
   if (clave === null) return;
@@ -710,45 +710,16 @@ function verInformacionMensualPrivada() {
     const ventasMes = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
     const totalMesGeneral = ventasMes.reduce((sum, v) => sum + v.total, 0);
 
-    // Agrupar ventas exactamente por fecha formateada a "D/M/YYYY" o estricta
-    let ventasPorDiaExacto = {};
+    let ventasPorDia = {};
     ventasMes.forEach(v => {
-      // Intentamos normalizar la fecha de la venta a objeto Date o extraer sus partes exactas
-      let partesFecha = v.fecha.split('/');
-      if (partesFecha.length === 3) {
-        // Formato típico MM/DD/YYYY o DD/MM/YYYY
-        let d = parseInt(partesFecha[0]);
-        let m = parseInt(partesFecha[1]);
-        let a = parseInt(partesFecha[2]);
-        
-        // Asumimos formato local (si el primero es mayor a 12 es DD/MM, si no, intentamos estandarizar)
-        // O mejor aún, guardamos una clave limpia "dia-mes-anio"
-        let diaReal = d > 12 ? partesFecha[0] : partesFecha[1]; // Ajuste por si viene DD/MM o MM/DD
-        let mesReal = d > 12 ? partesFecha[1] : partesFecha[0];
-        let anioReal = partesFecha[2];
-        
-        // Clave unificada exacta
-        let claveLimpia = `${parseInt(diaReal)}-${parseInt(mesReal)}-${anioReal}`;
-        if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = 0;
-        ventasPorDiaExacto[claveLimpia] += v.total;
-      } else {
-        // Si viene en formato YYYY-MM-DD
-        let partesGuion = v.fecha.split('-');
-        if (partesGuion.length === 3) {
-          let claveLimpia = `${parseInt(partesGuion[2])}-${parseInt(partesGuion[1])}-${partesGuion[0]}`;
-          if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = 0;
-          ventasPorDiaExacto[claveLimpia] += v.total;
-        } else {
-          // Fallback por si acaso
-          if (!ventasPorDiaExacto[v.fecha]) ventasPorDiaExacto[v.fecha] = 0;
-          ventasPorDiaExacto[v.fecha] += v.total;
-        }
-      }
+      let f = v.fecha;
+      if (!ventasPorDia[f]) ventasPorDia[f] = 0;
+      ventasPorDia[f] += v.total;
     });
 
     const fechaActual = new Date();
     const anio = fechaActual.getFullYear();
-    const mes = fechaActual.getMonth(); // 0 al 11
+    const mes = fechaActual.getMonth();
     const nombreMes = fechaActual.toLocaleString('default', { month: 'long', year: 'numeric' });
 
     const primerDiaIndex = new Date(anio, mes, 1).getDay();
@@ -765,27 +736,22 @@ function verInformacionMensualPrivada() {
     }
 
     for (let dia = 1; dia <= totalDiasMes; dia++) {
-      // Armamos la clave exacta buscada para este día del mes actual (mes + 1 porque en JS los meses van de 0 a 11)
-      let claveBuscada1 = `${dia}-${mes + 1}-${anio}`;
-      let claveBuscada2 = `${mes + 1}-${dia}-${anio}`; // por si acaso el orden cambia
+      let fechaBuscada1 = `${mes + 1}/${dia}/${anio}`;
+      let fechaBuscada2 = `${dia}/${mes + 1}/${anio}`;
+      let fechaBuscada3 = `${anio}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
 
       let totalDiaVenta = 0;
-      
-      // Sumamos de forma estricta buscando coincidencias exactas en las claves limpias
-      for (let k in ventasPorDiaExacto) {
-        let partesK = k.split('-');
-        if (partesK.length === 3) {
-          let dK = parseInt(partesK[0]);
-          let mK = parseInt(partesK[1]);
-          let aK = parseInt(partesK[2]);
-          
-          // Verificamos si coincide exactamente el día, el mes y el año
-          if ((dK === dia && mK === (mes + 1) && aK === anio) || (mK === dia && dK === (mes + 1) && aK === anio)) {
-            totalDiaVenta += ventasPorDiaExacto[k];
+      for (let k in ventasPorDia) {
+        if (k === fechaBuscada1 || k === fechaBuscada2 || k === fechaBuscada3 || k.includes(`/${dia}/${anio}`) || k.includes(`${dia}/`)) {
+          let partesK = k.split('/');
+          if (partesK.length >= 2) {
+            let dNum = parseInt(partesK[1].length === 4 ? partesK[0] : partesK[1]);
+            if (dNum === dia || k === fechaBuscada1 || k === fechaBuscada2) {
+              totalDiaVenta += ventasPorDia[k];
+            }
+          } else {
+            totalDiaVenta += ventasPorDia[k];
           }
-        } else if (k.includes(`${dia}`)) {
-          // Comprobación secundaria estricta si la fecha es texto plano
-          totalDiaVenta += ventasPorDiaExacto[k];
         }
       }
 
@@ -894,10 +860,10 @@ function realizarCierreYEnviarCorreo() {
   localStorage.removeItem('ventasDiarias');
   renderizarCorteCaja();
 
-  // 3. ABRIR CLIENTE DE CORREO AUTOMÁTICAMENTE
+  // 3. ABRIR CLIENTE DE CORREO
   const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
   const cuerpo = encodeURIComponent(
-    `REPORTE DE CORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
+    `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
     `Fecha y Hora: ${fechaHora}\n\n` +
     `----------------------------------------\n` +
     `Total Efectivo: $${totalEfectivo.toFixed(2)}\n` +
@@ -916,3 +882,7 @@ function realizarCierreYEnviarCorreo() {
 
   alert("✅ Caja cerrada, resguardo mensual actualizado y registro diario reiniciado con éxito.");
 }
+
+// INICIALIZACIÓN AL CARGAR LA PÁGINA
+renderizarMenu();
+actualizarUIComandasPendientes();
