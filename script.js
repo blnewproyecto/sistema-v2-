@@ -184,7 +184,7 @@ const menuData = {
     { nombre: "Rol de Canela", precio: 49 },
     { nombre: "Panque de Elote", precio: 39 },
     { nombre: "Bisquet c/ Mermelada", precio: 35 },
-    { nombre: "Croissant c/ Mermelada", precio: 60 },
+    { nombre: "Croissant c/ Mermelada",precio: 60 },
     { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
     { nombre: "Postre Especialess Waffles Bless", precio: 99 }
   ]
@@ -245,6 +245,7 @@ function cambiarPestana(idPestana) {
   if (event && event.target) event.target.classList.add('active');
 
   if (idPestana === 'corte') renderizarCorteCaja();
+  if (idPestana === 'inventario') renderizarInventario();
 }
 
 function agregarAlCarrito(nombre, precioBase) {
@@ -440,16 +441,27 @@ function finalizarCobro(metodoPago) {
   }
 
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+  const fechaHoy = new Date().toLocaleDateString();
+  const mesAnioActual = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
 
+  // Guardar en ventas diarias (tiempo real)
   const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  historialVentas.push({
+  const nuevaVenta = {
     id: Date.now(),
+    fecha: fechaHoy,
+    mesAnio: mesAnioActual,
     hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     items: [...carrito],
     total: total,
     metodo: metodoPago
-  });
+  };
+  historialVentas.push(nuevaVenta);
   localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
+
+  // Guardar también en el acumulado mensual histórico
+  const historialMensual = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
+  historialMensual.push(nuevaVenta);
+  localStorage.setItem('ventasMensuales', JSON.stringify(historialMensual));
 
   let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
   comandas = comandas.filter(c => c.id !== comandaActualId);
@@ -594,122 +606,147 @@ function cargarComanda(id) {
   }
 }
 
-function renderizarCorteCaja() {
-  const contenedorCorte = document.getElementById('tab-corte');
-  if (!contenedorCorte) return;
+// RENDERIZAR INVENTARIO
+function renderizarInventario() {
+  const contenedor = document.getElementById('tablaInventarioContainer');
+  if (!contenedor) return;
 
+  let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [
+    { insumo: "Café en Grano (kg)", stock: 12, min: 3 },
+    { insumo: "Leche Entera (L)", stock: 24, min: 6 },
+    { insumo: "Leche Deslactosada (L)", stock: 18, min: 5 },
+    { insumo: "Leche Vegetal/Almendra (L)", stock: 10, min: 3 },
+    { insumo: "Chocolate Obscuro (kg)", stock: 5, min: 2 },
+    { insumo: "Matcha (kg)", stock: 2, min: 1 },
+    { insumo: "Chai (kg)", stock: 4, min: 1 },
+    { insumo: "Pan para Chapata / Baguette (pz)", stock: 35, min: 10 }
+  ];
+
+  contenedor.innerHTML = `
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+      <thead>
+        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+          <th style="padding: 10px;">Insumo / Producto</th>
+          <th style="padding: 10px;">Stock Actual</th>
+          <th style="padding: 10px;">Mínimo Requerido</th>
+          <th style="padding: 10px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${inventario.map((item, index) => `
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px;">${item.insumo}</td>
+            <td style="padding: 10px; font-weight: bold; color: ${item.stock <= item.min ? '#dc2626' : '#16a34a'};">${item.stock}</td>
+            <td style="padding: 10px; color: #64748b;">${item.min}</td>
+            <td style="padding: 10px;">
+              <button onclick="modificarStock(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">＋</button>
+              <button onclick="modificarStock(${index}, -1)" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 4px;">－</button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function modificarStock(index, cantidad) {
+  let inventario = JSON.parse(localStorage.getItem('inventarioBless'));
+  inventario[index].stock += cantidad;
+  if (inventario[index].stock < 0) inventario[index].stock = 0;
+  localStorage.setItem('inventarioBless', JSON.stringify(inventario));
+  renderizarInventario();
+}
+
+// RENDERIZAR CORTE Y VENTAS
+function renderizarCorteCaja() {
+  const containerDia = document.getElementById('registroVentasDiaContainer');
+  const containerMes = document.getElementById('registroVentasMesContainer');
+  
+  if (!containerDia || !containerMes) return;
+
+  const ventasDia = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+  const ventasMes = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
+
+  // Renderizar Ventas del Día en Tiempo Real
+  if (ventasDia.length === 0) {
+    containerDia.innerHTML = '<p style="color: #64748b; font-size: 14px;">No hay ventas registradas en el día actual.</p>';
+  } else {
+    containerDia.innerHTML = `
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <thead>
+          <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+            <th style="padding: 8px;">Hora</th>
+            <th style="padding: 8px;">Productos</th>
+            <th style="padding: 8px;">Método</th>
+            <th style="padding: 8px;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ventasDia.map(v => `
+            <tr style="border-bottom: 1px solid #f8fafc;">
+              <td style="padding: 8px;">${v.hora}</td>
+              <td style="padding: 8px;">${v.items.map(i => i.nombre).join(', ')}</td>
+              <td style="padding: 8px;">${v.metodo}</td>
+              <td style="padding: 8px; font-weight: bold; color: #16a34a;">$${v.total.toFixed(2)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  // Calcular y Renderizar Acumulado Mensual
+  const totalMesGeneral = ventasMes.reduce((sum, v) => sum + v.total, 0);
+  containerMes.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 15px; border-radius: 6px;">
+      <div>
+        <span style="font-size: 14px; color: #64748b;">Total Acumulado Registrado en el Mes:</span>
+        <h3 style="font-size: 22px; color: #0f172a; margin-top: 2px;">$${totalMesGeneral.toFixed(2)}</h3>
+      </div>
+      <span style="font-size: 12px; background: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-weight: bold;">${ventasMes.length} Transacciones totales</span>
+    </div>
+  `;
+}
+
+// CIERRE DE CAJA Y ENVÍO A CORREOS
+function realizarCierreYEnviarCorreo() {
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
+  if (ventas.length === 0) {
+    alert("No hay ventas registradas en el día para realizar el cierre.");
+    return;
+  }
+
   let totalEfectivo = 0;
   let totalTarjeta = 0;
-
   ventas.forEach(v => {
     if (v.metodo === 'Tarjeta') totalTarjeta += v.total;
     else totalEfectivo += v.total;
   });
-
   const totalGeneral = totalEfectivo + totalTarjeta;
+  const fechaHora = new Date().toLocaleString();
 
-  contenedorCorte.innerHTML = `
-    <h2>Corte de Caja Diario</h2>
-    <div style="display:flex; gap:15px; margin-top:15px;">
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #16a34a;">
-        <span>Efectivo</span>
-        <h3>$${totalEfectivo.toFixed(2)}</h3>
-      </div>
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #2563eb;">
-        <span>Tarjeta</span>
-        <h3>$${totalTarjeta.toFixed(2)}</h3>
-      </div>
-      <div style="background:#fff; padding:15px; border-radius:8px; flex:1; border-left:5px solid #0284c7;">
-        <span>Total Acumulado</span>
-        <h3>$${totalGeneral.toFixed(2)}</h3>
-      </div>
-    </div>
-    <br>
-    <button class="btn-accion btn-cancelar" style="width: auto; padding: 12px 20px;" onclick="cerrarCajaTurno()">🔒 Cerrar Caja y Reiniciar Día</button>
-  `;
-}
+  const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
+  const cuerpo = encodeURIComponent(
+    `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
+    `Fecha y Hora: ${fechaHora}\n\n` +
+    `----------------------------------------\n` +
+    `Total Efectivo: $${totalEfectivo.toFixed(2)}\n` +
+    `Total Tarjeta: $${totalTarjeta.toFixed(2)}\n` +
+    `TOTAL GENERAL: $${totalGeneral.toFixed(2)}\n` +
+    `----------------------------------------\n` +
+    `Número de Tickets Vendidos: ${ventas.length}\n\n` +
+    `Generado desde el Sistema POS Bless Coffee.`
+  );
 
-function cerrarCajaTurno() {
-  const comandasPendientes = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
+  const correosDestino = "abelgonrive@gmail.com,tesoreria.riveraconstrucciones@gmail.com";
+  
+  // Abrir cliente de correo configurado con ambos destinatarios
+  window.location.href = `mailto:${correosDestino}?subject=${asunto}&body=${cuerpo}`;
 
-  if (carrito.length > 0) {
-    alert("⛔ BLOQUEADO: Hay ítems cargados en el carrito actual. Cóbralos o vacía el carrito.");
-    return;
-  }
-
-  if (comandasPendientes.length > 0) {
-    alert(`⛔ BLOQUEADO: Tienes ${comandasPendientes.length} comanda(s) pendiente(s) por cobrar.`);
-    return;
-  }
-
-  const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  if (ventas.length === 0) {
-    alert("No hay ventas registradas para realizar el cierre.");
-    return;
-  }
-
-  if (confirm("¿Confirmas cerrar la caja, imprimir el ticket de corte y reiniciar las ventas del día?")) {
-    let totalEfectivo = 0;
-    let totalTarjeta = 0;
-    ventas.forEach(v => {
-      if (v.metodo === 'Tarjeta') totalTarjeta += v.total;
-      else totalEfectivo += v.total;
-    });
-    const totalGeneral = totalEfectivo + totalTarjeta;
-    const fechaHora = new Date().toLocaleString();
-
-    // Imprimir ticket de cierre de caja automáticamente
-    const ventana = window.open('', '', 'width=400,height=600');
-    if (ventana) {
-      ventana.document.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="UTF-8">
-            <style>
-              @page { margin: 0; }
-              body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 14px; line-height: 1.2; }
-              .centro { text-align: center; }
-              .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
-              .flex { display: flex; justify-content: space-between; font-weight: bold; }
-              .total-box { font-size: 18px; font-weight: bold; margin-top: 6px; }
-            </style>
-          </head>
-          <body>
-            <div class="centro">
-              <h2>BLESS COFFEE</h2>
-              <strong>CORTE DE CAJA / CIERRE</strong><br>
-              <small>${fechaHora}</small>
-            </div>
-            <div class="linea"></div>
-            <div class="flex">
-              <span>EFECTIVO:</span>
-              <span>$${totalEfectivo.toFixed(2)}</span>
-            </div>
-            <div class="flex">
-              <span>TARJETA:</span>
-              <span>$${totalTarjeta.toFixed(2)}</span>
-            </div>
-            <div class="linea"></div>
-            <div class="flex total-box">
-              <span>TOTAL ACUM:</span>
-              <span>$${totalGeneral.toFixed(2)}</span>
-            </div>
-            <div class="linea"></div>
-            <div class="centro">*** FIN DE CORTE ***</div>
-            <script>
-              window.onload = function() { window.print(); window.close(); }
-            </script>
-          </body>
-        </html>
-      `);
-      ventana.document.close();
-    }
-
+  if (confirm("¿Deseas vaciar el registro diario actual para iniciar un nuevo día de ventas?")) {
     localStorage.removeItem('ventasDiarias');
-    alert("✅ Caja cerrada con éxito.");
     renderizarCorteCaja();
+    alert("✅ Caja cerrada y reiniciada con éxito.");
   }
 }
 
