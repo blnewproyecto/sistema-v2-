@@ -119,6 +119,9 @@ const menuData = {
   ],
   friasVarios: [
     { nombre: "Shaken Tea", precio: 80 },
+    { nombre: "Yogurt Mango", precio: 85 },
+    { nombre: "Yogurt Fresa", precio: 85 },
+    { nombre: "Yogurt Blueberry", precio: 85 },
     { nombre: "Naranjada / Limonada", precio: 60 },
     { nombre: "Black Orange Tonic", precio: 80 },
     { nombre: "Lemon Coffee Tonic", precio: 80 },
