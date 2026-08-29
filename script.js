@@ -134,7 +134,13 @@ const menuData = {
     { nombre: "Agua Mineral Perrier Preparada", precio: 65 }
   ],
   friasMocktails: [
-    { nombre: "Mocktail Frutos Rojos / Kiwi / Lichi", precio: 85 },
+    { nombre: "Mocktail Frutos Rojos", precio: 85 },
+    { nombre: "Mocktail Lichi", precio: 85 },
+    { nombre: "Mocktail Cereza", precio: 85 },
+    { nombre: "Mocktail Frambuesa", precio: 85 },
+    { nombre: "Mocktail Kiwi", precio: 85 },
+    { nombre: "Mocktail Fresa", precio: 85 },
+    { nombre: "Mocktail Durazno", precio: 85 },
     { nombre: "Tizana Fría", precio: 85 },
     { nombre: "Tizana Frappé", precio: 90 },
     { nombre: "Té Herbal Frío", precio: 65 }
@@ -173,6 +179,7 @@ const menuData = {
     { nombre: "Waffles", precio: 80 },
     { nombre: "Pastel del Día", precio: 70 },
     { nombre: "Rol de Canela", precio: 49 },
+    { nombre: "Rol de Canela", precio: 39 },
     { nombre: "Bisquet c/ Mermelada", precio: 35 },
     { nombre: "Croissant c/ Mermelada", precio: 60 },
     { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
