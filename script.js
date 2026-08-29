@@ -894,6 +894,77 @@ function realizarCierreYEnviarCorreo() {
   localStorage.removeItem('ventasDiarias');
   renderizarCorteCaja();
 
+  // 3. ABRIR CLIENTE DE CORREO AUTOMÁTICAMENTE
+  const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
+  const cuerpo = encodeURIComponent(
+    `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
+    `Fecha y Hora: ${fechaHora}\n\n` +
+    `----------------------------------------\n` +
+    `Total Efectivo: $${totalEfectivo.toFixed(2)}\n` +
+    `Total Tarjeta: $${totalTarjeta.toFixed(2)}\n` +
+    `TOTAL GENERAL: $${totalGeneral.toFixed(2)}\n` +
+    `----------------------------------------\n` +
+    `Número de Tickets Vendidos: ${ventas.length}\n\n` +
+    `Generado desde el Sistema POS Bless Coffee.`
+  );
+
+  const correosDestino = "abelgonrive@gmail.com,tesoreria.riveraconstrucciones@gmail.com";
+  
+  setTimeout(() => {
+    window.location.href = `mailto:${correosDestino}?subject=${asunto}&body=${cuerpo}`;
+  }, 800);
+
+  alert("✅ Caja cerrada, resguardo mensual actualizado y registro diario reiniciado con éxito.");
+}
+
+  // 1. IMPRIMIR TICKET FÍSICO DE CORTE
+  const ventanaImpresion = window.open('', '', 'width=400,height=600');
+  if (ventanaImpresion) {
+    ventanaImpresion.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            @page { margin: 0; }
+            body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 13px; line-height: 1.2; }
+            .centro { text-align: center; }
+            .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+            .flex { display: flex; justify-content: space-between; font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <div class="centro">
+            <h2>BLESS COFFEE</h2>
+            <strong>CORTE DE CAJA</strong><br>
+            <small>${fechaHora}</small>
+          </div>
+          <div class="linea"></div>
+          <div class="flex"><span>Efectivo:</span><span>$${totalEfectivo.toFixed(2)}</span></div>
+          <div class="flex"><span>Tarjeta:</span><span>$${totalTarjeta.toFixed(2)}</span></div>
+          <div class="linea"></div>
+          <div class="flex" style="font-size: 16px;">
+            <span>TOTAL:</span>
+            <span>$${totalGeneral.toFixed(2)}</span>
+          </div>
+          <div class="linea"></div>
+          <div class="centro">
+            Tickets vendidos: ${ventas.length}<br>
+            ¡Corte realizado con éxito!
+          </div>
+          <script>
+            window.onload = function() { window.print(); window.close(); }
+          </script>
+        </body>
+      </html>
+    `);
+    ventanaImpresion.document.close();
+  }
+
+  // 2. VACIAR EL REGISTRO DIARIO INMEDIATAMENTE
+  localStorage.removeItem('ventasDiarias');
+  renderizarCorteCaja();
+
   // 3. ABRIR CLIENTE DE CORREO
   const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
   const cuerpo = encodeURIComponent(
