@@ -312,12 +312,10 @@ function cancelarCuentaActual() {
   if (clave.trim() === "0705") {
     if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrará de la lista de pendientes y de la nube.")) {
       
-      // ELIMINAR DE LA NUBE / ALMACENAMIENTO (comandasPendientes)
       let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
       comandas = comandas.filter(c => c.id !== comandaActualId);
       localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
 
-      // LIMPIAR PANTALLA Y CONTADOR
       carrito = [];
       comandaActualId = Date.now();
       actualizarCarritoUI();
@@ -444,7 +442,6 @@ function finalizarCobro(metodoPago) {
   const fechaHoy = new Date().toLocaleDateString();
   const mesAnioActual = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
 
-  // Guardar en ventas diarias (tiempo real)
   const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   const nuevaVenta = {
     id: Date.now(),
@@ -458,7 +455,6 @@ function finalizarCobro(metodoPago) {
   historialVentas.push(nuevaVenta);
   localStorage.setItem('ventasDiarias', JSON.stringify(historialVentas));
 
-  // Guardar también en el acumulado mensual histórico
   const historialMensual = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
   historialMensual.push(nuevaVenta);
   localStorage.setItem('ventasMensuales', JSON.stringify(historialMensual));
@@ -657,17 +653,13 @@ function modificarStock(index, cantidad) {
   renderizarInventario();
 }
 
-// RENDERIZAR CORTE Y VENTAS
+// RENDERIZAR CORTE Y ACCESO PRIVADO AL MES (CONTRASEÑA 1984) Y CALENDARIO
 function renderizarCorteCaja() {
   const containerDia = document.getElementById('registroVentasDiaContainer');
-  const containerMes = document.getElementById('registroVentasMesContainer');
-  
-  if (!containerDia || !containerMes) return;
+  if (!containerDia) return;
 
   const ventasDia = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
-  const ventasMes = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
 
-  // Renderizar Ventas del Día en Tiempo Real
   if (ventasDia.length === 0) {
     containerDia.innerHTML = '<p style="color: #64748b; font-size: 14px;">No hay ventas registradas en el día actual.</p>';
   } else {
@@ -695,20 +687,111 @@ function renderizarCorteCaja() {
     `;
   }
 
-  // Calcular y Renderizar Acumulado Mensual
-  const totalMesGeneral = ventasMes.reduce((sum, v) => sum + v.total, 0);
-  containerMes.innerHTML = `
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 15px; border-radius: 6px;">
-      <div>
-        <span style="font-size: 14px; color: #64748b;">Total Acumulado Registrado en el Mes:</span>
-        <h3 style="font-size: 22px; color: #0f172a; margin-top: 2px;">$${totalMesGeneral.toFixed(2)}</h3>
+  let containerMes = document.getElementById('registroVentasMesContainer');
+  if (containerMes) {
+    containerMes.innerHTML = `
+      <div style="background: #f8fafc; padding: 15px; border-radius: 6px; text-align: center;">
+        <p style="font-size: 14px; color: #64748b; margin-bottom: 10px;">Información financiera mensual protegida.</p>
+        <button onclick="verInformacionMensualPrivada()" style="background: #0f172a; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">🔑 Ver Resumen y Calendario Mensual</button>
       </div>
-      <span style="font-size: 12px; background: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-weight: bold;">${ventasMes.length} Transacciones totales</span>
-    </div>
-  `;
+    `;
+  }
 }
 
-// CIERRE DE CAJA Y ENVÍO A CORREOS
+// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR RESUMEN MENSUAL Y CALENDARIO
+function verInformacionMensualPrivada() {
+  const clave = prompt("Ingrese la contraseña de seguridad para acceder al mes:");
+  if (clave === null) return;
+
+  if (clave.trim() === "1984") {
+    const containerMes = document.getElementById('registroVentasMesContainer');
+    if (!containerMes) return;
+
+    const ventasMes = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
+    const totalMesGeneral = ventasMes.reduce((sum, v) => sum + v.total, 0);
+
+    let ventasPorDia = {};
+    ventasMes.forEach(v => {
+      let f = v.fecha;
+      if (!ventasPorDia[f]) ventasPorDia[f] = 0;
+      ventasPorDia[f] += v.total;
+    });
+
+    const fechaActual = new Date();
+    const anio = fechaActual.getFullYear();
+    const mes = fechaActual.getMonth();
+    const nombreMes = fechaActual.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    const primerDiaIndex = new Date(anio, mes, 1).getDay();
+    const totalDiasMes = new Date(anio, mes + 1, 0).getDate();
+    const diasIniciales = ['D', 'L', 'M', 'Mi', 'J', 'V', 'S']; 
+
+    let celdasCalendario = '';
+    diasIniciales.forEach(d => {
+      celdasCalendario += `<div style="text-align:center; font-weight:bold; font-size:12px; color:#64748b; padding:4px;">${d}</div>`;
+    });
+
+    for (let i = 0; i < primerDiaIndex; i++) {
+      celdasCalendario += `<div></div>`;
+    }
+
+    for (let dia = 1; dia <= totalDiasMes; dia++) {
+      let fechaBuscada1 = `${mes + 1}/${dia}/${anio}`;
+      let fechaBuscada2 = `${dia}/${mes + 1}/${anio}`;
+      let fechaBuscada3 = `${anio}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+
+      let totalDiaVenta = 0;
+      for (let k in ventasPorDia) {
+        if (k === fechaBuscada1 || k === fechaBuscada2 || k === fechaBuscada3 || k.includes(`/${dia}/${anio}`) || k.includes(`${dia}/`)) {
+          let partesK = k.split('/');
+          if (partesK.length >= 2) {
+            let dNum = parseInt(partesK[1].length === 4 ? partesK[0] : partesK[1]);
+            if (dNum === dia || k === fechaBuscada1 || k === fechaBuscada2) {
+              totalDiaVenta += ventasPorDia[k];
+            }
+          } else {
+            totalDiaVenta += ventasPorDia[k];
+          }
+        }
+      }
+
+      let tieneVenta = totalDiaVenta > 0;
+      let estiloDia = tieneVenta 
+        ? 'background: #dcfce7; color: #16a34a; font-weight: bold; cursor: pointer;' 
+        : 'background: #f8fafc; color: #94a3b8;';
+
+      celdasCalendario += `
+        <div onclick="mostrarDetalleDiaCalendario('${dia}', '${nombreMes}', ${totalDiaVenta})" style="text-align:center; padding:8px; border-radius:4px; font-size:13px; ${estiloDia}">
+          ${dia}
+        </div>
+      `;
+    }
+
+    containerMes.innerHTML = `
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #0f172a;">${nombreMes}</h4>
+          <span style="font-size: 14px; font-weight: bold; color: #16a34a;">Total Mes: $${totalMesGeneral.toFixed(2)}</span>
+        </div>
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Toca cualquier fecha resaltada para ver lo vendido en ese día específico.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #f1f5f9; padding: 8px; border-radius: 6px;">
+          ${celdasCalendario}
+        </div>
+        
+        <button onclick="renderizarCorteCaja()" style="margin-top: 12px; background: #64748b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">🔒 Ocultar Información</button>
+      </div>
+    `;
+  } else {
+    alert("⛔ Contraseña incorrecta. Acceso denegado.");
+  }
+}
+
+function mostrarDetalleDiaCalendario(dia, mesAnio, totalVentaDia) {
+  alert(`📅 Fecha: ${dia} de ${mesAnio}\n💰 Total vendido este día: $${totalVentaDia.toFixed(2)}`);
+}
+
+// CIERRE DE CAJA, IMPRESIÓN DE TICKET Y ENVÍO A CORREOS
 function realizarCierreYEnviarCorreo() {
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   if (ventas.length === 0) {
@@ -725,6 +808,51 @@ function realizarCierreYEnviarCorreo() {
   const totalGeneral = totalEfectivo + totalTarjeta;
   const fechaHora = new Date().toLocaleString();
 
+  // 1. IMPRIMIR TICKET FÍSICO DE CORTE
+  const ventanaImpresion = window.open('', '', 'width=400,height=600');
+  if (ventanaImpresion) {
+    ventanaImpresion.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            @page { margin: 0; }
+            body { font-family: Arial, sans-serif; width: 58mm; padding: 8px 4px; margin: 0 auto; font-size: 13px; line-height: 1.2; }
+            .centro { text-align: center; }
+            .linea { border-bottom: 1px dashed #000; margin: 6px 0; }
+            .flex { display: flex; justify-content: space-between; font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <div class="centro">
+            <h2>BLESS COFFEE</h2>
+            <strong>CORTE DE CAJA</strong><br>
+            <small>${fechaHora}</small>
+          </div>
+          <div class="linea"></div>
+          <div class="flex"><span>Efectivo:</span><span>$${totalEfectivo.toFixed(2)}</span></div>
+          <div class="flex"><span>Tarjeta:</span><span>$${totalTarjeta.toFixed(2)}</span></div>
+          <div class="linea"></div>
+          <div class="flex" style="font-size: 16px;">
+            <span>TOTAL:</span>
+            <span>$${totalGeneral.toFixed(2)}</span>
+          </div>
+          <div class="linea"></div>
+          <div class="centro">
+            Tickets vendidos: ${ventas.length}<br>
+            ¡Corte realizado con éxito!
+          </div>
+          <script>
+            window.onload = function() { window.print(); window.close(); }
+          </script>
+        </body>
+      </html>
+    `);
+    ventanaImpresion.document.close();
+  }
+
+  // 2. ABRIR CLIENTE DE CORREO PARA AMBOS DESTINATARIOS
   const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
   const cuerpo = encodeURIComponent(
     `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
@@ -740,8 +868,10 @@ function realizarCierreYEnviarCorreo() {
 
   const correosDestino = "abelgonrive@gmail.com,tesoreria.riveraconstrucciones@gmail.com";
   
-  // Abrir cliente de correo configurado con ambos destinatarios
-  window.location.href = `mailto:${correosDestino}?subject=${asunto}&body=${cuerpo}`;
+  // Usamos un pequeño retraso para asegurar que el navegador abra la impresión antes de cambiar al enlace del correo
+  setTimeout(() => {
+    window.location.href = `mailto:${correosDestino}?subject=${asunto}&body=${cuerpo}`;
+  }, 1000);
 
   if (confirm("¿Deseas vaciar el registro diario actual para iniciar un nuevo día de ventas?")) {
     localStorage.removeItem('ventasDiarias');
