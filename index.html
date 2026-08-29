@@ -290,12 +290,12 @@
     <div class="nav-tabs">
       <button class="btn-tab active" onclick="cambiarPestana('menu')">Menú</button>
       <button class="btn-tab" onclick="abrirModalComandas()">Comandas (<span id="badgeComandasCount">0</span>)</button>
-      <button class="btn-tab" onclick="cambiarPestana('corte')">Corte de Caja</button>
+      <button class="btn-tab" onclick="cambiarPestana('inventario')">📦 Inventario</button>
+      <button class="btn-tab" onclick="cambiarPestana('corte')">📊 Corte y Ventas</button>
     </div>
   </header>
 
   <div class="main-container">
-    <!-- Contenido Izquierdo (Menú) -->
     <div class="contenido-principal">
       <div class="buscador-bar">
         <input type="text" id="inputBuscador" placeholder="Buscar producto..." onkeyup="filtrarProductos()">
@@ -342,12 +342,38 @@
         <div class="grid-productos" id="grid-alimentos-dulces"></div>
       </div>
 
-      <div id="tab-corte" class="seccion">
-        <!-- Generado dinámicamente -->
+      <div id="tab-inventario" class="seccion">
+        <h3 class="categoria-titulo">Control de Inventario y Stock</h3>
+        <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+          <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Existencias actuales de insumos y productos para control interno.</p>
+          <div id="tablaInventarioContainer"></div>
+        </div>
       </div>
+
+      <div id="tab-corte" class="seccion">
+        <h3 class="categoria-titulo">Corte de Caja y Registro de Ventas</h3>
+        <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div>
+              <h4 style="font-size: 18px; color: #0f172a;">Ventas del Día Actual</h4>
+              <p style="font-size: 13px; color: #64748b;">Registro en tiempo real. Se borra al cerrar caja para el nuevo día.</p>
+            </div>
+            <button onclick="realizarCierreYEnviarCorreo()" style="background: #16a34a; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+              🔒 Cerrar Caja y Enviar Reportes
+            </button>
+          </div>
+          <div id="registroVentasDiaContainer"></div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+          <h4 style="font-size: 18px; color: #0f172a; margin-bottom: 5px;">Acumulado y Registro Mensual</h4>
+          <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Historial completo de ventas y cálculo total del mes en curso.</p>
+          <div id="registroVentasMesContainer"></div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Panel Derecho (Orden Actual / Carrito) -->
     <div class="panel-carrito">
       <h3>Orden Activa</h3>
       <br>
@@ -377,7 +403,6 @@
           <button class="btn-accion btn-guardar" onclick="guardarComandaPendiente()">☁️ Pendiente</button>
         </div>
 
-        <!-- BOTÓN DE CANCELAR CUENTA (NUEVA UBICACIÓN DESTACADA) -->
         <button class="btn-accion btn-cancelar" id="btnCancelarCuenta" onclick="cancelarCuentaActual()">❌ CANCELAR CUENTA</button>
 
         <div style="display: flex; gap: 8px; margin-top: 5px;">
@@ -388,7 +413,6 @@
     </div>
   </div>
 
-  <!-- Modal Comandas Pendientes -->
   <div class="modal" id="modalComandas">
     <div class="modal-contenido">
       <h3>Comandas Pendientes</h3>
