@@ -897,7 +897,7 @@ function realizarCierreYEnviarCorreo() {
   // 3. ABRIR CLIENTE DE CORREO AUTOMÁTICAMENTE
   const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
   const cuerpo = encodeURIComponent(
-    `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
+    `REPORTE DE CORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
     `Fecha y Hora: ${fechaHora}\n\n` +
     `----------------------------------------\n` +
     `Total Efectivo: $${totalEfectivo.toFixed(2)}\n` +
@@ -916,34 +916,3 @@ function realizarCierreYEnviarCorreo() {
 
   alert("✅ Caja cerrada, resguardo mensual actualizado y registro diario reiniciado con éxito.");
 }
-
-  // 2. VACIAR EL REGISTRO DIARIO INMEDIATAMENTE
-  localStorage.removeItem('ventasDiarias');
-  renderizarCorteCaja();
-
-  // 3. ABRIR CLIENTE DE CORREO
-  const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
-  const cuerpo = encodeURIComponent(
-    `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
-    `Fecha y Hora: ${fechaHora}\n\n` +
-    `----------------------------------------\n` +
-    `Total Efectivo: $${totalEfectivo.toFixed(2)}\n` +
-    `Total Tarjeta: $${totalTarjeta.toFixed(2)}\n` +
-    `TOTAL GENERAL: $${totalGeneral.toFixed(2)}\n` +
-    `----------------------------------------\n` +
-    `Número de Tickets Vendidos: ${ventas.length}\n\n` +
-    `Generado desde el Sistema POS Bless Coffee.`
-  );
-
-  const correosDestino = "abelgonrive@gmail.com,tesoreria.riveraconstrucciones@gmail.com";
-  
-  setTimeout(() => {
-    window.location.href = `mailto:${correosDestino}?subject=${asunto}&body=${cuerpo}`;
-  }, 800);
-
-  alert("✅ Caja cerrada, resguardo mensual actualizado y registro diario reiniciado con éxito.");
-}
-
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-renderizarMenu();
-actualizarUIComandasPendientes();
