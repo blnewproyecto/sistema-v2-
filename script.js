@@ -184,7 +184,7 @@ const menuData = {
     { nombre: "Rol de Canela", precio: 49 },
     { nombre: "Panque de Elote", precio: 39 },
     { nombre: "Bisquet c/ Mermelada", precio: 35 },
-    { nombre: "Croissant c/ Mermelada",precio: 60 },
+    { nombre: "Croissant c/ Mermelada", precio: 60 },
     { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
     { nombre: "Postre Especialess Waffles Bless", precio: 99 }
   ]
@@ -791,11 +791,15 @@ function mostrarDetalleDiaCalendario(dia, mesAnio, totalVentaDia) {
   alert(`📅 Fecha: ${dia} de ${mesAnio}\n💰 Total vendido este día: $${totalVentaDia.toFixed(2)}`);
 }
 
-// CIERRE DE CAJA, IMPRESIÓN DE TICKET Y ENVÍO A CORREOS
+// CIERRE DE CAJA, IMPRESIÓN DE TICKET Y ENVÍO A CORREOS (CORREGIDO)
 function realizarCierreYEnviarCorreo() {
   const ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   if (ventas.length === 0) {
     alert("No hay ventas registradas en el día para realizar el cierre.");
+    return;
+  }
+
+  if (!confirm("¿Estás seguro de realizar el corte de caja? Se imprimirán los datos, se abrirá tu correo y se vaciará el registro diario.")) {
     return;
   }
 
@@ -852,7 +856,11 @@ function realizarCierreYEnviarCorreo() {
     ventanaImpresion.document.close();
   }
 
-  // 2. ABRIR CLIENTE DE CORREO PARA AMBOS DESTINATARIOS
+  // 2. VACIAR EL REGISTRO DIARIO INMEDIATAMENTE
+  localStorage.removeItem('ventasDiarias');
+  renderizarCorteCaja();
+
+  // 3. ABRIR CLIENTE DE CORREO
   const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
   const cuerpo = encodeURIComponent(
     `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
@@ -868,21 +876,9 @@ function realizarCierreYEnviarCorreo() {
 
   const correosDestino = "abelgonrive@gmail.com,tesoreria.riveraconstrucciones@gmail.com";
   
-  // Usamos un pequeño retraso para asegurar que el navegador abra la impresión antes de cambiar al enlace del correo
   setTimeout(() => {
     window.location.href = `mailto:${correosDestino}?subject=${asunto}&body=${cuerpo}`;
-  }, 1000);
+  }, 800);
 
-  if (confirm("¿Deseas vaciar el registro diario actual para iniciar un nuevo día de ventas?")) {
-    localStorage.removeItem('ventasDiarias');
-    renderizarCorteCaja();
-    alert("✅ Caja cerrada y reiniciada con éxito.");
-  }
+  alert("✅ Caja cerrada, resguardo mensual actualizado y registro diario reiniciado con éxito.");
 }
-
-// Inicialización al cargar la página
-window.onload = function() {
-  renderizarMenu();
-  actualizarCarritoUI();
-  actualizarUIComandasPendientes();
-};
