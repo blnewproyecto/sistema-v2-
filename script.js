@@ -182,7 +182,7 @@ const menuData = {
     { nombre: "Waffles", precio: 80 },
     { nombre: "Pastel del Día", precio: 70 },
     { nombre: "Rol de Canela", precio: 49 },
-    { nombre: "Rol de Canela", precio: 39 },
+    { nombre: "Panque de Elote", precio: 39 },
     { nombre: "Bisquet c/ Mermelada", precio: 35 },
     { nombre: "Croissant c/ Mermelada", precio: 60 },
     { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
