@@ -150,6 +150,7 @@ const menuData = {
   ],
   alimentosSalados: [
     { nombre: "Huevos al gusto", precio: 75 },
+    { nombre: "Huevos a la susan ", precio: 100 },
     { nombre: "Molletes Sencillos", precio: 80 },
     { nombre: "Molletes con Jamón", precio: 90 },
     { nombre: "Molletes con Chorizo", precio: 99 },
