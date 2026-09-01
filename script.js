@@ -185,6 +185,7 @@ const menuData = {
     { nombre: "Panque de Elote", precio: 39 },
     { nombre: "Bisquet c/ Mermelada", precio: 35 },
     { nombre: "Croissant c/ Mermelada", precio: 60 },
+    { nombre: "Galleta", precio: 40 },
     { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
     { nombre: "Postre Especialess Waffles Bless", precio: 99 }
   ]
