@@ -149,7 +149,7 @@ const menuData = {
     { nombre: "Té Herbal Frío", precio: 65 }
   ],
   alimentosSalados: [
-    { nombre: "Huevos al gusto", precio: 80 },
+    { nombre: "Huevos al gusto", precio: 75 },
     { nombre: "Molletes Sencillos", precio: 80 },
     { nombre: "Molletes con Jamón", precio: 90 },
     { nombre: "Molletes con Chorizo", precio: 99 },
