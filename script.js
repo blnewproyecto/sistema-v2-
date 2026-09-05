@@ -152,6 +152,7 @@ const menuData = {
     { nombre: "Huevos al gusto", precio: 75 },
     { nombre: "Huevos a la Susan ", precio: 100 },
     { nombre: "Molletes Sencillos", precio: 80 },
+    { nombre: "Mollaquiles", precio: 90 },
     { nombre: "Molletes con Jamón", precio: 90 },
     { nombre: "Molletes con Chorizo", precio: 99 },
     { nombre: "Chilaquiles Sencillos", precio: 80 },
