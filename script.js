@@ -2,6 +2,7 @@
 const menuData = {
   calientesCafe: [
     { nombre: "Espresso Sencillo (1oz)", precio: 35 },
+    { nombre: "COCA COLA", precio: 40 },
     { nombre: "Espresso Doble (2oz)", precio: 45 },
     { nombre: "Doble Cortado (2oz)", precio: 50 },
     { nombre: "Panna (2oz)", precio: 50 },
