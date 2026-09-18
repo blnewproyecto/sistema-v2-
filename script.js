@@ -309,7 +309,7 @@ function aplicarDescuento50() {
     return;
   }
 
-  const clave = prompt("Ingrese la contraseña de autorización (0705):");
+  const clave = prompt("Ingrese la contraseña de autorización:");
   if (clave === null) return;
 
   if (clave.trim() === "0705") {
