@@ -243,6 +243,14 @@
       letter-spacing: 0.5px;
     }
     .btn-cancelar:hover { background: #b91c1c !important; }
+
+    /* BOTÓN DESCUENTO 50% */
+    .btn-descuento {
+      background: #ea580c !important;
+      color: white !important;
+      font-size: 14px !important;
+    }
+    .btn-descuento:hover { background: #c2410c !important; }
     
     .btn-guardar { background: #64748b; color: white; }
     .btn-efectivo { background: #16a34a; color: white; font-size: 14px; }
@@ -404,6 +412,9 @@
         </div>
 
         <button class="btn-accion btn-cancelar" id="btnCancelarCuenta" onclick="cancelarCuentaActual()">❌ CANCELAR CUENTA</button>
+        
+        <!-- NUEVO BOTÓN DE DESCUENTO 50% -->
+        <button class="btn-accion btn-descuento" onclick="aplicarDescuento50()">🏷️ APLICAR 50% DESCUENTO</button>
 
         <div style="display: flex; gap: 8px; margin-top: 5px;">
           <button class="btn-accion btn-efectivo" onclick="finalizarCobro('Efectivo')">💵 Efectivo</button>
