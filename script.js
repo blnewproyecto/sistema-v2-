@@ -302,6 +302,30 @@ function actualizarCarritoUI() {
   totalTxt.innerText = `$${total.toFixed(2)}`;
 }
 
+// APLICAR 50% DE DESCUENTO CON CONTRASEÑA 0705
+function aplicarDescuento50() {
+  if (carrito.length === 0) {
+    alert("No hay productos en la orden actual para aplicar descuento.");
+    return;
+  }
+
+  const clave = prompt("Ingrese la contraseña de autorización (0705):");
+  if (clave === null) return;
+
+  if (clave.trim() === "0705") {
+    carrito.forEach(item => {
+      if (!item.nombre.includes("(50% Desc.)")) {
+        item.precio = item.precio * 0.5;
+        item.nombre = item.nombre + " (50% Desc.)";
+      }
+    });
+    actualizarCarritoUI();
+    alert("¡Descuento del 50% aplicado correctamente!");
+  } else {
+    alert("⛔ Contraseña incorrecta. No se pudo aplicar el descuento.");
+  }
+}
+
 // CANCELAR CUENTA Y ELIMINARLA DE LA NUBE/LOCALSTORAGE
 function cancelarCuentaActual() {
   if (carrito.length === 0) {
@@ -367,8 +391,7 @@ function imprimirComanda() {
         </div>
         <div class="linea"></div>
         ${carrito.map(i => `
-          <div class="item">• 1x ${i.nombre}</div>
-          ${i.leche !== 'Sin leche' ? `<div class="subitem">Leche: ${i.leche}</div>` : ''}
+          <div class="item">• 1x ${i.nombre}</div>${i.leche !== 'Sin leche' ? `<div class="subitem">Leche: ${i.leche}</div>` : ''}
         `).join('')}
         <div class="linea"></div>
         <script>
@@ -414,8 +437,7 @@ function imprimirPrecuenta() {
         <div class="linea"></div>
         ${carrito.map(i => `
           <div class="flex">
-            <span>${i.nombre}</span>
-            <span>$${i.precio.toFixed(2)}</span>
+            <span>${i.nombre}</span>             <span>$${i.precio.toFixed(2)}</span>
           </div>
           ${i.leche !== 'Sin leche' ? `<small style="margin-left: 6px;">• Leche: ${i.leche}</small>` : ''}
         `).join('')}
@@ -502,8 +524,7 @@ function imprimirTicketFinal(items, total, metodo) {
         <div class="linea"></div>
         ${items.map(i => `
           <div class="flex">
-            <span>${i.nombre}</span>
-            <span>$${i.precio.toFixed(2)}</span>
+            <span>${i.nombre}</span>             <span>$${i.precio.toFixed(2)}</span>
           </div>
           ${i.leche !== 'Sin leche' ? `<div style="font-size:12px;">• Leche: ${i.leche}</div>` : ''}
         `).join('')}
@@ -682,8 +703,7 @@ function renderizarCorteCaja() {
             <tr style="border-bottom: 1px solid #f8fafc;">
               <td style="padding: 8px;">${v.hora}</td>
               <td style="padding: 8px;">${v.items.map(i => i.nombre).join(', ')}</td>
-              <td style="padding: 8px;">${v.metodo}</td>
-              <td style="padding: 8px; font-weight: bold; color: #16a34a;">$${v.total.toFixed(2)}</td>
+              <td style="padding: 8px;">${v.metodo}</td>               <td style="padding: 8px; font-weight: bold; color: #16a34a;">$${v.total.toFixed(2)}</td>
             </tr>
           `).join('')}
         </tbody>
@@ -714,36 +734,28 @@ function verInformacionMensualPrivada() {
     const ventasMes = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
     const totalMesGeneral = ventasMes.reduce((sum, v) => sum + v.total, 0);
 
-    // Agrupar ventas exactamente por fecha formateada a "D/M/YYYY" o estricta
     let ventasPorDiaExacto = {};
     ventasMes.forEach(v => {
-      // Intentamos normalizar la fecha de la venta a objeto Date o extraer sus partes exactas
       let partesFecha = v.fecha.split('/');
       if (partesFecha.length === 3) {
-        // Formato típico MM/DD/YYYY o DD/MM/YYYY
         let d = parseInt(partesFecha[0]);
         let m = parseInt(partesFecha[1]);
         let a = parseInt(partesFecha[2]);
         
-        // Asumimos formato local (si el primero es mayor a 12 es DD/MM, si no, intentamos estandarizar)
-        // O mejor aún, guardamos una clave limpia "dia-mes-anio"
-        let diaReal = d > 12 ? partesFecha[0] : partesFecha[1]; // Ajuste por si viene DD/MM o MM/DD
+        let diaReal = d > 12 ? partesFecha[0] : partesFecha[1];
         let mesReal = d > 12 ? partesFecha[1] : partesFecha[0];
         let anioReal = partesFecha[2];
         
-        // Clave unificada exacta
         let claveLimpia = `${parseInt(diaReal)}-${parseInt(mesReal)}-${anioReal}`;
         if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = 0;
         ventasPorDiaExacto[claveLimpia] += v.total;
       } else {
-        // Si viene en formato YYYY-MM-DD
         let partesGuion = v.fecha.split('-');
         if (partesGuion.length === 3) {
           let claveLimpia = `${parseInt(partesGuion[2])}-${parseInt(partesGuion[1])}-${partesGuion[0]}`;
           if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = 0;
           ventasPorDiaExacto[claveLimpia] += v.total;
         } else {
-          // Fallback por si acaso
           if (!ventasPorDiaExacto[v.fecha]) ventasPorDiaExacto[v.fecha] = 0;
           ventasPorDiaExacto[v.fecha] += v.total;
         }
@@ -752,7 +764,7 @@ function verInformacionMensualPrivada() {
 
     const fechaActual = new Date();
     const anio = fechaActual.getFullYear();
-    const mes = fechaActual.getMonth(); // 0 al 11
+    const mes = fechaActual.getMonth();
     const nombreMes = fechaActual.toLocaleString('default', { month: 'long', year: 'numeric' });
 
     const primerDiaIndex = new Date(anio, mes, 1).getDay();
@@ -769,13 +781,8 @@ function verInformacionMensualPrivada() {
     }
 
     for (let dia = 1; dia <= totalDiasMes; dia++) {
-      // Armamos la clave exacta buscada para este día del mes actual (mes + 1 porque en JS los meses van de 0 a 11)
-      let claveBuscada1 = `${dia}-${mes + 1}-${anio}`;
-      let claveBuscada2 = `${mes + 1}-${dia}-${anio}`; // por si acaso el orden cambia
-
       let totalDiaVenta = 0;
       
-      // Sumamos de forma estricta buscando coincidencias exactas en las claves limpias
       for (let k in ventasPorDiaExacto) {
         let partesK = k.split('-');
         if (partesK.length === 3) {
@@ -783,12 +790,10 @@ function verInformacionMensualPrivada() {
           let mK = parseInt(partesK[1]);
           let aK = parseInt(partesK[2]);
           
-          // Verificamos si coincide exactamente el día, el mes y el año
           if ((dK === dia && mK === (mes + 1) && aK === anio) || (mK === dia && dK === (mes + 1) && aK === anio)) {
             totalDiaVenta += ventasPorDiaExacto[k];
           }
         } else if (k.includes(`${dia}`)) {
-          // Comprobación secundaria estricta si la fecha es texto plano
           totalDiaVenta += ventasPorDiaExacto[k];
         }
       }
@@ -850,7 +855,6 @@ function realizarCierreYEnviarCorreo() {
   const totalGeneral = totalEfectivo + totalTarjeta;
   const fechaHora = new Date().toLocaleString();
 
-  // 1. IMPRIMIR TICKET FÍSICO DE CORTE
   const ventanaImpresion = window.open('', '', 'width=400,height=600');
   if (ventanaImpresion) {
     ventanaImpresion.document.write(`
@@ -894,11 +898,9 @@ function realizarCierreYEnviarCorreo() {
     ventanaImpresion.document.close();
   }
 
-  // 2. VACIAR EL REGISTRO DIARIO INMEDIATAMENTE
   localStorage.removeItem('ventasDiarias');
   renderizarCorteCaja();
 
-  // 3. ABRIR CLIENTE DE CORREO
   const asunto = encodeURIComponent(`Corte de Caja - BLESS COFFEE - ${fechaHora}`);
   const cuerpo = encodeURIComponent(
     `REPORTE DE CORTE DE CAJA - BLESS COFFEE\n` +
