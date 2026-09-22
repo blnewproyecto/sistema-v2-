@@ -18,6 +18,22 @@ const menuData = {
     { nombre: "Matcha", precio: 75 },
     { nombre: "Taro", precio: 75 }
   ],
+   calientesEspecialess: [
+    { nombre: "Chai Manzana Verde M", precio: 80 },
+    { nombre: "Chai Manzana Verde G", precio: 85 },
+    { nombre: "Horchai M", precio: 80 },
+    { nombre: "Horchai G", precio: 85 },
+    { nombre: "Blessed M", precio: 90 },
+    { nombre: "Blessed G", precio: 95 },
+    { nombre: "Hope Latte M", precio: 90 },
+    { nombre: "Hope Latte G", precio: 95 },
+    { nombre: "Ferrero Sin Café M", precio: 80 },
+    { nombre: "Ferrero Sin Café G", precio: 85 },
+    { nombre: "Ferrero Con Café M", precio: 90 },
+    { nombre: "Ferrero Con Café G", precio: 95 },
+    { nombre: "Mazapán M", precio: 80 },
+    { nombre: "Mazapán G", precio: 85 }
+  ],
   calientesInfusionables: [
     { nombre: "Tizana Fresa Kiwi", precio: 75 },
     { nombre: "Tizana Maracuyá", precio: 75 },
