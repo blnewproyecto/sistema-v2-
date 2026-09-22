@@ -10,7 +10,7 @@ const menuData = {
     { nombre: "Capuccino / Latte", precio: 65 },
     { nombre: "Moka Obscuro", precio: 80 },
     { nombre: "Caramel Latte", precio: 80 },
-    { nombre: "Cajeta Latte", precio: 80 },
+    { nombre: "Cajeta Latte", precio: 80 }
   ],
   calientesSinCafe: [
     { nombre: "Chocolate Obscuro", precio: 75 },
@@ -47,7 +47,7 @@ const menuData = {
     { nombre: "Matcha Frío", precio: 80 },
     { nombre: "Matcha Frappé", precio: 85 },
     { nombre: "Taro Frío", precio: 80 },
-    { nombre: "Taro Frappé", precio: 85 },
+    { nombre: "Taro Frappé", precio: 85 }
   ],
   friasEspecialess: [
     { nombre: "Chai Manzana Verde Frío", precio: 85 },
