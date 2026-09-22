@@ -1,203 +1,135 @@
-// Base de datos del Menú
+// Base de datos del Menú Actualizada según las nuevas imágenes
 const menuData = {
   calientesCafe: [
-    { nombre: "Espresso Sencillo (1oz)", precio: 35 },
-    { nombre: "COCA COLA", precio: 40 },
-    { nombre: "Espresso Doble (2oz)", precio: 45 },
-    { nombre: "Doble Cortado (2oz)", precio: 50 },
-    { nombre: "Panna (2oz)", precio: 50 },
-    { nombre: "Flat White (2oz)", precio: 55 },
-    { nombre: "Affogato", precio: 65 },
-    { nombre: "Affogato Nut", precio: 95 },
-    { nombre: "Americano G", precio: 42 },
-    { nombre: "Café de Olla M", precio: 47 },
-    { nombre: "Café de Olla G", precio: 52 },
-    { nombre: "Capuccino / Latte M", precio: 60 },
-    { nombre: "Capuccino / Latte G", precio: 65 },
-    { nombre: "Moka Obscuro M", precio: 80 },
-    { nombre: "Moka Obscuro G", precio: 85 },
-    { nombre: "Moka Blanco M", precio: 80 },
-    { nombre: "Moka Blanco G", precio: 85 },
-    { nombre: "Caramel Latte M", precio: 80 },
-    { nombre: "Caramel Latte G", precio: 85 },
-    { nombre: "Cajeta Latte M", precio: 80 },
-    { nombre: "Cajeta Latte G", precio: 85 }
+    { nombre: "Espresso Sencillo", precio: 35 },
+    { nombre: "Doble", precio: 45 },
+    { nombre: "Doble Cortado", precio: 50 },
+    { nombre: "Flat White", precio: 55 },
+    { nombre: "Americano (Caliente)", precio: 47 },
+    { nombre: "Café de Olla", precio: 47 },
+    { nombre: "Capuchino o Latte (Caliente)", precio: 65 },
+    { nombre: "Moka (Caliente)", precio: 80 },
+    { nombre: "Caramel Latte (Caliente)", precio: 80 },
+    { nombre: "Cajeta Latte (Caliente)", precio: 80 }
   ],
   calientesSinCafe: [
-    { nombre: "Chocolate Obscuro M", precio: 75 },
-    { nombre: "Chocolate Obscuro G", precio: 80 },
-    { nombre: "Chocolate Blanco M", precio: 75 },
-    { nombre: "Chocolate Blanco G", precio: 80 },
-    { nombre: "Chai M", precio: 80 },
-    { nombre: "Chai G", precio: 85 },
-    { nombre: "Matcha M", precio: 80 },
-    { nombre: "Matcha G", precio: 85 },
-    { nombre: "Taro M", precio: 80 },
-    { nombre: "Taro G", precio: 85 },
-    { nombre: "Horchata M", precio: 75 },
-    { nombre: "Horchata G", precio: 80 }
+    { nombre: "Chocolate", precio: 75 },
+    { nombre: "Chai", precio: 75 },
+    { nombre: "Matcha", precio: 75 },
+    { nombre: "Taro", precio: 75 },
+    { nombre: "Ferrero", precio: 90 }
   ],
   calientesEspecialess: [
-    { nombre: "Chai Manzana Verde M", precio: 80 },
-    { nombre: "Chai Manzana Verde G", precio: 85 },
-    { nombre: "Horchai M", precio: 80 },
-    { nombre: "Horchai G", precio: 85 },
-    { nombre: "Blessed M", precio: 90 },
-    { nombre: "Blessed G", precio: 95 },
-    { nombre: "Hope Latte M", precio: 90 },
-    { nombre: "Hope Latte G", precio: 95 },
-    { nombre: "Ferrero Sin Café M", precio: 80 },
-    { nombre: "Ferrero Sin Café G", precio: 85 },
-    { nombre: "Ferrero Con Café M", precio: 90 },
-    { nombre: "Ferrero Con Café G", precio: 95 },
-    { nombre: "Mazapán M", precio: 80 },
-    { nombre: "Mazapán G", precio: 85 }
+    // Se mantiene estructura integrada en las categorías principales según nueva carta
   ],
   calientesInfusionables: [
-    { nombre: "Tizana Fresa Kiwi M", precio: 75 },
-    { nombre: "Tizana Fresa Kiwi G", precio: 80 },
-    { nombre: "Tizana Maracuyá M", precio: 75 },
-    { nombre: "Tizana Maracuyá G", precio: 80 },
-    { nombre: "Tizana Frutos Tropicales M", precio: 75 },
-    { nombre: "Tizana Frutos Tropicales G", precio: 80 },
-    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) M", precio: 45 },
-    { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) G", precio: 50 }
+    { nombre: "Té (Frambuesa, Menta, Hierbabuena, Negro, Manzanilla, Verde, Jengibre) - Caliente", precio: 45 }
   ],
   friasCafe: [
-    { nombre: "Americano Frío", precio: 55 },
-    { nombre: "Capuccino/Latte Frío", precio: 70 },
-    { nombre: "Capuccino/Latte Frappé", precio: 75 },
-    { nombre: "Cold Brew", precio: 70 },
+    { nombre: "Americano Frío", precio: 47 },
+    { nombre: "Americano Frappé", precio: 50 },
+    { nombre: "Capuchino o Latte Frío", precio: 65 },
+    { nombre: "Capuchino o Latte Frappé", precio: 70 },
+    { nombre: "Capuchino o Latte (Frappé Especial)", precio: 75 },
     { nombre: "Moka Frío", precio: 80 },
-    { nombre: "Moka Frappé", precio: 85 },
-    { nombre: "Moka Blanco Frío", precio: 80 },
-    { nombre: "Moka Blanco Frappé", precio: 85 },
+    { nombre: "Moka Frappé (Opción 1)", precio: 82 },
+    { nombre: "Moka Frappé (Opción 2)", precio: 90 },
     { nombre: "Caramel Latte Frío", precio: 80 },
-    { nombre: "Caramel Latte Frappé", precio: 85 },
+    { nombre: "Caramel Latte Frappé (Opción 1)", precio: 82 },
+    { nombre: "Caramel Latte Frappé (Opción 2)", precio: 90 },
     { nombre: "Cajeta Latte Frío", precio: 80 },
-    { nombre: "Cajeta Latte Frappé", precio: 85 }
+    { nombre: "Cajeta Latte Frappé (Opción 1)", precio: 82 },
+    { nombre: "Cajeta Latte Frappé (Opción 2)", precio: 90 }
   ],
   friasSinCafe: [
-    { nombre: "Chocolate Obscuro Frío", precio: 80 },
-    { nombre: "Chocolate Obscuro Frappé", precio: 85 },
-    { nombre: "Chai Frío", precio: 85 },
-    { nombre: "Chai Frappé", precio: 90 },
-    { nombre: "Matcha Frío", precio: 85 },
-    { nombre: "Matcha Frappé", precio: 90 },
-    { nombre: "Taro Frío", precio: 85 },
-    { nombre: "Taro Frappé", precio: 90 },
-    { nombre: "Cookies (Oreo) Frío", precio: 85 },
-    { nombre: "Cookies (Oreo) Frappé", precio: 90 },
-    { nombre: "Horchata Fría", precio: 85 },
-    { nombre: "Horchata Frappé", precio: 90 }
+    { nombre: "Chocolate Frío", precio: 75 },
+    { nombre: "Chocolate Frappé (Opción 1)", precio: 80 },
+    { nombre: "Chocolate Frappé (Opción 2)", precio: 85 },
+    { nombre: "Chai Frío", precio: 75 },
+    { nombre: "Chai Frappé (Opción 1)", precio: 80 },
+    { nombre: "Chai Frappé (Opción 2)", precio: 85 },
+    { nombre: "Matcha Frío", precio: 75 },
+    { nombre: "Matcha Frappé (Opción 1)", precio: 80 },
+    { nombre: "Matcha Frappé (Opción 2)", precio: 85 },
+    { nombre: "Taro Frío", precio: 75 },
+    { nombre: "Taro Frappé (Opción 1)", precio: 80 },
+    { nombre: "Taro Frappé (Opción 2)", precio: 85 },
+    { nombre: "Ferrero Frío", precio: 90 },
+    { nombre: "Ferrero Frappé", precio: 95 }
   ],
-  friasEspecialess: [
-    { nombre: "Chai Manzana Verde Frío", precio: 85 },
-    { nombre: "Chai Manzana Verde Frappé", precio: 90 },
-    { nombre: "Horchai Frío", precio: 90 },
-    { nombre: "Horchai Frappé", precio: 95 },
-    { nombre: "Blessed Frío", precio: 90 },
-    { nombre: "Blessed Frappé", precio: 95 },
-    { nombre: "Hope Latte Frío", precio: 90 },
-    { nombre: "Hope Latte Frappé", precio: 95 },
-    { nombre: "Ferrero Sin Café Frío", precio: 80 },
-    { nombre: "Ferrero Sin Café Frappé", precio: 85 },
-    { nombre: "Ferrero Con Café Frío", precio: 90 },
-    { nombre: "Ferrero Con Café Frappé", precio: 95 },
-    { nombre: "Mazapán Frío", precio: 90 },
-    { nombre: "Mazapán Frappé", precio: 95 }
+  friasRefrescables: [
+    { nombre: "Limonada / Naranjada", precio: 60 },
+    { nombre: "Shaken Tea (Negro, Limón, Durazno o Frambuesa)", precio: 80 },
+    { nombre: "Black Orange (Naranja, espresso y agua quina)", precio: 80 },
+    { nombre: "Chamoyada (Mango, Fresa, Maracuyá, Frutos Rojos)", precio: 80 },
+    { nombre: "Mocktails (Frutos rojos y perlas explosivas: Lichi, Durazno, Kiwi, Maracuyá, Fresa, Frambuesa, Cereza)", precio: 85 },
+    { nombre: "Malteadas (Vainilla, Fresa, Chocolate, Oreo, Ferrero)", precio: 95 }
   ],
-  friasFoamMalteadas: [
-    { nombre: "Cold Foam Vainilla/Caramelo/Moka", precio: 95 },
-    { nombre: "Cold Foam Taro Coconut", precio: 99 },
-    { nombre: "Cold Foam Berry Matcha", precio: 99 },
-    { nombre: "Cold Foam Banana Peanut Coffee", precio: 99 },
-    { nombre: "Cold Foam Strawberry Coconut", precio: 99 },
-    { nombre: "Cold Foam Matcha Coconut", precio: 99 },
-    { nombre: "Malteada Vainilla/Fresa/Chocolate", precio: 90 },
-    { nombre: "Malteada Caramelo/Oreo/Ferrero", precio: 95 }
+  friasTizanasYTe: [
+    { nombre: "Té Frío (Frambuesa, Menta, Hierbabuena, Negro, Manzanilla, Verde, Jengibre)", precio: 60 },
+    { nombre: "Tizana Fresa Kiwi", precio: 75 },
+    { nombre: "Tizana Maracuyá", precio: 75 },
+    { nombre: "Tizana Frutos Tropicales (Frío)", precio: 75 },
+    { nombre: "Tizana Frutos Tropicales (Frappé 1)", precio: 80 },
+    { nombre: "Tizana Frutos Tropicales (Frappé 2)", precio: 85 },
+    { nombre: "Tizana Pasión Frutal", precio: 75 },
+    { nombre: "Tizana Dulce Amanecer", precio: 75 },
+    { nombre: "Tizana Frutos del Bosque", precio: 75 }
   ],
-  friasVarios: [
-    { nombre: "Shaken Tea", precio: 80 },
-    { nombre: "Yogurt Mango", precio: 85 },
-    { nombre: "Yogurt Fresa", precio: 85 },
-    { nombre: "Yogurt Blueberry", precio: 85 },
-    { nombre: "Naranjada / Limonada", precio: 60 },
-    { nombre: "Black Orange Tonic", precio: 80 },
-    { nombre: "Lemon Coffee Tonic", precio: 80 },
-    { nombre: "Chamoyada Mango/Fresa/Maracuyá", precio: 80 },
-    { nombre: "Smoothie Detox", precio: 95 },
-    { nombre: "Smoothie Tropical / Banana Berry", precio: 95 },
-    { nombre: "Smoothie Apple Kiss / Exótico", precio: 95 }
+  extrasBebidas: [
+    { nombre: "Leche vegetal", precio: 12 },
+    { nombre: "Carga de café", precio: 15 },
+    { nombre: "Chispas", precio: 10 },
+    { nombre: "Perlas explosivas", precio: 18 }
   ],
-  friasMinerales: [
-    { nombre: "Agua Mineral Kirkland", precio: 40 },
-    { nombre: "Agua Mineral Perrier", precio: 50 },
-    { nombre: "Mineral Kirkland Preparada", precio: 65 },
-    { nombre: "Agua Mineral Perrier Preparada", precio: 65 }
+  alimentosEnsaladas: [
+    { nombre: "Ensalada Sweet (Mix lechuga, queso de cabra, fresa, arándano, nuez y aderezo)", precio: 65 },
+    { nombre: "Ensalada Parmesana (Mix lechuga, pechuga de pollo, queso parmesano, pepino, tomate cherry)", precio: 65 },
+    { nombre: "Ensalada Chef (Mix lechugas, jamón de pierna, queso manchego, queso panela, jitomate, croutones y aderezo)", precio: 65 }
   ],
-  friasMocktails: [
-    { nombre: "Mocktail Frutos Rojos", precio: 85 },
-    { nombre: "Mocktail Lichi", precio: 85 },
-    { nombre: "Mocktail Cereza", precio: 85 },
-    { nombre: "Mocktail Frambuesa", precio: 85 },
-    { nombre: "Mocktail Kiwi", precio: 85 },
-    { nombre: "Mocktail Fresa", precio: 85 },
-    { nombre: "Mocktail Durazno", precio: 85 },
-    { nombre: "Tizana Fría", precio: 85 },
-    { nombre: "Tizana Frappé", precio: 90 },
-    { nombre: "Té Herbal Frío", precio: 65 }
+  alimentosWrapsYChapatas: [
+    { nombre: "Wrap Clásico (Queso philadelphia, queso manchego, jamón, lechuga, pepino y jitomate) + Papas chips", precio: 75 },
+    { nombre: "Wrap Pollo (Queso philadelphia, queso manchego, pollo, lechuga, pepino y jitomate) + Papas chips", precio: 85 },
+    { nombre: "Chapata o Croissant - Pechuga de pavo con queso panela + Papas chips", precio: 90 },
+    { nombre: "Chapata o Croissant - Jamón de pierna con queso manchego + Papas chips", precio: 90 },
+    { nombre: "Chapata o Croissant - Pechuga de pollo con queso manchego + Papas chips", precio: 90 }
   ],
-  alimentosSalados: [
-    { nombre: "Huevos al gusto", precio: 75 },
-    { nombre: "Huevos a la Susan ", precio: 100 },
-    { nombre: "Molletes Sencillos", precio: 80 },
-    { nombre: "Mollaquiles", precio: 90 },
-    { nombre: "Molletes con Jamón", precio: 90 },
-    { nombre: "Molletes con Chorizo", precio: 99 },
-    { nombre: "Chilaquiles Sencillos", precio: 80 },
-    { nombre: "Chilaquiles c/ Huevo", precio: 95 },
-    { nombre: "Chilaquiles c/ Pollo", precio: 110 },
-    { nombre: "Chilaquiles Gratinedos", precio: 140 },
-    { nombre: "Sincronizada", precio: 70 },
-    { nombre: "Chapata Pizza", precio: 99 },
-    { nombre: "Baguette / Chapata Pechuga Pavo", precio: 90 },
-    { nombre: "Wrap Clásico", precio: 75 },
-    { nombre: "Wrap Pollo", precio: 85 },
-    { nombre: "Ensalada Bless", precio: 65 },
-    { nombre: "Especialess Salada Mexicana", precio: 120 },
-    { nombre: "Especialess Salada Hawaiiana", precio: 120 },
-    { nombre: "Especialess Salada Vegetariana", precio: 120 },
-    { nombre: "Especialess Salada Italiana", precio: 130 },
-    { nombre: "Especialess Salada Bless", precio: 130 }
+  alimentosDesayunos: [
+    { nombre: "Chilaquiles Sencillos (Refil Café Americano incl.)", precio: 75 },
+    { nombre: "Chilaquiles con Huevo (Refil Café Americano incl.)", precio: 90 },
+    { nombre: "Chilaquiles con Pollo (Refil Café Americano incl.)", precio: 95 },
+    { nombre: "Molletes Sencillos + Papas chips y pico de gallo", precio: 80 },
+    { nombre: "Molletes con Jamón + Papas chips y pico de gallo", precio: 90 },
+    { nombre: "Omelette (Jamón, queso manchego, champiñones)", precio: 90 },
+    { nombre: "Sincronizadas + Papas chips y pico de gallo", precio: 90 },
+    { nombre: "Mollaquiles", precio: 90 }
   ],
-  alimentosDulces: [
-    { nombre: "Crepa Tradicional", precio: 95 },
-    { nombre: "Crepa Frutal", precio: 99 },
-    { nombre: "Crepa Celaya", precio: 115 },
-    { nombre: "Crepa Celaya Frutal", precio: 120 },
-    { nombre: "Crepa Banana Bless", precio: 120 },
-    { nombre: "Crepa Arroz con Leche", precio: 120 },
-    { nombre: "Crepa Rompope Bless", precio: 130 },
-    { nombre: "Crepa Dulce Deseo", precio: 130 },
+  alimentosCrepas: [
+    { nombre: "Crepa Tradicional Dulce (Philadelphia o nutella y mermelada de fresa/zarzamora)", precio: 95 },
+    { nombre: "Crepa Frutal Dulce (Philadelphia o nutella y fresa/plátano/durazno/frutos rojos)", precio: 99 },
+    { nombre: "Crepa Celaya Frutal (Cajeta con durazno/fresa/plátano, nuez y helado)", precio: 120 },
+    { nombre: "Crepa Dulce Deseo (Philadelphia, nutella, frutos rojos y chocolate kinder)", precio: 130 },
+    { nombre: "Crepa Philadelphia Tropical (Philadelphia, plátano/fresa/durazno, lechera y nuez)", precio: 130 },
+    { nombre: "Crepizza Salada (Salsa de tomate, queso manchego y pepperoni)", precio: 130 },
+    { nombre: "Crepa Salada Tradicional (Queso crema con jamón o queso manchego con jamón)", precio: 99 }
+  ],
+  alimentosDulcesYPostres: [
     { nombre: "Hot Cakes", precio: 80 },
-    { nombre: "Hot Cakes 3 Leches", precio: 100 },
-    { nombre: "Waffles", precio: 80 },
-    { nombre: "Pastel del Día", precio: 70 },
-    { nombre: "Rol de Canela", precio: 49 },
-    { nombre: "Panque de Elote", precio: 39 },
-    { nombre: "Bisquet c/ Mermelada", precio: 35 },
-    { nombre: "Croissant c/ Mermelada", precio: 60 },
-    { nombre: "Galleta", precio: 40 },
-    { nombre: "Postre Especialess Bisquet/Croissant", precio: 90 },
-    { nombre: "Postre Especialess Waffles Bless", precio: 99 }
+    { nombre: "Waffles o Croissant con helado", precio: 90 },
+    { nombre: "Croissant con mermelada", precio: 60 },
+    { nombre: "Pan de elote", precio: 39 },
+    { nombre: "Rol de canela", precio: 49 },
+    { nombre: "Muffin de sabores", precio: 40 },
+    { nombre: "Pastel del día", precio: 70 },
+    { nombre: "Postre del día", precio: 45 },
+    { nombre: "Chapata pizza", precio: 99 }
   ]
 };
 
 let carrito = [];
 let comandaActualId = Date.now();
 
-// Renderizar Menú
+// Renderizar Menú Actualizado
 function renderizarMenu() {
   const mapeo = {
     'grid-calientes-cafe': menuData.calientesCafe,
@@ -206,13 +138,11 @@ function renderizarMenu() {
     'grid-calientes-infusionables': menuData.calientesInfusionables,
     'grid-frias-cafe': menuData.friasCafe,
     'grid-frias-sincafe': menuData.friasSinCafe,
-    'grid-frias-especialess': menuData.friasEspecialess,
-    'grid-frias-foam-malteadas': menuData.friasFoamMalteadas,
-    'grid-frias-varios': menuData.friasVarios,
-    'grid-frias-minerales': menuData.friasMinerales,
-    'grid-frias-mocktails': menuData.friasMocktails,
-    'grid-alimentos-salados': menuData.alimentosSalados,
-    'grid-alimentos-dulces': menuData.alimentosDulces
+    'grid-frias-especialess': menuData.friasRefrescables,
+    'grid-frias-foam-malteadas': menuData.friasTizanasYTe,
+    'grid-frias-varios': menuData.extrasBebidas,
+    'grid-alimentos-salados': [...menuData.alimentosEnsaladas, ...menuData.alimentosWrapsYChapatas, ...menuData.alimentosDesayunos],
+    'grid-alimentos-dulces': [...menuData.alimentosCrepas, ...menuData.alimentosDulcesYPostres]
   };
 
   for (let idContainer in mapeo) {
@@ -309,7 +239,7 @@ function aplicarDescuento50() {
     return;
   }
 
-  const clave = prompt("Ingrese la contraseña de autorización:");
+  const clave = prompt("Ingrese la contraseña de autorización (0705):");
   if (clave === null) return;
 
   if (clave.trim() === "0705") {
@@ -334,12 +264,10 @@ function cancelarCuentaActual() {
   }
 
   const clave = prompt("Ingrese la contraseña de autorización para cancelar la cuenta:");
-
   if (clave === null) return;
 
   if (clave.trim() === "0705") {
     if (confirm("¿Estás seguro de que deseas cancelar la cuenta actual? Se borrará de la lista de pendientes y de la nube.")) {
-      
       let comandas = JSON.parse(localStorage.getItem('comandasPendientes')) || [];
       comandas = comandas.filter(c => c.id !== comandaActualId);
       localStorage.setItem('comandasPendientes', JSON.stringify(comandas));
@@ -722,7 +650,7 @@ function renderizarCorteCaja() {
   }
 }
 
-// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR RESUMEN MENSUAL Y CALENDARIO (CORREGIDO)
+// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR RESUMEN MENSUAL Y CALENDARIO
 function verInformacionMensualPrivada() {
   const clave = prompt("Ingrese la contraseña de seguridad para acceder al mes:");
   if (clave === null) return;
