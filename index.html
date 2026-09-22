@@ -60,7 +60,6 @@
       overflow: hidden;
     }
 
-    /* Contenido Principal / Menú */
     .contenido-principal {
       flex: 1;
       display: flex;
@@ -233,7 +232,6 @@
     .btn-comanda { background: #2563eb; color: white; }
     .btn-precuenta { background: #0284c7; color: white; }
     
-    /* BOTÓN CANCELAR RESALTADO */
     .btn-cancelar { 
       background: #dc2626 !important; 
       color: white !important; 
@@ -244,7 +242,6 @@
     }
     .btn-cancelar:hover { background: #b91c1c !important; }
 
-    /* BOTÓN DESCUENTO 50% */
     .btn-descuento {
       background: #ea580c !important;
       color: white !important;
@@ -256,7 +253,6 @@
     .btn-efectivo { background: #16a34a; color: white; font-size: 14px; }
     .btn-tarjeta { background: #0284c7; color: white; font-size: 14px; }
 
-    /* Modal Comandas */
     .modal {
       display: none;
       position: fixed;
@@ -310,43 +306,25 @@
       </div>
 
       <div id="tab-menu" class="seccion active">
-        <h3 class="categoria-titulo">Bebidas Calientes - Café</h3>
+        <h3 class="categoria-titulo">Café</h3>
         <div class="grid-productos" id="grid-calientes-cafe"></div>
 
-        <h3 class="categoria-titulo">Bebidas Calientes - Sin Café</h3>
+        <h3 class="categoria-titulo">Sin Café</h3>
         <div class="grid-productos" id="grid-calientes-sincafe"></div>
 
-        <h3 class="categoria-titulo">Bebidas Calientes - Especiales</h3>
-        <div class="grid-productos" id="grid-calientes-especialess"></div>
-
-        <h3 class="categoria-titulo">Bebidas Calientes - Infusionables</h3>
-        <div class="grid-productos" id="grid-calientes-infusionables"></div>
-
-        <h3 class="categoria-titulo">Bebidas Frías - Café</h3>
-        <div class="grid-productos" id="grid-frias-cafe"></div>
-
-        <h3 class="categoria-titulo">Bebidas Frías - Sin Café</h3>
-        <div class="grid-productos" id="grid-frias-sincafe"></div>
-
-        <h3 class="categoria-titulo">Bebidas Frías - Especiales</h3>
+        <h3 class="categoria-titulo">Bebidas Frías / Refrescables</h3>
         <div class="grid-productos" id="grid-frias-especialess"></div>
 
-        <h3 class="categoria-titulo">Cold Foam / Malteadas</h3>
+        <h3 class="categoria-titulo">Tizanas y Té</h3>
         <div class="grid-productos" id="grid-frias-foam-malteadas"></div>
 
-        <h3 class="categoria-titulo">Bebidas Frías - Varios</h3>
+        <h3 class="categoria-titulo">Extras Bebidas</h3>
         <div class="grid-productos" id="grid-frias-varios"></div>
 
-        <h3 class="categoria-titulo">Aguas Minerales</h3>
-        <div class="grid-productos" id="grid-frias-minerales"></div>
-
-        <h3 class="categoria-titulo">Mocktails / Tizanas Frías</h3>
-        <div class="grid-productos" id="grid-frias-mocktails"></div>
-
-        <h3 class="categoria-titulo">Alimentos Salados</h3>
+        <h3 class="categoria-titulo">Alimentos (Ensaladas, Wraps, Chapatas, Desayunos)</h3>
         <div class="grid-productos" id="grid-alimentos-salados"></div>
 
-        <h3 class="categoria-titulo">Alimentos Dulces</h3>
+        <h3 class="categoria-titulo">Alimentos Dulces, Crepas y Postres</h3>
         <div class="grid-productos" id="grid-alimentos-dulces"></div>
       </div>
 
@@ -413,7 +391,6 @@
 
         <button class="btn-accion btn-cancelar" id="btnCancelarCuenta" onclick="cancelarCuentaActual()">❌ CANCELAR CUENTA</button>
         
-        <!-- NUEVO BOTÓN DE DESCUENTO 50% -->
         <button class="btn-accion btn-descuento" onclick="aplicarDescuento50()">🏷️ APLICAR 50% DESCUENTO</button>
 
         <div style="display: flex; gap: 8px; margin-top: 5px;">
