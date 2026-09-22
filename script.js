@@ -18,44 +18,36 @@ const menuData = {
     { nombre: "Matcha", precio: 75 },
     { nombre: "Taro", precio: 75 }
   ],
-  calientesEspecialess: [
-  ],
   calientesInfusionables: [
-    { nombre: "Tizana Fresa Kiwi M", precio: 75 },
-    { nombre: "Tizana Fresa Kiwi G", precio: 80 },
-    { nombre: "Tizana Maracuyá M", precio: 75 },
-    { nombre: "Tizana Maracuyá G", precio: 80 },
-    { nombre: "Tizana Frutos Tropicales M", precio: 75 },
-    { nombre: "Tizana Frutos Tropicales G", precio: 80 },
+    { nombre: "Tizana Fresa Kiwi", precio: 75 },
+    { nombre: "Tizana Maracuyá", precio: 75 },
+    { nombre: "Tizana Frutos Tropicales", precio: 75 },
+    { nombre: "Tizana Pasion Frutal", precio: 75 },
+    { nombre: "Tizana Dulce Amanecer", precio: 75 },
+    { nombre: "Tizana Frutos Del Bosque", precio: 75 },
     { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) M", precio: 45 },
     { nombre: "Té Herbal (Frambuesa/Menta/Negro/Verde) G", precio: 50 }
   ],
   friasCafe: [
-    { nombre: "Americano Frío", precio: 55 },
+    { nombre: "Americano Frío", precio: 50 },
     { nombre: "Capuccino/Latte Frío", precio: 70 },
     { nombre: "Capuccino/Latte Frappé", precio: 75 },
     { nombre: "Moka Frío", precio: 80 },
-    { nombre: "Moka Frappé", precio: 85 },
-    { nombre: "Moka Blanco Frío", precio: 80 },
-    { nombre: "Moka Blanco Frappé", precio: 85 },
+    { nombre: "Moka Frappé", precio: 90 },
     { nombre: "Caramel Latte Frío", precio: 80 },
-    { nombre: "Caramel Latte Frappé", precio: 85 },
+    { nombre: "Caramel Latte Frappé", precio: 90 },
     { nombre: "Cajeta Latte Frío", precio: 80 },
-    { nombre: "Cajeta Latte Frappé", precio: 85 }
+    { nombre: "Cajeta Latte Frappé", precio: 90 }
   ],
   friasSinCafe: [
     { nombre: "Chocolate Obscuro Frío", precio: 80 },
     { nombre: "Chocolate Obscuro Frappé", precio: 85 },
-    { nombre: "Chai Frío", precio: 85 },
-    { nombre: "Chai Frappé", precio: 90 },
-    { nombre: "Matcha Frío", precio: 85 },
-    { nombre: "Matcha Frappé", precio: 90 },
-    { nombre: "Taro Frío", precio: 85 },
-    { nombre: "Taro Frappé", precio: 90 },
-    { nombre: "Cookies (Oreo) Frío", precio: 85 },
-    { nombre: "Cookies (Oreo) Frappé", precio: 90 },
-    { nombre: "Horchata Fría", precio: 85 },
-    { nombre: "Horchata Frappé", precio: 90 }
+    { nombre: "Chai Frío", precio: 80 },
+    { nombre: "Chai Frappé", precio: 85 },
+    { nombre: "Matcha Frío", precio: 80 },
+    { nombre: "Matcha Frappé", precio: 85 },
+    { nombre: "Taro Frío", precio: 80 },
+    { nombre: "Taro Frappé", precio: 85 },
   ],
   friasEspecialess: [
     { nombre: "Chai Manzana Verde Frío", precio: 85 },
@@ -113,7 +105,7 @@ const menuData = {
     { nombre: "Mocktail Durazno", precio: 85 },
     { nombre: "Tizana Fría", precio: 85 },
     { nombre: "Tizana Frappé", precio: 90 },
-    { nombre: "Té Herbal Frío", precio: 65 }
+    { nombre: "Té Herbal Frío", precio: 60 }
   ],
   alimentosSalados: [
     { nombre: "Huevos al gusto", precio: 75 },
