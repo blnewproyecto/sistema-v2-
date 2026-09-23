@@ -35,7 +35,7 @@ const menuData = {
     { nombre: "Taro Frio", precio: 80 },
     { nombre: "Taro Frappe", precio: 85 },
     { nombre: "Ferrero", precio: 90 },
-    { nombre: "Ferrero", precio: 95 }
+    { nombre: "Ferrero Frappe", precio: 95 }
   ],
   calientesEspecialess: [
     // Se mantiene estructura integrada en las categorías principales según nueva carta
@@ -77,14 +77,26 @@ const menuData = {
   ],
   friasRefrescables: [
     { nombre: "Limonada / Naranjada", precio: 60 },
-    { nombre: "Shaken Tea (Negro, Limón, Durazno o Frambuesa)", precio: 80 },
-    { nombre: "Black Orange (Naranja, espresso y agua quina)", precio: 80 },
-    { nombre: "Chamoyada (Mango, Fresa, Maracuyá, Frutos Rojos)", precio: 80 },
-    { nombre: "Mocktails (Frutos rojos y perlas explosivas: Lichi, Durazno, Kiwi, Maracuyá, Fresa, Frambuesa, Cereza)", precio: 85 },
-    { nombre: "Malteadas (Vainilla, Fresa, Chocolate, Oreo, Ferrero)", precio: 95 }
+    { nombre: "Shaken Tea", precio: 80 },
+    { nombre: "Black Orange", precio: 80 },
+    { nombre: "Chamoyada Mango", precio: 80 },
+    { nombre: "Chamoyada Fresa", precio: 80 },
+    { nombre: "Chamoyada Maracuya", precio: 80 },
+    { nombre: "Chamoyada Frutos Rojos", precio: 80 },
+    { nombre: "Mocktail Frutos Rojos", precio: 85 },
+    { nombre: "Mocktail Cereza", precio: 85 },
+    { nombre: "Mocktail Fresa", precio: 85 },
+    { nombre: "Mocktail Frambuesa", precio: 85 },
+    { nombre: "Mocktail Durazno", precio: 85 },
+    { nombre: "Mocktail Kiwi", precio: 85 },
+    { nombre: "Mocktail Lichi", precio: 85 },
+    { nombre: "Malteada Vainilla", precio: 95 },
+    { nombre: "Malteada Fresa", precio: 95 },
+    { nombre: "Malteada Chocolate", precio: 95 },
+    { nombre: "Malteada Oreo", precio: 95 }
   ],
   friasTizanasYTe: [
-    { nombre: "Té Frío (Frambuesa, Menta, Hierbabuena, Negro, Manzanilla, Verde, Jengibre)", precio: 60 },
+    { nombre: "Té Frío", precio: 60 },
     { nombre: "Tizana Fresa Kiwi", precio: 75 },
     { nombre: "Tizana Maracuyá", precio: 75 },
     { nombre: "Tizana Frutos Tropicales (Frío)", precio: 75 },
@@ -101,16 +113,16 @@ const menuData = {
     { nombre: "Perlas explosivas", precio: 18 }
   ],
   alimentosEnsaladas: [
-    { nombre: "Ensalada Sweet (Mix lechuga, queso de cabra, fresa, arándano, nuez y aderezo)", precio: 65 },
-    { nombre: "Ensalada Parmesana (Mix lechuga, pechuga de pollo, queso parmesano, pepino, tomate cherry)", precio: 65 },
-    { nombre: "Ensalada Chef (Mix lechugas, jamón de pierna, queso manchego, queso panela, jitomate, croutones y aderezo)", precio: 65 }
+    { nombre: "Ensalada Sweet", precio: 65 },
+    { nombre: "Ensalada Parmesana", precio: 65 },
+    { nombre: "Ensalada Chef", precio: 65 }
   ],
   alimentosWrapsYChapatas: [
-    { nombre: "Wrap Clásico (Queso philadelphia, queso manchego, jamón, lechuga, pepino y jitomate) + Papas chips", precio: 75 },
-    { nombre: "Wrap Pollo (Queso philadelphia, queso manchego, pollo, lechuga, pepino y jitomate) + Papas chips", precio: 85 },
-    { nombre: "Chapata o Croissant - Pechuga de pavo con queso panela + Papas chips", precio: 90 },
-    { nombre: "Chapata o Croissant - Jamón de pierna con queso manchego + Papas chips", precio: 90 },
-    { nombre: "Chapata o Croissant - Pechuga de pollo con queso manchego + Papas chips", precio: 90 }
+    { nombre: "Wrap Clásico", precio: 75 },
+    { nombre: "Wrap Pollo", precio: 85 },
+    { nombre: "Chapata o Croissant Panela", precio: 90 },
+    { nombre: "Chapata o Croissant Manchego", precio: 90 },
+    { nombre: "Chapata o Croissant Pollo", precio: 90 }
   ],
   alimentosDesayunos: [
     { nombre: "Chilaquiles Sencillos (Refil Café Americano incl.)", precio: 75 },
