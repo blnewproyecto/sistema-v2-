@@ -76,6 +76,8 @@ const menuData = {
     { nombre: "Ferrero Frappé", precio: 95 }
   ],
   friasRefrescables: [
+    { nombre: "Mineral", precio: 40 },
+    { nombre: "Mineral Preparada", precio: 60 },
     { nombre: "Limonada / Naranjada", precio: 60 },
     { nombre: "Shaken Tea", precio: 80 },
     { nombre: "Black Orange", precio: 80 },
