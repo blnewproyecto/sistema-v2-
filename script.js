@@ -5,12 +5,21 @@ const menuData = {
     { nombre: "Doble", precio: 45 },
     { nombre: "Doble Cortado", precio: 50 },
     { nombre: "Flat White", precio: 55 },
-    { nombre: "Americano (Caliente)", precio: 47 },
+    { nombre: "Americano", precio: 47 },
+    { nombre: "Americano Frio", precio: 50 },
     { nombre: "Café de Olla", precio: 47 },
-    { nombre: "Capuchino o Latte (Caliente)", precio: 65 },
-    { nombre: "Moka (Caliente)", precio: 80 },
-    { nombre: "Caramel Latte (Caliente)", precio: 80 },
-    { nombre: "Cajeta Latte (Caliente)", precio: 80 }
+    { nombre: "Capuchino o Latte", precio: 65 },
+    { nombre: "Capuchino o Latte Frio", precio: 70 },
+    { nombre: "Capuchino o Latte Frappe", precio: 75 },
+    { nombre: "Moka", precio: 80 },
+    { nombre: "Moka Frio", precio: 82 },
+    { nombre: "Moka Frappe", precio: 90 },
+    { nombre: "Caramel Latte", precio: 80 },
+    { nombre: "Caramel Latte Frio", precio: 82 },
+    { nombre: "Caramel Latte Frappe", precio: 90 },
+    { nombre: "Cajeta Latte Frio", precio: 82 }
+    { nombre: "Cajeta Latte", precio: 80 }
+    { nombre: "Cajeta Latte Frappe", precio: 90 }
   ],
   calientesSinCafe: [
     { nombre: "Chocolate", precio: 75 },
