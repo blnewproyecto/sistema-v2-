@@ -99,13 +99,23 @@ const menuData = {
     { nombre: "Té", precio: 45 },
     { nombre: "Té Frío", precio: 60 },
     { nombre: "Tizana Fresa Kiwi", precio: 75 },
+    { nombre: "Tizana Fresa Kiwi Frio", precio: 80 },
+    { nombre: "Tizana Fresa Kiwi Frappe", precio: 85 },
     { nombre: "Tizana Maracuyá", precio: 75 },
-    { nombre: "Tizana Frutos Tropicales (Frío)", precio: 75 },
-    { nombre: "Tizana Frutos Tropicales (Frappé 1)", precio: 80 },
-    { nombre: "Tizana Frutos Tropicales (Frappé 2)", precio: 85 },
+    { nombre: "Tizana Maracuyá Frio", precio: 80 },
+    { nombre: "Tizana Maracuyá Frappe", precio: 85 },
+    { nombre: "Tizana Frutos Tropicales", precio: 75 },
+    { nombre: "Tizana Frutos Tropicales Frio", precio: 80 },
+    { nombre: "Tizana Frutos Tropicales Frappe", precio: 85 },
     { nombre: "Tizana Pasión Frutal", precio: 75 },
+    { nombre: "Tizana Pasión Frutal Frio", precio: 80 },
+    { nombre: "Tizana Pasión Frutal Frappe", precio: 85 },
     { nombre: "Tizana Dulce Amanecer", precio: 75 },
+    { nombre: "Tizana Dulce Amanecer Frio", precio: 80 },
+    { nombre: "Tizana Dulce Amanecer Frappe", precio: 85 },
     { nombre: "Tizana Frutos del Bosque", precio: 75 }
+    { nombre: "Tizana Frutos del Bosque Frio", precio: 80 }
+    { nombre: "Tizana Frutos del Bosque Frappe", precio: 85 }
   ],
   extrasBebidas: [
     { nombre: "Leche vegetal", precio: 12 },
