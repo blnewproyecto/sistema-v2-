@@ -113,8 +113,8 @@ const menuData = {
     { nombre: "Tizana Dulce Amanecer", precio: 75 },
     { nombre: "Tizana Dulce Amanecer Frio", precio: 80 },
     { nombre: "Tizana Dulce Amanecer Frappe", precio: 85 },
-    { nombre: "Tizana Frutos del Bosque", precio: 75 }
-    { nombre: "Tizana Frutos del Bosque Frio", precio: 80 }
+    { nombre: "Tizana Frutos del Bosque", precio: 75 },
+    { nombre: "Tizana Frutos del Bosque Frio", precio: 80 },
     { nombre: "Tizana Frutos del Bosque Frappe", precio: 85 }
   ],
   extrasBebidas: [
