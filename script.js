@@ -17,8 +17,8 @@ const menuData = {
     { nombre: "Caramel Latte", precio: 80 },
     { nombre: "Caramel Latte Frio", precio: 82 },
     { nombre: "Caramel Latte Frappe", precio: 90 },
-    { nombre: "Cajeta Latte Frio", precio: 82 }
-    { nombre: "Cajeta Latte", precio: 80 }
+    { nombre: "Cajeta Latte Frio", precio: 82 },
+    { nombre: "Cajeta Latte", precio: 80 },
     { nombre: "Cajeta Latte Frappe", precio: 90 }
   ],
   calientesSinCafe: [
