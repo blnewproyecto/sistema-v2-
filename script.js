@@ -23,10 +23,19 @@ const menuData = {
   ],
   calientesSinCafe: [
     { nombre: "Chocolate", precio: 75 },
+    { nombre: "Chocolate Frio", precio: 80 },
+    { nombre: "Chocolate Frappe", precio: 85 },
     { nombre: "Chai", precio: 75 },
+    { nombre: "Chai Frio", precio: 80 },
+    { nombre: "Chai Frappe", precio: 85 },
     { nombre: "Matcha", precio: 75 },
+    { nombre: "Matcha Frio", precio: 80 },
+    { nombre: "Matcha Frappe", precio: 85 },
     { nombre: "Taro", precio: 75 },
-    { nombre: "Ferrero", precio: 90 }
+    { nombre: "Taro Frio", precio: 80 },
+    { nombre: "Taro Frappe", precio: 85 },
+    { nombre: "Ferrero", precio: 90 },
+    { nombre: "Ferrero", precio: 95 }
   ],
   calientesEspecialess: [
     // Se mantiene estructura integrada en las categorías principales según nueva carta
