@@ -96,6 +96,7 @@ const menuData = {
     { nombre: "Malteada Oreo", precio: 95 }
   ],
   friasTizanasYTe: [
+    { nombre: "Té", precio: 45 },
     { nombre: "Té Frío", precio: 60 },
     { nombre: "Tizana Fresa Kiwi", precio: 75 },
     { nombre: "Tizana Maracuyá", precio: 75 },
@@ -125,23 +126,23 @@ const menuData = {
     { nombre: "Chapata o Croissant Pollo", precio: 90 }
   ],
   alimentosDesayunos: [
-    { nombre: "Chilaquiles Sencillos (Refil Café Americano incl.)", precio: 75 },
-    { nombre: "Chilaquiles con Huevo (Refil Café Americano incl.)", precio: 90 },
-    { nombre: "Chilaquiles con Pollo (Refil Café Americano incl.)", precio: 95 },
-    { nombre: "Molletes Sencillos + Papas chips y pico de gallo", precio: 80 },
-    { nombre: "Molletes con Jamón + Papas chips y pico de gallo", precio: 90 },
-    { nombre: "Omelette (Jamón, queso manchego, champiñones)", precio: 90 },
-    { nombre: "Sincronizadas + Papas chips y pico de gallo", precio: 90 },
+    { nombre: "Chilaquiles Sencillos", precio: 75 },
+    { nombre: "Chilaquiles con Huevo", precio: 90 },
+    { nombre: "Chilaquiles con Pollo", precio: 95 },
+    { nombre: "Molletes Sencillos", precio: 80 },
+    { nombre: "Molletes con Jamón", precio: 90 },
+    { nombre: "Omelette", precio: 90 },
+    { nombre: "Sincronizadas", precio: 90 },
     { nombre: "Mollaquiles", precio: 90 }
   ],
   alimentosCrepas: [
-    { nombre: "Crepa Tradicional Dulce (Philadelphia o nutella y mermelada de fresa/zarzamora)", precio: 95 },
-    { nombre: "Crepa Frutal Dulce (Philadelphia o nutella y fresa/plátano/durazno/frutos rojos)", precio: 99 },
-    { nombre: "Crepa Celaya Frutal (Cajeta con durazno/fresa/plátano, nuez y helado)", precio: 120 },
-    { nombre: "Crepa Dulce Deseo (Philadelphia, nutella, frutos rojos y chocolate kinder)", precio: 130 },
-    { nombre: "Crepa Philadelphia Tropical (Philadelphia, plátano/fresa/durazno, lechera y nuez)", precio: 130 },
-    { nombre: "Crepizza Salada (Salsa de tomate, queso manchego y pepperoni)", precio: 130 },
-    { nombre: "Crepa Salada Tradicional (Queso crema con jamón o queso manchego con jamón)", precio: 99 }
+    { nombre: "Crepa Tradicional Dulce", precio: 95 },
+    { nombre: "Crepa Frutal Dulce", precio: 99 },
+    { nombre: "Crepa Celaya Frutal", precio: 120 },
+    { nombre: "Crepa Dulce Deseo", precio: 130 },
+    { nombre: "Crepa Philadelphia Tropical", precio: 130 },
+    { nombre: "Crepizza Salada", precio: 130 },
+    { nombre: "Crepa Salada Tradicional", precio: 99 }
   ],
   alimentosDulcesYPostres: [
     { nombre: "Hot Cakes", precio: 80 },
