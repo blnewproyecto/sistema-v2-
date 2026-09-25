@@ -213,7 +213,22 @@ function filtrarProductos() {
   });
 }
 
+// GESTIÓN DE PESTAÑAS CON CONTRASEÑA PARA INVENTARIO
+let inventarioDesbloqueado = false;
+
 function cambiarPestana(idPestana) {
+  if (idPestana === 'inventario' && !inventarioDesbloqueado) {
+    const clave = prompt("Ingrese la contraseña de autorización (0705) para acceder al Inventario:");
+    if (clave === null) return;
+    
+    if (clave.trim() === "0705") {
+      inventarioDesbloqueado = true;
+    } else {
+      alert("⛔ Contraseña incorrecta. Acceso al inventario denegado.");
+      return;
+    }
+  }
+
   document.querySelectorAll('.seccion').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
 
@@ -632,8 +647,8 @@ function renderizarInventario() {
             <td style="padding: 10px; font-weight: bold; color: ${item.stock <= item.min ? '#dc2626' : '#16a34a'};">${item.stock}</td>
             <td style="padding: 10px; color: #64748b;">${item.min}</td>
             <td style="padding: 10px;">
-              <button onclick="modificarStock(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">＋</button>
-              <button onclick="modificarStock(${index}, -1)" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 4px;">－</button>
+              <button onclick="modificarStockConPassword(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ Agregar</button>
+              <button onclick="modificarStockConPassword(${index}, -1)" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-left: 4px; font-weight: bold;">－ Quitar</button>
             </td>
           </tr>
         `).join('')}
@@ -642,12 +657,24 @@ function renderizarInventario() {
   `;
 }
 
-function modificarStock(index, cantidad) {
-  let inventario = JSON.parse(localStorage.getItem('inventarioBless'));
-  inventario[index].stock += cantidad;
-  if (inventario[index].stock < 0) inventario[index].stock = 0;
-  localStorage.setItem('inventarioBless', JSON.stringify(inventario));
-  renderizarInventario();
+// MODIFICAR STOCK PIDIENDO CONTRASEÑA 0705 ANTES DE APLICAR EL CAMBIO
+function modificarStockConPassword(index, cantidad) {
+  const clave = prompt("Ingrese la contraseña de autorización para modificar el inventario:");
+  if (clave === null) return;
+
+  if (clave.trim() === "0705") {
+    let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [];
+    if (inventario[index]) {
+      inventario[index].stock += cantidad;
+      if (inventario[index].stock < 0) inventario[index].stock = 0;
+      
+      localStorage.setItem('inventarioBless', JSON.stringify(inventario));
+      renderizarInventario();
+      alert("✅ Stock actualizado correctamente.");
+    }
+  } else {
+    alert("⛔ Contraseña incorrecta. No se modificó el inventario.");
+  }
 }
 
 // RENDERIZAR CORTE Y ACCESO PRIVADO AL MES (CONTRASEÑA 1984)
@@ -729,10 +756,9 @@ function verInformacionMensualPrivada() {
       const ventasDelMes = mesesAgrupados[nombreMes];
       const totalMesGeneral = ventasDelMes.reduce((sum, v) => sum + v.total, 0);
 
-      // Agrupar por fecha exacta
       let ventasPorDia = {};
       ventasDelMes.forEach(v => {
-        let fechaKey = v.fecha; // Ej: "25/9/2026"
+        let fechaKey = v.fecha;
         if (!ventasPorDia[fechaKey]) ventasPorDia[fechaKey] = [];
         ventasPorDia[fechaKey].push(v);
       });
@@ -831,12 +857,10 @@ function borrarDiaCompleto(fecha) {
   if (clave.trim() === "7777") {
     if (confirm(`¿Estás completamente seguro de borrar todos los registros del día ${fecha}? Esta acción no se puede deshacer.`)) {
       let historialMensual = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
-      // Filtramos para eliminar todas las ventas que coincidan con esa fecha
       let historialFiltrado = historialMensual.filter(v => v.fecha !== fecha);
       localStorage.setItem('ventasMensuales', JSON.stringify(historialFiltrado));
 
       alert(`🗑️ Registros del día ${fecha} eliminados con éxito.`);
-      // Cerramos cualquier modal abierto y refrescamos el calendario mensual
       let modalAntiguo = document.getElementById('modalDetalleDia');
       if (modalAntiguo) modalAntiguo.remove();
       verInformacionMensualPrivada();
