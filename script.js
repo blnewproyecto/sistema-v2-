@@ -213,17 +213,13 @@ function filtrarProductos() {
   });
 }
 
-// GESTIÓN DE PESTAÑAS CON CONTRASEÑA PARA INVENTARIO
-let inventarioDesbloqueado = false;
-
+// GESTIÓN DE PESTAÑAS (PIDE CONTRASEÑA 0705 SOLO AL ENTRAR A INVENTARIO)
 function cambiarPestana(idPestana) {
-  if (idPestana === 'inventario' && !inventarioDesbloqueado) {
+  if (idPestana === 'inventario') {
     const clave = prompt("Ingrese la contraseña de autorización (0705) para acceder al Inventario:");
     if (clave === null) return;
     
-    if (clave.trim() === "0705") {
-      inventarioDesbloqueado = true;
-    } else {
+    if (clave.trim() !== "0705") {
       alert("⛔ Contraseña incorrecta. Acceso al inventario denegado.");
       return;
     }
@@ -647,8 +643,8 @@ function renderizarInventario() {
             <td style="padding: 10px; font-weight: bold; color: ${item.stock <= item.min ? '#dc2626' : '#16a34a'};">${item.stock}</td>
             <td style="padding: 10px; color: #64748b;">${item.min}</td>
             <td style="padding: 10px;">
-              <button onclick="modificarStockConPassword(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ Agregar</button>
-              <button onclick="modificarStockConPassword(${index}, -1)" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-left: 4px; font-weight: bold;">－ Quitar</button>
+              <button onclick="modificarStockDirecto(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ Agregar</button>
+              <button onclick="modificarStockDirecto(${index}, -1)" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-left: 4px; font-weight: bold;">－ Quitar</button>
             </td>
           </tr>
         `).join('')}
@@ -657,23 +653,15 @@ function renderizarInventario() {
   `;
 }
 
-// MODIFICAR STOCK PIDIENDO CONTRASEÑA 0705 ANTES DE APLICAR EL CAMBIO
-function modificarStockConPassword(index, cantidad) {
-  const clave = prompt("Ingrese la contraseña de autorización para modificar el inventario:");
-  if (clave === null) return;
-
-  if (clave.trim() === "0705") {
-    let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [];
-    if (inventario[index]) {
-      inventario[index].stock += cantidad;
-      if (inventario[index].stock < 0) inventario[index].stock = 0;
-      
-      localStorage.setItem('inventarioBless', JSON.stringify(inventario));
-      renderizarInventario();
-      alert("✅ Stock actualizado correctamente.");
-    }
-  } else {
-    alert("⛔ Contraseña incorrecta. No se modificó el inventario.");
+// MODIFICAR STOCK DIRECTAMENTE AL PRESIONAR LOS BOTONES (SIN CONTRASEÑA)
+function modificarStockDirecto(index, cantidad) {
+  let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [];
+  if (inventario[index]) {
+    inventario[index].stock += cantidad;
+    if (inventario[index].stock < 0) inventario[index].stock = 0;
+    
+    localStorage.setItem('inventarioBless', JSON.stringify(inventario));
+    renderizarInventario();
   }
 }
 
