@@ -37,9 +37,7 @@ const menuData = {
     { nombre: "Ferrero", precio: 90 },
     { nombre: "Ferrero Frappe", precio: 95 }
   ],
-  calientesEspecialess: [
-    // Se mantiene estructura integrada en las categorías principales según nueva carta
-  ],
+  calientesEspecialess: [],
   calientesInfusionables: [
     { nombre: "Té (Frambuesa, Menta, Hierbabuena, Negro, Manzanilla, Verde, Jengibre) - Caliente", precio: 45 }
   ],
@@ -411,7 +409,7 @@ function imprimirPrecuenta() {
         <div class="linea"></div>
         ${carrito.map(i => `
           <div class="flex">
-            <span>${i.nombre}</span>             <span>$${i.precio.toFixed(2)}</span>
+            <span>${i.nombre}</span><span>$${i.precio.toFixed(2)}</span>
           </div>
           ${i.leche !== 'Sin leche' ? `<small style="margin-left: 6px;">• Leche: ${i.leche}</small>` : ''}
         `).join('')}
@@ -498,7 +496,7 @@ function imprimirTicketFinal(items, total, metodo) {
         <div class="linea"></div>
         ${items.map(i => `
           <div class="flex">
-            <span>${i.nombre}</span>             <span>$${i.precio.toFixed(2)}</span>
+            <span>${i.nombre}</span><span>$${i.precio.toFixed(2)}</span>
           </div>
           ${i.leche !== 'Sin leche' ? `<div style="font-size:12px;">• Leche: ${i.leche}</div>` : ''}
         `).join('')}
@@ -690,13 +688,13 @@ function renderizarCorteCaja() {
     containerMes.innerHTML = `
       <div style="background: #f8fafc; padding: 15px; border-radius: 6px; text-align: center;">
         <p style="font-size: 14px; color: #64748b; margin-bottom: 10px;">Información financiera mensual protegida.</p>
-        <button onclick="verInformacionMensualPrivada()" style="background: #0f172a; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">🔑 Ver Resumen y Todos los Meses</button>
+        <button onclick="verInformacionMensualPrivada()" style="background: #0f172a; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">🔑 Ver Calendario de Todos los Meses</button>
       </div>
     `;
   }
 }
 
-// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR TODOS LOS MESES Y DETALLES
+// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR CALENDARIO DE TODOS LOS MESES
 function verInformacionMensualPrivada() {
   const clave = prompt("Ingrese la contraseña de seguridad para acceder al historial mensual:");
   if (clave === null) return;
@@ -725,49 +723,54 @@ function verInformacionMensualPrivada() {
       mesesAgrupados[mesKey].push(v);
     });
 
-    let htmlMeses = '';
+    let htmlCalendariosMeses = '';
 
     for (let nombreMes in mesesAgrupados) {
       const ventasDelMes = mesesAgrupados[nombreMes];
       const totalMesGeneral = ventasDelMes.reduce((sum, v) => sum + v.total, 0);
 
-      let ventasPorDiaExacto = {};
+      // Agrupar por fecha exacta
+      let ventasPorDia = {};
       ventasDelMes.forEach(v => {
-        let claveLimpia = v.fecha;
-        if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = [];
-        ventasPorDiaExacto[claveLimpia].push(v);
+        let fechaKey = v.fecha; // Ej: "25/9/2026"
+        if (!ventasPorDia[fechaKey]) ventasPorDia[fechaKey] = [];
+        ventasPorDia[fechaKey].push(v);
       });
 
-      htmlMeses += `
-        <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h4 style="margin: 0; text-transform: capitalize; color: #0f172a; font-size: 16px;">📅 ${nombreMes}</h4>
-            <span style="font-size: 14px; font-weight: bold; color: #16a34a;">Total: $${totalMesGeneral.toFixed(2)}</span>
+      let botonesDiasHtml = '';
+      let fechasOrdenadas = Object.keys(ventasPorDia);
+      fechasOrdenadas.sort();
+
+      fechasOrdenadas.forEach(fecha => {
+        let totalDia = ventasPorDia[fecha].reduce((sum, v) => sum + v.total, 0);
+        botonesDiasHtml += `
+          <div style="background: #dcfce7; border: 1px solid #86efac; border-radius: 6px; padding: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 13px; font-weight: bold; color: #16a34a; cursor: pointer; flex: 1;" onclick='mostrarDetalleDiaEspecifico(${JSON.stringify(fecha)}, ${JSON.stringify(ventasPorDia[fecha])})'>
+              📅 Día ${fecha} — Total: $${totalDia.toFixed(2)}
+            </span>
+            <button onclick='borrarDiaCompleto(${JSON.stringify(fecha)})' style="background: #dc2626; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;">🗑️ Borrar Día</button>
           </div>
-          <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Haz clic en un día para ver el desglose exacto de alimentos y bebidas vendidos.</p>
-          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-      `;
-
-      let diasUnicos = Object.keys(ventasPorDiaExacto);
-      diasUnicos.sort();
-
-      diasUnicos.forEach(fechaDia => {
-        let totalDia = ventasPorDiaExacto[fechaDia].reduce((s, v) => s + v.total, 0);
-        htmlMeses += `
-          <button onclick='mostrarDetalleDiaEspecifico(${JSON.stringify(fechaDia)}, ${JSON.stringify(ventasPorDiaExacto[fechaDia])})' 
-            style="background: #dcfce7; color: #16a34a; border: 1px solid #86efac; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold;">
-            Día ${fechaDia} ($${totalDia.toFixed(2)})
-          </button>
         `;
       });
 
-      htmlMeses += `</div></div>`;
+      htmlCalendariosMeses += `
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h4 style="margin: 0; text-transform: capitalize; color: #0f172a; font-size: 16px;">🗓️ ${nombreMes}</h4>
+            <span style="font-size: 14px; font-weight: bold; color: #16a34a;">Total Mes: $${totalMesGeneral.toFixed(2)}</span>
+          </div>
+          <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Haz clic en un día para ver el desglose completo de alimentos y bebidas, o bórralo si es necesario.</p>
+          <div style="max-height: 200px; overflow-y: auto;">
+            ${botonesDiasHtml}
+          </div>
+        </div>
+      `;
     }
 
     containerMes.innerHTML = `
       <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-        <h3 style="font-size: 15px; margin-bottom: 12px; color: #0f172a;">Historial de Todos los Meses</h3>
-        ${htmlMeses}
+        <h3 style="font-size: 15px; margin-bottom: 12px; color: #0f172a;">Calendario y Desglose de Todos los Meses</h3>
+        ${htmlCalendariosMeses}
         <button onclick="renderizarCorteCaja()" style="margin-top: 5px; background: #64748b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">🔒 Ocultar Información</button>
       </div>
     `;
@@ -806,7 +809,7 @@ function mostrarDetalleDiaEspecifico(fecha, listaVentasDia) {
   
   modalDiv.innerHTML = `
     <div style="background:white; padding:20px; border-radius:8px; width:450px; max-height:80vh; overflow-y:auto; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-      <h3 style="margin-bottom: 10px; color: #0f172a;">📊 Reporte del Día ${fecha}</h3>
+      <h3 style="margin-bottom: 10px; color: #0f172a;">📊 Desglose del Día ${fecha}</h3>
       <p style="font-size: 14px; font-weight: bold; color: #16a34a; margin-bottom: 12px;">Total: $${totalDia.toFixed(2)} (${listaVentasDia.length} órdenes)</p>
       <div style="max-height: 250px; overflow-y: auto; background: #f8fafc; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px;">
         ${htmlDetalleItems}
@@ -818,6 +821,29 @@ function mostrarDetalleDiaEspecifico(fecha, listaVentasDia) {
     </div>
   `;
   document.body.appendChild(modalDiv);
+}
+
+// FUNCIÓN PARA BORRAR UN DÍA COMPLETO DEL HISTORIAL MENSUAL
+function borrarDiaCompleto(fecha) {
+  const clave = prompt("Ingrese la contraseña de seguridad (1984) para confirmar la eliminación de este día:");
+  if (clave === null) return;
+
+  if (clave.trim() === "1984") {
+    if (confirm(`¿Estás completamente seguro de borrar todos los registros del día ${fecha}? Esta acción no se puede deshacer.`)) {
+      let historialMensual = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
+      // Filtramos para eliminar todas las ventas que coincidan con esa fecha
+      let historialFiltrado = historialMensual.filter(v => v.fecha !== fecha);
+      localStorage.setItem('ventasMensuales', JSON.stringify(historialFiltrado));
+
+      alert(`🗑️ Registros del día ${fecha} eliminados con éxito.`);
+      // Cerramos cualquier modal abierto y refrescamos el calendario mensual
+      let modalAntiguo = document.getElementById('modalDetalleDia');
+      if (modalAntiguo) modalAntiguo.remove();
+      verInformacionMensualPrivada();
+    }
+  } else {
+    alert("⛔ Contraseña incorrecta. No se eliminó nada.");
+  }
 }
 
 function enviarReporteDiaCorreo(fecha, totalDia, textoDetallado) {
