@@ -123,7 +123,10 @@ const menuData = {
     { nombre: "Leche vegetal", precio: 12 },
     { nombre: "Carga de café", precio: 15 },
     { nombre: "Chispas", precio: 10 },
-    { nombre: "Perlas explosivas", precio: 18 }
+    { nombre: "Perlas explosivas", precio: 18 },
+    { nombre: "ext. pollo", precio: 10 },
+    { nombre: "ext. huevo", precio: 15 },
+    { nombre: "ext. helado", precio: 15 }
   ],
   alimentosEnsaladas: [
     { nombre: "Ensalada Sweet", precio: 65 },
