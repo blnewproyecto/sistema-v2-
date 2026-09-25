@@ -825,10 +825,10 @@ function mostrarDetalleDiaEspecifico(fecha, listaVentasDia) {
 
 // FUNCIÓN PARA BORRAR UN DÍA COMPLETO DEL HISTORIAL MENSUAL
 function borrarDiaCompleto(fecha) {
-  const clave = prompt("Ingrese la contraseña de seguridad (1984) para confirmar la eliminación de este día:");
+  const clave = prompt("Ingrese la contraseña de seguridad para confirmar la eliminación de este día:");
   if (clave === null) return;
 
-  if (clave.trim() === "1984") {
+  if (clave.trim() === "7777") {
     if (confirm(`¿Estás completamente seguro de borrar todos los registros del día ${fecha}? Esta acción no se puede deshacer.`)) {
       let historialMensual = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
       // Filtramos para eliminar todas las ventas que coincidan con esa fecha
