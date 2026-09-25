@@ -652,7 +652,7 @@ function modificarStock(index, cantidad) {
   renderizarInventario();
 }
 
-// RENDERIZAR CORTE Y ACCESO PRIVADO AL MES (CONTRASEÑA 1984) Y CALENDARIO
+// RENDERIZAR CORTE Y ACCESO PRIVADO AL MES (CONTRASEÑA 1984)
 function renderizarCorteCaja() {
   const containerDia = document.getElementById('registroVentasDiaContainer');
   if (!containerDia) return;
@@ -690,15 +690,15 @@ function renderizarCorteCaja() {
     containerMes.innerHTML = `
       <div style="background: #f8fafc; padding: 15px; border-radius: 6px; text-align: center;">
         <p style="font-size: 14px; color: #64748b; margin-bottom: 10px;">Información financiera mensual protegida.</p>
-        <button onclick="verInformacionMensualPrivada()" style="background: #0f172a; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">🔑 Ver Resumen y Calendario Mensual</button>
+        <button onclick="verInformacionMensualPrivada()" style="background: #0f172a; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">🔑 Ver Resumen y Todos los Meses</button>
       </div>
     `;
   }
 }
 
-// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR RESUMEN MENSUAL Y CALENDARIO
+// SOLICITAR CONTRASEÑA 1984 PARA MOSTRAR TODOS LOS MESES Y DETALLES
 function verInformacionMensualPrivada() {
-  const clave = prompt("Ingrese la contraseña de seguridad para acceder al mes:");
+  const clave = prompt("Ingrese la contraseña de seguridad para acceder al historial mensual:");
   if (clave === null) return;
 
   if (clave.trim() === "1984") {
@@ -706,106 +706,126 @@ function verInformacionMensualPrivada() {
     if (!containerMes) return;
 
     const ventasMes = JSON.parse(localStorage.getItem('ventasMensuales')) || [];
-    const totalMesGeneral = ventasMes.reduce((sum, v) => sum + v.total, 0);
-
-    let ventasPorDiaExacto = {};
-    ventasMes.forEach(v => {
-      let partesFecha = v.fecha.split('/');
-      if (partesFecha.length === 3) {
-        let d = parseInt(partesFecha[0]);
-        let m = parseInt(partesFecha[1]);
-        let a = parseInt(partesFecha[2]);
-        
-        let diaReal = d > 12 ? partesFecha[0] : partesFecha[1];
-        let mesReal = d > 12 ? partesFecha[1] : partesFecha[0];
-        let anioReal = partesFecha[2];
-        
-        let claveLimpia = `${parseInt(diaReal)}-${parseInt(mesReal)}-${anioReal}`;
-        if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = 0;
-        ventasPorDiaExacto[claveLimpia] += v.total;
-      } else {
-        let partesGuion = v.fecha.split('-');
-        if (partesGuion.length === 3) {
-          let claveLimpia = `${parseInt(partesGuion[2])}-${parseInt(partesGuion[1])}-${partesGuion[0]}`;
-          if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = 0;
-          ventasPorDiaExacto[claveLimpia] += v.total;
-        } else {
-          if (!ventasPorDiaExacto[v.fecha]) ventasPorDiaExacto[v.fecha] = 0;
-          ventasPorDiaExacto[v.fecha] += v.total;
-        }
-      }
-    });
-
-    const fechaActual = new Date();
-    const anio = fechaActual.getFullYear();
-    const mes = fechaActual.getMonth();
-    const nombreMes = fechaActual.toLocaleString('default', { month: 'long', year: 'numeric' });
-
-    const primerDiaIndex = new Date(anio, mes, 1).getDay();
-    const totalDiasMes = new Date(anio, mes + 1, 0).getDate();
-    const diasIniciales = ['D', 'L', 'M', 'Mi', 'J', 'V', 'S']; 
-
-    let celdasCalendario = '';
-    diasIniciales.forEach(d => {
-      celdasCalendario += `<div style="text-align:center; font-weight:bold; font-size:12px; color:#64748b; padding:4px;">${d}</div>`;
-    });
-
-    for (let i = 0; i < primerDiaIndex; i++) {
-      celdasCalendario += `<div></div>`;
-    }
-
-    for (let dia = 1; dia <= totalDiasMes; dia++) {
-      let totalDiaVenta = 0;
-      
-      for (let k in ventasPorDiaExacto) {
-        let partesK = k.split('-');
-        if (partesK.length === 3) {
-          let dK = parseInt(partesK[0]);
-          let mK = parseInt(partesK[1]);
-          let aK = parseInt(partesK[2]);
-          
-          if ((dK === dia && mK === (mes + 1) && aK === anio) || (mK === dia && dK === (mes + 1) && aK === anio)) {
-            totalDiaVenta += ventasPorDiaExacto[k];
-          }
-        } else if (k.includes(`${dia}`)) {
-          totalDiaVenta += ventasPorDiaExacto[k];
-        }
-      }
-
-      let tieneVenta = totalDiaVenta > 0;
-      let estiloDia = tieneVenta 
-        ? 'background: #dcfce7; color: #16a34a; font-weight: bold; cursor: pointer;' 
-        : 'background: #f8fafc; color: #94a3b8;';
-
-      celdasCalendario += `
-        <div onclick="mostrarDetalleDiaCalendario('${dia}', '${nombreMes}', ${totalDiaVenta})" style="text-align:center; padding:8px; border-radius:4px; font-size:13px; ${estiloDia}">
-          ${dia}
+    if (ventasMes.length === 0) {
+      containerMes.innerHTML = `
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; text-align: center;">
+          <p style="color: #64748b; font-size: 14px;">No hay registros de ventas mensuales aún.</p>
+          <button onclick="renderizarCorteCaja()" style="margin-top: 10px; background: #64748b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">🔒 Ocultar</button>
         </div>
       `;
+      return;
+    }
+
+    let mesesAgrupados = {};
+    ventasMes.forEach(v => {
+      let mesKey = v.mesAnio || "Mes General";
+      if (!mesesAgrupados[mesKey]) {
+        mesesAgrupados[mesKey] = [];
+      }
+      mesesAgrupados[mesKey].push(v);
+    });
+
+    let htmlMeses = '';
+
+    for (let nombreMes in mesesAgrupados) {
+      const ventasDelMes = mesesAgrupados[nombreMes];
+      const totalMesGeneral = ventasDelMes.reduce((sum, v) => sum + v.total, 0);
+
+      let ventasPorDiaExacto = {};
+      ventasDelMes.forEach(v => {
+        let claveLimpia = v.fecha;
+        if (!ventasPorDiaExacto[claveLimpia]) ventasPorDiaExacto[claveLimpia] = [];
+        ventasPorDiaExacto[claveLimpia].push(v);
+      });
+
+      htmlMeses += `
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h4 style="margin: 0; text-transform: capitalize; color: #0f172a; font-size: 16px;">📅 ${nombreMes}</h4>
+            <span style="font-size: 14px; font-weight: bold; color: #16a34a;">Total: $${totalMesGeneral.toFixed(2)}</span>
+          </div>
+          <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Haz clic en un día para ver el desglose exacto de alimentos y bebidas vendidos.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      `;
+
+      let diasUnicos = Object.keys(ventasPorDiaExacto);
+      diasUnicos.sort();
+
+      diasUnicos.forEach(fechaDia => {
+        let totalDia = ventasPorDiaExacto[fechaDia].reduce((s, v) => s + v.total, 0);
+        htmlMeses += `
+          <button onclick='mostrarDetalleDiaEspecifico(${JSON.stringify(fechaDia)}, ${JSON.stringify(ventasPorDiaExacto[fechaDia])})' 
+            style="background: #dcfce7; color: #16a34a; border: 1px solid #86efac; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold;">
+            Día ${fechaDia} ($${totalDia.toFixed(2)})
+          </button>
+        `;
+      });
+
+      htmlMeses += `</div></div>`;
     }
 
     containerMes.innerHTML = `
-      <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h4 style="margin: 0; text-transform: capitalize; color: #0f172a;">${nombreMes}</h4>
-          <span style="font-size: 14px; font-weight: bold; color: #16a34a;">Total Mes: $${totalMesGeneral.toFixed(2)}</span>
-        </div>
-        <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Toca cualquier fecha resaltada para ver lo vendido en ese día específico.</p>
-        
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #f1f5f9; padding: 8px; border-radius: 6px;">
-          ${celdasCalendario}
-        </div>
-        
-        <button onclick="renderizarCorteCaja()" style="margin-top: 12px; background: #64748b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">🔒 Ocultar Información</button>
+      <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+        <h3 style="font-size: 15px; margin-bottom: 12px; color: #0f172a;">Historial de Todos los Meses</h3>
+        ${htmlMeses}
+        <button onclick="renderizarCorteCaja()" style="margin-top: 5px; background: #64748b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">🔒 Ocultar Información</button>
       </div>
     `;
+
   } else {
     alert("⛔ Contraseña incorrecta. Acceso denegado.");
   }
 }
 
-function mostrarDetalleDiaCalendario(dia, mesAnio, totalVentaDia) {
-  alert(`📅 Fecha: ${dia} de ${mesAnio}\n💰 Total vendido este día: $${totalVentaDia.toFixed(2)}`);
+// MOSTRAR DETALLE DE UN DÍA ESPECÍFICO CON OPCIÓN DE ENVÍO POR CORREO
+function mostrarDetalleDiaEspecifico(fecha, listaVentasDia) {
+  let totalDia = listaVentasDia.reduce((sum, v) => sum + v.total, 0);
+  
+  let resumenTexto = `REPORTE DEL DÍA: ${fecha}\n`;
+  resumenTexto += `Total Vendido: $${totalDia.toFixed(2)}\n`;
+  resumenTexto += `Total de Tickets/Órdenes: ${listaVentasDia.length}\n\n`;
+  resumenTexto += `--- DESGLOSE DE PRODUCTOS ---\n`;
+
+  let htmlDetalleItems = '';
+  listaVentasDia.forEach(v => {
+    htmlDetalleItems += `<div style="margin-bottom: 8px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px;">
+      <small style="color: #64748b;">Hora: ${v.hora} | Pago: ${v.metodo}</small><br>`;
+    v.items.forEach(i => {
+      htmlDetalleItems += `• ${i.nombre} ${i.leche && i.leche !== 'Sin leche' ? `(Leche: ${i.leche})` : ''} - $${i.precio.toFixed(2)}<br>`;
+      resumenTexto += `[${v.hora}] ${i.nombre} - $${i.precio.toFixed(2)}\n`;
+    });
+    htmlDetalleItems += `<strong>Subtotal Orden: $${v.total.toFixed(2)}</strong></div>`;
+  });
+
+  let modalAntiguo = document.getElementById('modalDetalleDia');
+  if (modalAntiguo) modalAntiguo.remove();
+
+  let modalDiv = document.createElement('div');
+  modalDiv.id = 'modalDetalleDia';
+  modalDiv.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:2000;";
+  
+  modalDiv.innerHTML = `
+    <div style="background:white; padding:20px; border-radius:8px; width:450px; max-height:80vh; overflow-y:auto; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+      <h3 style="margin-bottom: 10px; color: #0f172a;">📊 Reporte del Día ${fecha}</h3>
+      <p style="font-size: 14px; font-weight: bold; color: #16a34a; margin-bottom: 12px;">Total: $${totalDia.toFixed(2)} (${listaVentasDia.length} órdenes)</p>
+      <div style="max-height: 250px; overflow-y: auto; background: #f8fafc; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px;">
+        ${htmlDetalleItems}
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button onclick="enviarReporteDiaCorreo(${JSON.stringify(fecha)}, ${totalDia}, ${JSON.stringify(resumenTexto)})" style="flex:1; background:#16a34a; color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">📧 Enviar a mi Correo</button>
+        <button onclick="document.getElementById('modalDetalleDia').remove()" style="background:#64748b; color:white; border:none; padding:10px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">Cerrar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modalDiv);
+}
+
+function enviarReporteDiaCorreo(fecha, totalDia, textoDetallado) {
+  const asunto = encodeURIComponent(`Reporte de Ventas del Día - ${fecha} - BLESS COFFEE`);
+  const cuerpo = encodeURIComponent(textoDetallado + `\n\nGenerado automáticamente desde el Sistema POS Bless Coffee.`);
+  const correosDestino = "abelgonrive@gmail.com,tesoreria.riveraconstrucciones@gmail.com";
+  
+  window.location.href = `mailto:${correosDestino}?subject=${asunto}&body=${cuerpo}`;
 }
 
 // CIERRE DE CAJA, IMPRESIÓN DE TICKET Y ENVÍO A CORREOS
