@@ -643,8 +643,8 @@ function renderizarInventario() {
             <td style="padding: 10px; font-weight: bold; color: ${item.stock <= item.min ? '#dc2626' : '#16a34a'};">${item.stock}</td>
             <td style="padding: 10px; color: #64748b;">${item.min}</td>
             <td style="padding: 10px;">
-              <button onclick="modificarStockDirecto(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ Agregar</button>
-              <button onclick="modificarStockDirecto(${index}, -1)" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-left: 4px; font-weight: bold;">－ Quitar</button>
+              <button type="button" onclick="modificarStockDirecto(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ Agregar</button>
+              <button type="button" onclick="modificarStockDirecto(${index}, -1)" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-left: 4px; font-weight: bold;">－ Quitar</button>
             </td>
           </tr>
         `).join('')}
@@ -654,8 +654,18 @@ function renderizarInventario() {
 }
 
 // MODIFICAR STOCK DIRECTAMENTE AL PRESIONAR LOS BOTONES (SIN CONTRASEÑA)
-function modificarStockDirecto(index, cantidad) {
-  let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [];
+window.modificarStockDirecto = function(index, cantidad) {
+  let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [
+    { insumo: "Café en Grano (kg)", stock: 12, min: 3 },
+    { insumo: "Leche Entera (L)", stock: 24, min: 6 },
+    { insumo: "Leche Deslactosada (L)", stock: 18, min: 5 },
+    { insumo: "Leche Vegetal/Almendra (L)", stock: 10, min: 3 },
+    { insumo: "Chocolate Obscuro (kg)", stock: 5, min: 2 },
+    { insumo: "Matcha (kg)", stock: 2, min: 1 },
+    { insumo: "Chai (kg)", stock: 4, min: 1 },
+    { insumo: "Pan para Chapata / Baguette (pz)", stock: 35, min: 10 }
+  ];
+
   if (inventario[index]) {
     inventario[index].stock += cantidad;
     if (inventario[index].stock < 0) inventario[index].stock = 0;
@@ -663,7 +673,7 @@ function modificarStockDirecto(index, cantidad) {
     localStorage.setItem('inventarioBless', JSON.stringify(inventario));
     renderizarInventario();
   }
-}
+};
 
 // RENDERIZAR CORTE Y ACCESO PRIVADO AL MES (CONTRASEÑA 1984)
 function renderizarCorteCaja() {
