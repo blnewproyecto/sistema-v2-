@@ -440,7 +440,78 @@ function imprimirPrecuenta() {
   ventana.document.close();
 }
 
-// Finalizar Cobro
+// FUNCIÓN PARA DESCONTAR AUTOMÁTICAMENTE INSUMOS Y LECHES AL COBRAR
+function descontarInventarioPorVenta(itemsVenta) {
+  let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [
+    { insumo: "Café en Grano (kg)", stock: 12, min: 3 },
+    { insumo: "Leche Entera (L)", stock: 24, min: 6 },
+    { insumo: "Leche Deslactosada (L)", stock: 18, min: 5 },
+    { insumo: "Leche Vegetal/Almendra (L)", stock: 10, min: 3 },
+    { insumo: "Chocolate Obscuro (kg)", stock: 5, min: 2 },
+    { insumo: "Matcha (kg)", stock: 2, min: 1 },
+    { insumo: "Chai (kg)", stock: 4, min: 1 },
+    { insumo: "Pan para Chapata / Baguette (pz)", stock: 35, min: 10 }
+  ];
+
+  itemsVenta.forEach(item => {
+    let nombreLower = item.nombre.toLowerCase();
+
+    // 1. Descuento de café en grano (ej. 0.018 kg por bebida de café aprox, o ajústalo a tu receta)
+    if (nombreLower.includes('espresso') || nombreLower.includes('americano') || nombreLower.includes('latte') || nombreLower.includes('capuchino') || nombreLower.includes('moka') || nombreLower.includes('flat white')) {
+      let cafeItem = inventario.find(i => i.insumo.toLowerCase().includes('café en grano'));
+      if (cafeItem) cafeItem.stock = Math.max(0, Number((cafeItem.stock - 0.018).toFixed(3)));
+    }
+
+    // 2. Descuento de Chocolate
+    if (nombreLower.includes('chocolate') || nombreLower.includes('moka') || nombreLower.includes('ferrero')) {
+      let chocItem = inventario.find(i => i.insumo.toLowerCase().includes('chocolate'));
+      if (chocItem) chocItem.stock = Math.max(0, Number((chocItem.stock - 0.030).toFixed(3)));
+    }
+
+    // 3. Descuento de Matcha
+    if (nombreLower.includes('matcha')) {
+      let matchaItem = inventario.find(i => i.insumo.toLowerCase().includes('matcha'));
+      if (matchaItem) matchaItem.stock = Math.max(0, Number((matchaItem.stock - 0.020).toFixed(3)));
+    }
+
+    // 4. Descuento de Chai
+    if (nombreLower.includes('chai')) {
+      let chaiItem = inventario.find(i => i.insumo.toLowerCase().includes('chai'));
+      if (chaiItem) chaiItem.stock = Math.max(0, Number((chaiItem.stock - 0.025).toFixed(3)));
+    }
+
+    // 5. Descuento de Pan (Chapatas, Croissants)
+    if (nombreLower.includes('chapata') || nombreLower.includes('croissant') || nombreLower.includes('baguette')) {
+      let panItem = inventario.find(i => i.insumo.toLowerCase().includes('pan'));
+      if (panItem) panItem.stock = Math.max(0, panItem.stock - 1);
+    }
+
+    // 6. Descuento de Leche según la selección del usuario
+    if (item.leche && item.leche !== 'Sin leche') {
+      let tipoLecheBusq = item.leche.toLowerCase(); // 'entera', 'deslactosada', 'vegetal', etc.
+      let lecheItem = inventario.find(i => i.insumo.toLowerCase().includes(tipoLecheBusq));
+      
+      // Si no encuentra una específica, por defecto descuenta de la leche entera (0.240 Litros por bebida)
+      if (!lecheItem) {
+        lecheItem = inventario.find(i => i.insumo.toLowerCase().includes('leche entera'));
+      }
+
+      if (lecheItem) {
+        lecheItem.stock = Math.max(0, Number((lecheItem.stock - 0.240).toFixed(3)));
+      }
+    } else if (nombreLower.includes('latte') || nombreLower.includes('capuchino') || nombreLower.includes('moka') || nombreLower.includes('chocolate') || nombreLower.includes('taro') || nombreLower.includes('matcha') || nombreLower.includes('chai')) {
+      // Si lleva leche implícita y no se especificó otra, descuenta de Leche Entera por defecto
+      let lecheEntera = inventario.find(i => i.insumo.toLowerCase().includes('leche entera'));
+      if (lecheEntera) {
+        lecheEntera.stock = Math.max(0, Number((lecheEntera.stock - 0.240).toFixed(3)));
+      }
+    }
+  });
+
+  localStorage.setItem('inventarioBless', JSON.stringify(inventario));
+}
+
+// Finalizar Cobro (Integra el descuento automático)
 function finalizarCobro(metodoPago) {
   if (carrito.length === 0) {
     alert("Agrega productos a la comanda para poder cobrar.");
@@ -450,6 +521,9 @@ function finalizarCobro(metodoPago) {
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
   const fechaHoy = new Date().toLocaleDateString();
   const mesAnioActual = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+
+  // Descontar automáticamente del inventario al cobrar
+  descontarInventarioPorVenta(carrito);
 
   const historialVentas = JSON.parse(localStorage.getItem('ventasDiarias')) || [];
   const nuevaVenta = {
@@ -640,7 +714,7 @@ function renderizarInventario() {
         ${inventario.map((item, index) => `
           <tr style="border-bottom: 1px solid #e2e8f0;">
             <td style="padding: 10px;">${item.insumo}</td>
-            <td style="padding: 10px; font-weight: bold; color: ${item.stock <= item.min ? '#dc2626' : '#16a34a'};">${item.stock}</td>
+            <td style="padding: 10px; font-weight: bold; color: ${item.stock <= item.min ? '#dc2626' : '#16a34a'};">${typeof item.stock === 'number' ? item.stock.toFixed(3) : item.stock}</td>
             <td style="padding: 10px; color: #64748b;">${item.min}</td>
             <td style="padding: 10px;">
               <button type="button" onclick="modificarStockDirecto(${index}, 1)" style="background: #2563eb; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ Agregar</button>
@@ -655,16 +729,7 @@ function renderizarInventario() {
 
 // MODIFICAR STOCK DIRECTAMENTE AL PRESIONAR LOS BOTONES (SIN CONTRASEÑA)
 window.modificarStockDirecto = function(index, cantidad) {
-  let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [
-    { insumo: "Café en Grano (kg)", stock: 12, min: 3 },
-    { insumo: "Leche Entera (L)", stock: 24, min: 6 },
-    { insumo: "Leche Deslactosada (L)", stock: 18, min: 5 },
-    { insumo: "Leche Vegetal/Almendra (L)", stock: 10, min: 3 },
-    { insumo: "Chocolate Obscuro (kg)", stock: 5, min: 2 },
-    { insumo: "Matcha (kg)", stock: 2, min: 1 },
-    { insumo: "Chai (kg)", stock: 4, min: 1 },
-    { insumo: "Pan para Chapata / Baguette (pz)", stock: 35, min: 10 }
-  ];
+  let inventario = JSON.parse(localStorage.getItem('inventarioBless')) || [];
 
   if (inventario[index]) {
     inventario[index].stock += cantidad;
