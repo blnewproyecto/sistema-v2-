@@ -74,6 +74,7 @@ const menuData = {
     { nombre: "Ferrero Frappé", precio: 95 }
   ],
   friasRefrescables: [
+    { nombre: "coca cola", precio: 40 },
     { nombre: "Mineral", precio: 40 },
     { nombre: "Mineral Preparada", precio: 60 },
     { nombre: "Limonada / Naranjada", precio: 60 },
