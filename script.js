@@ -164,6 +164,7 @@ const menuData = {
     { nombre: "Croissant con mermelada", precio: 60 },
     { nombre: "Pan de elote", precio: 39 },
     { nombre: "Rol de canela", precio: 49 },
+    { nombre: "GALLETA 2X1", precio: 30 },
     { nombre: "Muffin de sabores", precio: 40 },
     { nombre: "Pastel del día", precio: 70 },
     { nombre: "Postre del día", precio: 45 },
