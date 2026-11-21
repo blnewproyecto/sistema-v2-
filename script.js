@@ -4,6 +4,7 @@ const menuData = {
     { nombre: "Espresso Sencillo", precio: 35 },
     { nombre: "Doble", precio: 45 },
     { nombre: "Doble Cortado", precio: 50 },
+    { nombre: "AFFOGATTO NUT", precio: 95 },
     { nombre: "Flat White", precio: 55 },
     { nombre: "Americano", precio: 47 },
     { nombre: "Americano Frio", precio: 50 },
