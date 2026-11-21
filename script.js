@@ -159,6 +159,7 @@ const menuData = {
     { nombre: "Crepa Salada Tradicional", precio: 99 }
   ],
   alimentosDulcesYPostres: [
+    { nombre: "BISQUET", precio: 29 },
     { nombre: "DONAS CUBIERTAS", precio: 39 },
     { nombre: "DONAS TURIN", precio: 49 },
     { nombre: "Hot Cakes", precio: 80 },
