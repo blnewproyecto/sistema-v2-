@@ -159,6 +159,8 @@ const menuData = {
     { nombre: "Crepa Salada Tradicional", precio: 99 }
   ],
   alimentosDulcesYPostres: [
+    { nombre: "DONAS CUBIERTAS", precio: 39 },
+    { nombre: "DONAS TURIN", precio: 49 },
     { nombre: "Hot Cakes", precio: 80 },
     { nombre: "Waffles o Croissant con helado", precio: 90 },
     { nombre: "Croissant con mermelada", precio: 60 },
